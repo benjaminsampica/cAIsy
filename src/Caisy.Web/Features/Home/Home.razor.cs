@@ -1,11 +1,12 @@
-﻿using OpenAI_API;
+﻿using Caisy.Web.Features.Profile;
+using OpenAI_API;
 using OpenAI_API.Chat;
 
 namespace Caisy.Web.Features.Home;
 
 public partial class Home
 {
-    [Inject] public IRepository<UserProfile> ProfileRepository { get; set; } = null!;
+    [Inject] public ProfileState ProfileState { get; set; } = null!;
     [Inject] public ISnackbar Snackbar { get; set; } = null!;
     private OpenAIAPI OpenAiApi { get; set; }
     private OpenApiRequest _request = new();
@@ -18,11 +19,9 @@ public partial class Home
 
     protected override async Task OnInitializedAsync()
     {
-        var profile = (await ProfileRepository.GetAllAsync(_cts.Token)).FirstOrDefault();
-
-        if (profile != null)
+        if (ProfileState.ApiKey != null)
         {
-            OpenAiApi = new OpenAIAPI(profile.ApiKey);
+            OpenAiApi = new OpenAIAPI(ProfileState.ApiKey);
         }
         else
         {
@@ -42,7 +41,7 @@ public partial class Home
 
         _conversation.AppendSystemMessage(String.Join(", ", _options));
 
-        _conversation.AppendUserInput(_request.Prompt); 
+        _conversation.AppendUserInput(_request.Prompt);
 
         await _conversation.GetResponseFromChatbotAsync();
 

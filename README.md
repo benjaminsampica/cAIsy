@@ -1,6 +1,6 @@
 # Introduction
 
-Built with Blazor WASM and hosted for free on GitHub Pages at <https://benjaminsampica.github.io/caisy>.
+Built with Blazor WASM and hosted for free on GitHub Pages at <https://benjaminsampica.github.io/cAIsy>.
 
 # Running Locally
 

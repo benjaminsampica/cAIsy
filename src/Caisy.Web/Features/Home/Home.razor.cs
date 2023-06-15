@@ -41,7 +41,7 @@ public partial class Home
 
         if (_request.IncludeTestCase)
         {
-            requestText = requestText + " Inlcude XUnit Test Case as well.";
+            requestText = requestText + $" Inlcude {_request.TestCaseLang} Test Case as well.";
         }
 
         _conversation.AppendSystemMessage(String.Join(", ", _options));
@@ -66,7 +66,8 @@ public partial class Home
 public class OpenApiRequest
 {
     public string? Prompt { get; set; }
-    public bool IncludeTestCase {get;set;}
+    public bool IncludeTestCase { get; set; }
+    public string? TestCaseLang { get; set; }
 }
 
 public class OpenApiResponse

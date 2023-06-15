@@ -15,7 +15,7 @@
             </MudButton>
         </MudItem>
 
-        <MudContainer Class="chat-container">
+        <div class="chat-container">
             @foreach (var message in _conversation.Messages)
             {
                 if (@message.Role == OpenAI_API.Chat.ChatMessageRole.System) continue;
@@ -24,7 +24,7 @@
                     <p>@message.Content</p>
                 </MudItem>
             }
-        </MudContainer>
+        </div>
     </MudGrid>
 </EditForm>
 

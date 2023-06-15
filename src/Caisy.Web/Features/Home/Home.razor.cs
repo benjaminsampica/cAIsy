@@ -38,7 +38,8 @@ public partial class Home
     {
         _conversation.AppendSystemMessage(String.Join(", ", _options));
 
-        _conversation.AppendUserInput(_request.Prompt);
+        _conversation.AppendUserInput(_request.Prompt); 
+        _isInProgress = true;
 
         await _conversation.GetResponseFromChatbotAsync();
 

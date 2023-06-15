@@ -7,8 +7,7 @@
     <MudGrid>
         <MudItem xs="12">
             <AdaptiveTextArea @bind-Value="_request.Prompt"/>     
-            <MudProgressLinear Color="Color.Primary" Striped=true />
-
+            <MudProgressLinear Color="Color.Primary" Indeterminate="@_isInProgress" Striped=true />
         </MudItem>
         <MudItem xs="12">
             <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Check">

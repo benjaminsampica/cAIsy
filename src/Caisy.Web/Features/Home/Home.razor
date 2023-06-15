@@ -34,7 +34,7 @@ else
                 <AdaptiveTextArea @bind-Value="_request.Prompt" />
             </MudItem>
             <MudItem xs="2">
-                <MudCheckBox Label="Inlcude Test Case" @bind-Checked="_request.IncludeTestCase" For="() => _request.IncludeTestCase" />
+                <MudCheckBox Label="Include Test Case" @bind-Checked="_request.IncludeTestCase" For="() => _request.IncludeTestCase" />
             </MudItem>
             <MudItem xs="4">
                     @if (_request.IncludeTestCase)

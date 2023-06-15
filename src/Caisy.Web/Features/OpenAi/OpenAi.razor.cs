@@ -3,7 +3,7 @@ using OpenAI_API;
 
 namespace Caisy.Web.Features.OpenAi;
 
-public partial class OpenAi
+public partial class OpenAi : IDisposable
 {
     [Inject] public ProfileState ProfileState { get; set; } = null!;
     [Inject] public ISnackbar Snackbar { get; set; } = null!;
@@ -27,6 +27,12 @@ public partial class OpenAi
         {
             Response = result
         };
+    }
+
+    public void Dispose()
+    {
+        _cts.Cancel();
+        _cts.Dispose();
     }
 }
 

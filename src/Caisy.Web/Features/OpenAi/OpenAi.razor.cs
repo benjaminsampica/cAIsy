@@ -30,7 +30,7 @@ public partial class OpenAi
         _conversation = OpenAiApi.Chat.CreateConversation();
 
         //TESTING options. This will ideally come in through the UI (checkboxes?):   
-        _options.Add("Prefer Java");
+        _options.Add("Prefer C#");
         _options.Add("Prefer EF Core");
     }
 
@@ -39,7 +39,15 @@ public partial class OpenAi
         _conversation.AppendSystemMessage(String.Join(", ", _options));
 
         _conversation.AppendUserInput(_request.Prompt);
-        _response.Response = await _conversation.GetResponseFromChatbotAsync();
+
+        await _conversation.GetResponseFromChatbotAsync();
+
+        _response.Response = string.Empty;
+        foreach (var msg in _conversation.Messages)
+        {
+            if (msg.Role == ChatMessageRole.System) continue;
+            _response.Response += $"{Environment.NewLine} {msg.Role}: {msg.Content}";
+        }
     }
 }
 

@@ -22,7 +22,7 @@ else
         <MudItem xs="4">
                 @if (_request.IncludeTestCase)
                 {
-                    <MudSelect Label="Test Case Type" Variant="Variant.Text" @bind-Value="_request.TestCaseLang">
+                    <MudSelect Label="Test Case Type" Variant="Variant.Text" @bind-Value="_request.TestCaseType">
                         <MudSelectItem Value="@("XUnit")" />
                         <MudSelectItem Value="@("MSTest")" />
                     </MudSelect>

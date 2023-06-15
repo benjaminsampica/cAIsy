@@ -12,6 +12,7 @@ public partial class Home
     private OpenApiResponse _response = new();
     private Conversation _conversation;
     private readonly CancellationTokenSource _cts = new();
+    private bool _isInProgress = false;
     private List<string> _options = new();
 
     protected override async Task OnInitializedAsync()
@@ -36,10 +37,18 @@ public partial class Home
 
     private async Task OnValidSubmitAsync()
     {
+        string requestText = _request.Prompt;
+
+            if (_request.IncludeTestCase)
+            {
+                requestText = requestText + " Inlcude Test Case as well.";
+            }
+
         _conversation.AppendSystemMessage(String.Join(", ", _options));
 
-        _conversation.AppendUserInput(_request.Prompt); 
+        _conversation.AppendUserInput(requestText); 
         _isInProgress = true;
+        _request.IncludeTestCase = false;
 
         await _conversation.GetResponseFromChatbotAsync();
 
@@ -55,6 +64,7 @@ public partial class Home
 public class OpenApiRequest
 {
     public string? Prompt { get; set; }
+    public bool IncludeTestCase {get;set;}
 }
 
 public class OpenApiResponse

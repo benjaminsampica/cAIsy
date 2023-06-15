@@ -75,7 +75,9 @@ else
                                             <MudIcon Icon="@icon"></MudIcon>
                                         </ItemDot>
                                         <ItemContent>
-                                            <MudAlert Severity="Severity.Normal" NoIcon=true>@message.Content</MudAlert>
+                                            <MudAlert Severity="Severity.Normal" NoIcon=true>
+                                                <MudMarkdown Value="@message.Content" CodeBlockTheme="CodeBlockTheme.AtomOneDark" />
+                                            </MudAlert>
                                         </ItemContent>
                                     </MudTimelineItem>
                                 }

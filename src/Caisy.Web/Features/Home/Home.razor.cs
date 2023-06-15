@@ -59,11 +59,6 @@ public partial class Home
 
         await _conversation.GetResponseFromChatbotAsync();
 
-        var codeMessages = _conversation.Messages.Where(msg => msg.Role == ChatMessageRole.Assistant)
-                                            .Select(msg => msg.Content)
-                                            .ToList();
-        //_assistantResponse = string.Join(Environment.NewLine, codeMessages);
-
         if (_request.IncludeTestCase)
         {
             await GetTestCaseResult();

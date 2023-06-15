@@ -1,7 +1,10 @@
-﻿using OpenAI_API;
+﻿using Caisy.Web.Features.Profile;
+using OpenAI_API;
 using OpenAI_API.Chat;
 
-namespace Caisy.Web.Features.OpenAi
+namespace Caisy.Web.Features.OpenAi;
+
+public partial class OpenAi : IDisposable
 {
     public partial class OpenAi
     {
@@ -43,14 +46,12 @@ namespace Caisy.Web.Features.OpenAi
         }
     }
 
-    public class OpenApiRequest
-    {
-        public string? Prompt { get; set; }
-    }
+public class OpenApiRequest
+{
+    public string? Prompt { get; set; }
+}
 
-    public class OpenApiResponse
-    {
-        public string? Response { get; set; }
-    }
-
+public class OpenApiResponse
+{
+    public string? Response { get; set; }
 }

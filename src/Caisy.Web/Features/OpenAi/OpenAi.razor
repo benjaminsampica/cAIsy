@@ -5,15 +5,25 @@
 ﻿<EditForm OnValidSubmit="OnValidSubmitAsync" Model="_request">
     <DataAnnotationsValidator />
     <MudGrid>
-        <MudItem xs="12">
-            <MudTextField Label="Chat" @bind-Value="_request.Prompt" For="() => _request.Prompt" />
-        </MudItem>
-        <MudItem xs="12">
-            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Check">
-                Send
-            </MudButton>
-        </MudItem>
-
+        @if(ProfileState.ApiKey != null)
+        {
+            <MudItem xs="12">
+                <MudTextField Label="Chat" @bind-Value="_request.Prompt" For="() => _request.Prompt" />
+            </MudItem>
+            <MudItem xs="12">
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Check">
+                    Send
+                </MudButton>
+            </MudItem>
+        }
+        else
+        {
+            <MudItem xs="12">
+                <MudAlert Icon="@Icons.Material.Outlined.Warning" Severity="Severity.Warning">
+                    You don't have an api key yet. Please visit the <MudLink Href="/profile">profile</MudLink> page.
+                </MudAlert>
+            </MudItem>
+        }
         @if (_response is not null)
         {
             <MudItem xs="12">

@@ -1,43 +1,53 @@
-﻿using Caisy.Web.Features.Profile;
-using OpenAI_API;
+﻿using OpenAI_API;
+using OpenAI_API.Chat;
 
 namespace Caisy.Web.Features.Home;
 
 public partial class Home
 {
-    [Inject] public ProfileState ProfileState { get; set; } = null!;
+    [Inject] public IRepository<UserProfile> ProfileRepository { get; set; } = null!;
     [Inject] public ISnackbar Snackbar { get; set; } = null!;
     private OpenAIAPI OpenAiApi { get; set; }
     private OpenApiRequest _request = new();
-    private OpenApiResponse? _response;
-    private bool _isInProgress = false;
+    private OpenApiResponse _response = new();
+    private Conversation _conversation;
     private readonly CancellationTokenSource _cts = new();
+    private List<string> _options = new();
 
     protected override async Task OnInitializedAsync()
     {
-        if (ProfileState.ApiKey != null)
+        var profile = (await ProfileRepository.GetAllAsync(_cts.Token)).FirstOrDefault();
+
+        if (profile != null)
         {
-            OpenAiApi = new OpenAIAPI(ProfileState.ApiKey);
+            OpenAiApi = new OpenAIAPI(profile.ApiKey);
         }
+        else
+        {
+            Snackbar.Add("No profile found.", Severity.Error);
+        }
+
+        _conversation = OpenAiApi.Chat.CreateConversation();
+
+        //TESTING options. This will ideally come in through the UI (checkboxes?):   
+        _options.Add("Prefer C#");
+        _options.Add("Prefer EF Core");
     }
 
     private async Task OnValidSubmitAsync()
     {
-        _isInProgress = true;
+        _conversation.AppendSystemMessage(String.Join(", ", _options));
 
-        var result = await OpenAiApi.Completions.GetCompletion(_request.Prompt);
-        _response = new OpenApiResponse
+        _conversation.AppendUserInput(_request.Prompt);
+
+        await _conversation.GetResponseFromChatbotAsync();
+
+        _response.Response = string.Empty;
+        foreach (var msg in _conversation.Messages)
         {
-            Response = result
-        };
-
-        _isInProgress = false;
-    }
-
-    public void Dispose()
-    {
-        _cts.Cancel();
-        _cts.Dispose();
+            if (msg.Role == ChatMessageRole.System) continue;
+            _response.Response += $"{Environment.NewLine} {msg.Role}: {msg.Content}";
+        }
     }
 }
 

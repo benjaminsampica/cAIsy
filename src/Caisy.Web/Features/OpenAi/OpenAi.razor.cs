@@ -1,40 +1,50 @@
 ﻿using Caisy.Web.Features.Profile;
 using OpenAI_API;
+using OpenAI_API.Chat;
 
 namespace Caisy.Web.Features.OpenAi;
 
 public partial class OpenAi : IDisposable
 {
-    [Inject] public ProfileState ProfileState { get; set; } = null!;
-    [Inject] public ISnackbar Snackbar { get; set; } = null!;
-    private OpenAIAPI OpenAiApi { get; set; }
-    private OpenApiRequest _request = new();
-    private OpenApiResponse? _response;
-    private readonly CancellationTokenSource _cts = new();
-
-    protected override async Task OnInitializedAsync()
+    public partial class OpenAi
     {
-        if (ProfileState.ApiKey != null)
+        [Inject] public IRepository<UserProfile> ProfileRepository { get; set; } = null!;
+        [Inject] public ISnackbar Snackbar { get; set; } = null!;
+        private OpenAIAPI OpenAiApi { get; set; }
+        private OpenApiRequest _request = new();
+        private OpenApiResponse _response = new();
+        private Conversation _conversation;
+        private readonly CancellationTokenSource _cts = new();
+        private List<string> _options = new();
+
+        protected override async Task OnInitializedAsync()
         {
-            OpenAiApi = new OpenAIAPI(ProfileState.ApiKey);
+            var profile = (await ProfileRepository.GetAllAsync(_cts.Token)).FirstOrDefault();
+
+            if (profile != null) 
+            {
+                OpenAiApi = new OpenAIAPI(profile.ApiKey);
+            }
+            else
+            {
+                Snackbar.Add("No profile found.", Severity.Error);
+            }       
+
+            _conversation = OpenAiApi.Chat.CreateConversation();
+
+            //TESTING options. This will ideally come in through the UI (checkboxes?):   
+            _options.Add("Prefer Java");
+            _options.Add("Prefer EF Core");
+        }
+
+        private async Task OnValidSubmitAsync()
+        {
+            _conversation.AppendSystemMessage(String.Join(", ", _options));
+
+            _conversation.AppendUserInput(_request.Prompt);
+            _response.Response = await _conversation.GetResponseFromChatbotAsync();       
         }
     }
-
-    private async Task OnValidSubmitAsync()
-    {
-        var result = await OpenAiApi.Completions.GetCompletion(_request.Prompt);
-        _response = new OpenApiResponse
-        {
-            Response = result
-        };
-    }
-
-    public void Dispose()
-    {
-        _cts.Cancel();
-        _cts.Dispose();
-    }
-}
 
 public class OpenApiRequest
 {

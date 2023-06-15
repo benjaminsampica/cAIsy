@@ -13,6 +13,7 @@ public partial class Home
     private OpenApiResponse _response = new();
     private Conversation _conversation;
     private bool _isInProgress = false;
+    private bool _anyCode = false;
     private readonly CancellationTokenSource _cts = new();
     private string _source;
     private string _destination;
@@ -67,22 +68,16 @@ public partial class Home
             _response.Response += $"{Environment.NewLine} {msg.Role}: {msg.Content}";
         }
 
-        if (_request.IncludeTestCase)
-        {
-            await GetTestCaseResult();
-        }
-        else
-        {
-            _isInProgress = false;
-        }
+        _isInProgress = false;
+        _anyCode = true;
     }
 
     private async Task GetTestCaseResult()
     {
+        _isInProgress = true;
         _conversation.AppendUserInput($"Get {_request.TestCaseType} test case for above result.");
         await _conversation.GetResponseFromChatbotAsync();
 
-        _request.IncludeTestCase = false;
         _isInProgress = false;
         
         _response.Response = string.Empty;
@@ -97,7 +92,6 @@ public partial class Home
 public class OpenApiRequest
 {
     public string? Prompt { get; set; }
-    public bool IncludeTestCase { get; set; }
     public string? TestCaseType { get; set; }
 }
 

@@ -1,0 +1,19 @@
+﻿<MudTextField Lines="@lines" Value="@Value" ValueChanged="@(EventCallback.Factory.Create<string>(this, OnValueChangedAsync))" DebounceInterval="200">
+
+</MudTextField>
+
+@code {
+    [Parameter] public string Value { get; set; } = null!;
+    [Parameter] public EventCallback<string> ValueChanged { get; set; }
+
+    private int lines = 5;
+
+    private async Task OnValueChangedAsync(string value)
+    {
+        lines = Math.Max(value.Split('\n').Length, value.Split('\r').Length);
+        lines = Math.Max(lines, 5);
+        lines = Math.Min(lines, 100);
+
+        await ValueChanged.InvokeAsync(value);
+    }
+}

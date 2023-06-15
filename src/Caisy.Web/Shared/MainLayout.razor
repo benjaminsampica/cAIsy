@@ -1,16 +1,28 @@
 ﻿@inherits LayoutComponentBase
 
-<main>
-    <article class="content px-4">
-        @Body
-    </article>
-
-    <MudAppBar Elevation=3 Bottom=true Class="d-flex align-center">
-        <MudText Typo="Typo.h6">
-            Built During <MudIconButton Icon="@Icons.Material.Outlined.LocalPizza" Href="https://github.com/benjaminsampica" Color="Color.Tertiary" Size="Size.Large"></MudIconButton> Casey's DevJam!
-        </MudText>
+<MudLayout>
+    <MudAppBar Color="Color.Primary">
+        <MudIconButton Icon="@Icons.Material.Outlined.Menu" OnClick="DrawerToggle" />
+        <MudText Typo="Typo.h6">cAIsy</MudText>
     </MudAppBar>
-</main>
+    <MudDrawer @bind-Open="@_drawerOpen" Variant="@DrawerVariant.Temporary">
+        <MudNavMenu>
+            <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.TableRows">Somethingsomething</MudNavLink>
+            <MudNavLink Href="/Profile" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.Settings">Somethingsomething</MudNavLink>
+        </MudNavMenu>
+    </MudDrawer>
+    <MudMainContent>
+        <ChildContent>
+            <MudMainContent Class="pt-2">
+                <MudContainer MaxWidth="MaxWidth.ExtraLarge">
+                    <MudPaper Class="pa-4">
+                        @Body
+                    </MudPaper>
+                </MudContainer>
+            </MudMainContent>
+        </ChildContent>
+    </MudMainContent>
+</MudLayout>
 
 <MudThemeProvider @ref=_mudThemeProvider IsDarkMode=_isDarkMode />
 <MudSnackbarProvider/>
@@ -18,6 +30,7 @@
 @code {
     private MudThemeProvider? _mudThemeProvider;
     private bool _isDarkMode;
+    private bool _drawerOpen;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -26,5 +39,10 @@
             _isDarkMode = await _mudThemeProvider!.GetSystemPreference();
             StateHasChanged();
         }
+    }
+
+    private void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
     }
 }

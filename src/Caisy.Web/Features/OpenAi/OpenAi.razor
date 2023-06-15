@@ -1,34 +1,24 @@
-﻿@page "/"
+﻿@page "/openai"
 
-<h1>Home</h1>
+<h1>Testing chat call</h1>
 
 ﻿<EditForm OnValidSubmit="OnValidSubmitAsync" Model="_request">
     <DataAnnotationsValidator />
     <MudGrid>
-        @if(ProfileState.ApiKey != null)
-        {
-            <MudItem xs="12">
-                <MudTextField Label="Chat" @bind-Value="_request.Prompt" For="() => _request.Prompt" />
-            </MudItem>
-            <MudItem xs="12">
-                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Check">
-                    Send
-                </MudButton>
-            </MudItem>
-        }
-        else
-        {
-            <MudItem xs="12">
-                <MudAlert Icon="@Icons.Material.Outlined.Warning" Severity="Severity.Warning">
-                    You don't have an api key yet. Please visit the <MudLink Href="/profile">profile</MudLink> page.
-                </MudAlert>
-            </MudItem>
-        }
+        <MudItem xs="12">
+            <MudTextField Label="Chat" @bind-Value="_request.Prompt" For="() => _request.Prompt" />
+        </MudItem>
+        <MudItem xs="12">
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Check">
+                Send
+            </MudButton>
+        </MudItem>
+
         @if (_response is not null)
         {
             <MudItem xs="12">
-                <MudTextField ReadOnly=true Label="Response" @bind-Value="_response.Response"/>
-            </MudItem>      
+                <MudTextField Label="Response" @bind-Value="_response.Response" />
+            </MudItem>
         }
     </MudGrid>
 </EditForm>

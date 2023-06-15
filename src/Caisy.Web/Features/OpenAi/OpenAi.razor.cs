@@ -1,50 +1,47 @@
-﻿using Caisy.Web.Features.Profile;
-using OpenAI_API;
+﻿using OpenAI_API;
 using OpenAI_API.Chat;
 
 namespace Caisy.Web.Features.OpenAi;
 
-public partial class OpenAi : IDisposable
+public partial class OpenAi
 {
-    public partial class OpenAi
+    [Inject] public IRepository<UserProfile> ProfileRepository { get; set; } = null!;
+    [Inject] public ISnackbar Snackbar { get; set; } = null!;
+    private OpenAIAPI OpenAiApi { get; set; }
+    private OpenApiRequest _request = new();
+    private OpenApiResponse _response = new();
+    private Conversation _conversation;
+    private readonly CancellationTokenSource _cts = new();
+    private List<string> _options = new();
+
+    protected override async Task OnInitializedAsync()
     {
-        [Inject] public IRepository<UserProfile> ProfileRepository { get; set; } = null!;
-        [Inject] public ISnackbar Snackbar { get; set; } = null!;
-        private OpenAIAPI OpenAiApi { get; set; }
-        private OpenApiRequest _request = new();
-        private OpenApiResponse _response = new();
-        private Conversation _conversation;
-        private readonly CancellationTokenSource _cts = new();
-        private List<string> _options = new();
+        var profile = (await ProfileRepository.GetAllAsync(_cts.Token)).FirstOrDefault();
 
-        protected override async Task OnInitializedAsync()
+        if (profile != null)
         {
-            var profile = (await ProfileRepository.GetAllAsync(_cts.Token)).FirstOrDefault();
-
-            if (profile != null) 
-            {
-                OpenAiApi = new OpenAIAPI(profile.ApiKey);
-            }
-            else
-            {
-                Snackbar.Add("No profile found.", Severity.Error);
-            }       
-
-            _conversation = OpenAiApi.Chat.CreateConversation();
-
-            //TESTING options. This will ideally come in through the UI (checkboxes?):   
-            _options.Add("Prefer Java");
-            _options.Add("Prefer EF Core");
+            OpenAiApi = new OpenAIAPI(profile.ApiKey);
+        }
+        else
+        {
+            Snackbar.Add("No profile found.", Severity.Error);
         }
 
-        private async Task OnValidSubmitAsync()
-        {
-            _conversation.AppendSystemMessage(String.Join(", ", _options));
+        _conversation = OpenAiApi.Chat.CreateConversation();
 
-            _conversation.AppendUserInput(_request.Prompt);
-            _response.Response = await _conversation.GetResponseFromChatbotAsync();       
-        }
+        //TESTING options. This will ideally come in through the UI (checkboxes?):   
+        _options.Add("Prefer Java");
+        _options.Add("Prefer EF Core");
     }
+
+    private async Task OnValidSubmitAsync()
+    {
+        _conversation.AppendSystemMessage(String.Join(", ", _options));
+
+        _conversation.AppendUserInput(_request.Prompt);
+        _response.Response = await _conversation.GetResponseFromChatbotAsync();
+    }
+}
 
 public class OpenApiRequest
 {

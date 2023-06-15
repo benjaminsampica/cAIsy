@@ -38,7 +38,9 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Publish
-      run: dotnet publish -c Release -o 'drop'
+      run: dotnet publish -c Release -o drop
+    - name: Change base-tag in index.html from / to cAIsy
+      run: sed -i 's/<base href="\/" \/>/<base href="\/cAIsy\/" \/>/g' drop/wwwroot/index.html
     - name: Setup Pages
       uses: actions/configure-pages@v3.0.6
     - name: Upload artifact

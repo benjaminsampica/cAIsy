@@ -7,8 +7,9 @@
     </MudAppBar>
     <MudDrawer @bind-Open="@_drawerOpen" Variant="@DrawerVariant.Temporary">
         <MudNavMenu>
-            <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.TableRows">Somethingsomething</MudNavLink>
-            <MudNavLink Href="/Profile" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.Settings">Settings</MudNavLink>
+            <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Home">Home</MudNavLink>
+            <MudNavLink Href="/Profile" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.PeopleAlt">Profile</MudNavLink>
+            <MudNavLink Href="/ChatHistory" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.ChatBubbleOutline">Chat History</MudNavLink>
         </MudNavMenu>
     </MudDrawer>
     <MudMainContent>

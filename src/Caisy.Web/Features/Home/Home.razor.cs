@@ -29,6 +29,7 @@ public partial class Home
         }
 
         _conversation = OpenAiApi.Chat.CreateConversation();
+        _conversation.AppendSystemMessage($"Convert {_source} to {_destination}");
     }
 
     private async Task OnSourceChangedAsync(string value)

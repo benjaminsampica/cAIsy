@@ -6,7 +6,7 @@
     <DataAnnotationsValidator />
     <MudGrid>
         <MudItem xs="12">
-            <AdaptiveTextArea @bind-Value="_request.Prompt"/>     
+            <AdaptiveTextArea @bind-Value="_request.Prompt" />
             <MudProgressLinear Color="Color.Primary" Indeterminate="@_isInProgress" Striped=true />
         </MudItem>
         <MudItem xs="12">
@@ -16,13 +16,14 @@
         </MudItem>
 
         <MudContainer Class="chat-container">
-        @foreach(var message in _conversation.Messages){
-            if (@message.Role == OpenAI_API.Chat.ChatMessageRole.System) continue;
-            <MudItem xs="12">
-                <h3>@message.Role</h3>
-                <p>@message.Content</p>
-            </MudItem>
-        }
+            @foreach (var message in _conversation.Messages)
+            {
+                if (@message.Role == OpenAI_API.Chat.ChatMessageRole.System) continue;
+                <MudItem xs="12">
+                    <h3>@message.Role</h3>
+                    <p>@message.Content</p>
+                </MudItem>
+            }
         </MudContainer>
     </MudGrid>
 </EditForm>

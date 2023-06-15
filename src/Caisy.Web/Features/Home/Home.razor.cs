@@ -11,6 +11,8 @@ public partial class Home
     private OpenApiRequest _request = new();
     private OpenApiResponse _response = new();
     private Conversation _conversation;
+    private bool _isInProgress = false;
+
     private readonly CancellationTokenSource _cts = new();
     private List<string> _options = new();
 
@@ -36,10 +38,11 @@ public partial class Home
 
     private async Task OnValidSubmitAsync()
     {
+        _isInProgress = true;
+
         _conversation.AppendSystemMessage(String.Join(", ", _options));
 
         _conversation.AppendUserInput(_request.Prompt); 
-        _isInProgress = true;
 
         await _conversation.GetResponseFromChatbotAsync();
 
@@ -49,6 +52,8 @@ public partial class Home
             if (msg.Role == ChatMessageRole.System) continue;
             _response.Response += $"{Environment.NewLine} {msg.Role}: {msg.Content}";
         }
+
+        _isInProgress = false;
     }
 }
 

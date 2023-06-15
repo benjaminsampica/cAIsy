@@ -14,8 +14,8 @@ public partial class Home
     private bool _isInProgress = false;
     private bool _anyCode = false;
     private readonly CancellationTokenSource _cts = new();
-    private string _source;
-    private string _destination;
+    private string _source = "SQL";
+    private string _destination = "Entity Framework";
 
     protected override async Task OnInitializedAsync()
     {

@@ -1,7 +1,7 @@
 ﻿@page "/"
 
 <div style="display: flex; align-items: center;">
-    <h1 style="margin-right: auto;">Home</h1>
+    <h1 style="margin-right: auto;">Code Converter</h1>
     <div id="new-chat-button">
         <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">
             + New Chat
@@ -46,7 +46,6 @@ else
                 <MudButton Disabled="@_isInProgress" ButtonType="ButtonType.Submit" OnClick="OnValidSubmitAsync" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Check">
                     Get Code
                 </MudButton>
-
                 <MudButton Disabled="@(_isInProgress || !_anyCode || (_destination == "SQL"))" ButtonType="ButtonType.Submit" OnClick="GetTestCaseResult" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Check">
                     Get Test Case
                 </MudButton>
@@ -68,11 +67,19 @@ else
                                     if (message.Role == OpenAI_API.Chat.ChatMessageRole.System) continue;
                                     var isUserMessage = message.Role == OpenAI_API.Chat.ChatMessageRole.User;
                                     var color = isUserMessage ? Color.Dark : Color.Primary;
-                                    var icon = isUserMessage ? Icons.Material.Outlined.SupervisedUserCircle : Icons.Material.Outlined.Computer;
+                                    var icon = isUserMessage ? Icons.Material.Outlined.Person : Icons.Material.Outlined.Computer;
 
                                     <MudTimelineItem Color="color" Size="Size.Large" Elevation="0">
                                         <ItemDot>
+                                            @if(isUserMessage)
+                                        {
                                             <MudIcon Icon="@icon"></MudIcon>
+                                        }
+                                        else
+                                        {
+                                            <MudImage Src="caisy.png" Height="30" />
+                                        }
+
                                         </ItemDot>
                                         <ItemContent>
                                             <MudAlert Severity="Severity.Normal" NoIcon=true>

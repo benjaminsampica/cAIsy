@@ -21,18 +21,19 @@ else
     <EditForm Model="_request">
         <DataAnnotationsValidator />
         <MudGrid>
-            <MudSelect Value=_source Label="Source" ValueChanged="@(EventCallback.Factory.Create<string>(this, OnSourceChangedAsync))">
-                <MudSelectItem Value="@("SQL")">SQL</MudSelectItem>
-                <MudSelectItem Value="@("Entity Framework")">Entity Framework</MudSelectItem>
-            </MudSelect>
-            <MudIcon Icon="@Icons.Material.Outlined.ArrowForward"></MudIcon>
-            <MudSelect Value=_destination Label="Destination" ValueChanged="@(EventCallback.Factory.Create<string>(this, OnDestinationChangedAsync))">
-                <MudSelectItem Value=@("SQL")>SQL</MudSelectItem>
-                <MudSelectItem Value=@("Entity Framework")>Entity Framework</MudSelectItem>
-            </MudSelect>
+            <MudItem xs="12" Class="d-flex align-end">
+                <MudSelect Value=_source Label="Source" ValueChanged="@(EventCallback.Factory.Create<string>(this, OnSourceChangedAsync))">
+                    <MudSelectItem Value="@("SQL")">SQL</MudSelectItem>
+                    <MudSelectItem Value="@("Entity Framework")">Entity Framework</MudSelectItem>
+                </MudSelect>
+                <MudIcon Icon="@Icons.Material.Outlined.ArrowForward" Class="mx-3"></MudIcon>
+                <MudSelect Value=_destination Label="Destination" ValueChanged="@(EventCallback.Factory.Create<string>(this, OnDestinationChangedAsync))" Placeholder="Enter your code...">
+                    <MudSelectItem Value=@("SQL")>SQL</MudSelectItem>
+                    <MudSelectItem Value=@("Entity Framework")>Entity Framework</MudSelectItem>
+                </MudSelect>
+            </MudItem>
             <MudItem xs="12">
                 <AdaptiveTextArea @bind-Value="_request.Prompt" />
-                <MudProgressLinear Color="Color.Primary" Indeterminate="@_isInProgress" Striped=true />
             </MudItem>
         <MudItem xs="4">
                 <MudSelect Label="Test Case Type" Variant="Variant.Text" @bind-Value="_request.TestCaseType">
@@ -40,7 +41,7 @@ else
                     <MudSelectItem Value="@("MSTest")" />
                 </MudSelect>
 
-        </MudItem>
+            </MudItem>
             <MudItem xs="12">
                 <MudButton Disabled="@_isInProgress" ButtonType="ButtonType.Submit" OnClick="OnValidSubmitAsync" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Check">
                     Get Code
@@ -50,17 +51,41 @@ else
                     Get Test Case
                 </MudButton>
             </MudItem>
-
-            <div class="chat-container">
-                @foreach (var message in _conversation.Messages)
+            <MudItem xs="12">
+                @if (_isInProgress)
                 {
-                    if (@message.Role == OpenAI_API.Chat.ChatMessageRole.System) continue;
-                    <MudItem xs="12" Variant="Variant.Outlined">
-                        <h3>@message.Role</h3>
-                        <p>@message.Content</p>
-                    </MudItem>
+                    <MudProgressLinear Color="Color.Primary" Indeterminate="@_isInProgress" Striped=true />
                 }
-            </div>
+            </MudItem>
+            @if (_conversation.Messages.Count > 1)
+            {
+                <MudItem xs="12">
+                    <div class="chat-container">
+
+                            <MudTimeline TimelinePosition="TimelinePosition.Start">
+                                @foreach (var message in _conversation.Messages)
+                                {
+                                    if (message.Role == OpenAI_API.Chat.ChatMessageRole.System) continue;
+                                    var isUserMessage = message.Role == OpenAI_API.Chat.ChatMessageRole.User;
+                                    var color = isUserMessage ? Color.Dark : Color.Primary;
+                                    var icon = isUserMessage ? Icons.Material.Outlined.SupervisedUserCircle : Icons.Material.Outlined.Computer;
+
+                                    <MudTimelineItem Color="color" Size="Size.Large" Elevation="0">
+                                        <ItemDot>
+                                            <MudIcon Icon="@icon"></MudIcon>
+                                        </ItemDot>
+                                        <ItemContent>
+                                            <MudAlert Severity="Severity.Normal" NoIcon=true>
+                                                <MudMarkdown Value="@message.Content" CodeBlockTheme="CodeBlockTheme.AtomOneDark" />
+                                            </MudAlert>
+                                        </ItemContent>
+                                    </MudTimelineItem>
+                                }
+                            </MudTimeline>
+                    </div>
+                </MudItem>
+            }
+                
         </MudGrid>
     </EditForm>
 }

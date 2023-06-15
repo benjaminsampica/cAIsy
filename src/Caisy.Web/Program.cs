@@ -9,6 +9,7 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddMudServices();
+builder.Services.AddMudMarkdownServices();
 builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));

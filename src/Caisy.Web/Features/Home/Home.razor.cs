@@ -10,7 +10,6 @@ public partial class Home
     [Inject] public ISnackbar Snackbar { get; set; } = null!;
     private OpenAIAPI OpenAiApi { get; set; }
     private OpenApiRequest _request = new();
-    private OpenApiResponse _response = new();
     private Conversation _conversation;
     private bool _isInProgress = false;
     private bool _anyCode = false;
@@ -61,13 +60,6 @@ public partial class Home
 
         await _conversation.GetResponseFromChatbotAsync();
 
-        _response.Response = string.Empty;
-        foreach (var msg in _conversation.Messages)
-        {
-            if (msg.Role == ChatMessageRole.System) continue;
-            _response.Response += $"{Environment.NewLine} {msg.Role}: {msg.Content}";
-        }
-
         _isInProgress = false;
         _anyCode = true;
     }
@@ -79,13 +71,6 @@ public partial class Home
         await _conversation.GetResponseFromChatbotAsync();
 
         _isInProgress = false;
-        
-        _response.Response = string.Empty;
-        foreach (var msg in _conversation.Messages)
-        {
-            if (msg.Role == ChatMessageRole.System) continue;
-            _response.Response += $"{Environment.NewLine} {msg.Role}: {msg.Content}";
-        }
     }
 }
 

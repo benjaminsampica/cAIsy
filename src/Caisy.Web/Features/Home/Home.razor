@@ -15,7 +15,6 @@ else
     <MudGrid>
         <MudItem xs="12">
             <AdaptiveTextArea @bind-Value="_request.Prompt" />
-            <MudProgressLinear Color="Color.Primary" Indeterminate="@_isInProgress" Striped=true />
         </MudItem>
         <MudItem xs="12">
             <MudCheckBox Label="Inlcude Test Case" @bind-Checked="_request.IncludeTestCase" For="() => _request.IncludeTestCase" />
@@ -26,16 +25,24 @@ else
             </MudButton>
         </MudItem>
 
-        <MudContainer Class="chat-container">
-            @foreach (var message in _conversation.Messages)
-            {
-                if (@message.Role == OpenAI_API.Chat.ChatMessageRole.System) continue;
-                <MudItem xs="12">
-                    <h3>@message.Role</h3>
-                    <p>@message.Content</p>
-                </MudItem>
-            }
-        </MudContainer>
+        <MudItem xs="12">
+                <div class="chat-container">
+                    @foreach (var message in _conversation.Messages)
+                    {
+                        if (@message.Role == OpenAI_API.Chat.ChatMessageRole.System) continue;
+                        <MudItem xs="12">
+                            <h3>@message.Role</h3>
+                            <p>@message.Content</p>
+                        </MudItem>
+                    }
+
+                    @if (_isInProgress)
+                    {
+                        <MudProgressLinear Color="Color.Primary" Indeterminate="@_isInProgress" Striped=true />
+                    }
+                </div>
+        </MudItem>
+        
     </MudGrid>
 </EditForm>
 }

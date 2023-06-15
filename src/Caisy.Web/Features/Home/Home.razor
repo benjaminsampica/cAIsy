@@ -1,8 +1,15 @@
 ﻿@page "/"
 
-<h1>Home</h1>
+<div style="display: flex; align-items: center;">
+    <h1 style="margin-right: auto;">Home</h1>
+    <div id="new-chat-button">
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">
+            + New Chat
+        </MudButton>
+    </div>
+</div>
 
-@if(ProfileState.Id is null)
+@if (ProfileState.Id is null)
 {
     <MudAlert Severity=Severity.Warning Icon="@Icons.Material.Outlined.Warning">
         An api key has not been set. Please go to your <MudLink Href="/profile">profile</MudLink> and add an API key.
@@ -10,29 +17,39 @@
 }
 else
 {
-    ﻿<EditForm OnValidSubmit="OnValidSubmitAsync" Model="_request">
-    <DataAnnotationsValidator />
-    <MudGrid>
-        <MudItem xs="12">
-            <AdaptiveTextArea @bind-Value="_request.Prompt" />
-            <MudProgressLinear Color="Color.Primary" Indeterminate="@_isInProgress" Striped=true />
-        </MudItem>
-        <MudItem xs="12">
-            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Check">
-                Send
-            </MudButton>
-        </MudItem>
+    ﻿
+    <EditForm OnValidSubmit="OnValidSubmitAsync" Model="_request">
+        <DataAnnotationsValidator />
+        <MudGrid>
+            <MudSelect Value=_source Label="Source" ValueChanged="@(EventCallback.Factory.Create<string>(this, OnSourceChangedAsync))">
+                <MudSelectItem Value="@("SQL")">SQL</MudSelectItem>
+                <MudSelectItem Value="@("Entity Framework")">Entity Framework</MudSelectItem>
+            </MudSelect>
+            <MudIcon Icon="@Icons.Material.Outlined.ArrowForward"></MudIcon>
+            <MudSelect Value=_destination Label="Destination" ValueChanged="@(EventCallback.Factory.Create<string>(this, OnDestinationChangedAsync))">
+                <MudSelectItem Value=@("SQL")>SQL</MudSelectItem>
+                <MudSelectItem Value=@("Entity Framework")>Entity Framework</MudSelectItem>
+            </MudSelect>
+            <MudItem xs="12">
+                <AdaptiveTextArea @bind-Value="_request.Prompt" />
+                <MudProgressLinear Color="Color.Primary" Indeterminate="@_isInProgress" Striped=true />
+            </MudItem>
+            <MudItem xs="12">
+                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Check">
+                    Send
+                </MudButton>
+            </MudItem>
 
-        <div class="chat-container">
-            @foreach (var message in _conversation.Messages)
-            {
-                if (@message.Role == OpenAI_API.Chat.ChatMessageRole.System) continue;
-                <MudItem xs="12">
-                    <h3>@message.Role</h3>
-                    <p>@message.Content</p>
-                </MudItem>
-            }
-        </div>
-    </MudGrid>
-</EditForm>
+            <div class="chat-container">
+                @foreach (var message in _conversation.Messages)
+                {
+                    if (@message.Role == OpenAI_API.Chat.ChatMessageRole.System) continue;
+                    <MudItem xs="12" Variant="Variant.Outlined">
+                        <h3>@message.Role</h3>
+                        <p>@message.Content</p>
+                    </MudItem>
+                }
+            </div>
+        </MudGrid>
+    </EditForm>
 }

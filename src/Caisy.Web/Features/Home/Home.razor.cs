@@ -13,9 +13,9 @@ public partial class Home
     private OpenApiResponse _response = new();
     private Conversation _conversation;
     private bool _isInProgress = false;
-
     private readonly CancellationTokenSource _cts = new();
-    private List<string> _options = new();
+    private string _source;
+    private string _destination;
 
     protected override async Task OnInitializedAsync()
     {
@@ -29,17 +29,32 @@ public partial class Home
         }
 
         _conversation = OpenAiApi.Chat.CreateConversation();
+    }
 
-        //TESTING options. This will ideally come in through the UI (checkboxes?):   
-        _options.Add("Prefer C#");
-        _options.Add("Prefer EF Core");
+    private async Task OnSourceChangedAsync(string value)
+    {
+        if (_source == value) return;
+        _source = value;
+        _conversation = OpenAiApi.Chat.CreateConversation();
+        _conversation.AppendSystemMessage($"Convert {_source} to {_destination}");
+    }
+    private async Task OnDestinationChangedAsync(string value)
+    {
+        if (_destination == value) return;
+        _destination = value;
+        _conversation = OpenAiApi.Chat.CreateConversation();
+        _conversation.AppendSystemMessage($"Convert {_source} to {_destination}");
     }
 
     private async Task OnValidSubmitAsync()
     {
-        _isInProgress = true;
+        if (ProfileState.ApiKey == null)
+        {
+            Snackbar.Add("No ApiKey found.  Please set up your Profile first.", Severity.Error);
+            return;
+        }
 
-        _conversation.AppendSystemMessage(String.Join(", ", _options));
+        _isInProgress = true;
 
         _conversation.AppendUserInput(_request.Prompt);
 

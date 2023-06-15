@@ -17,19 +17,20 @@
 }
 else
 {
-    ﻿
     <EditForm OnValidSubmit="OnValidSubmitAsync" Model="_request">
         <DataAnnotationsValidator />
         <MudGrid>
-            <MudSelect Value=_source Label="Source" ValueChanged="@(EventCallback.Factory.Create<string>(this, OnSourceChangedAsync))">
-                <MudSelectItem Value="@("SQL")">SQL</MudSelectItem>
-                <MudSelectItem Value="@("Entity Framework")">Entity Framework</MudSelectItem>
-            </MudSelect>
-            <MudIcon Icon="@Icons.Material.Outlined.ArrowForward"></MudIcon>
-            <MudSelect Value=_destination Label="Destination" ValueChanged="@(EventCallback.Factory.Create<string>(this, OnDestinationChangedAsync))">
-                <MudSelectItem Value=@("SQL")>SQL</MudSelectItem>
-                <MudSelectItem Value=@("Entity Framework")>Entity Framework</MudSelectItem>
-            </MudSelect>
+            <MudItem xs="12" Class="d-flex align-end">
+                <MudSelect Value=_source Label="Source" ValueChanged="@(EventCallback.Factory.Create<string>(this, OnSourceChangedAsync))">
+                    <MudSelectItem Value="@("SQL")">SQL</MudSelectItem>
+                    <MudSelectItem Value="@("Entity Framework")">Entity Framework</MudSelectItem>
+                </MudSelect>
+                <MudIcon Icon="@Icons.Material.Outlined.ArrowForward" Class="mx-3"></MudIcon>
+                <MudSelect Value=_destination Label="Destination" ValueChanged="@(EventCallback.Factory.Create<string>(this, OnDestinationChangedAsync))" Placeholder="Enter your code...">
+                    <MudSelectItem Value=@("SQL")>SQL</MudSelectItem>
+                    <MudSelectItem Value=@("Entity Framework")>Entity Framework</MudSelectItem>
+                </MudSelect>
+            </MudItem>
             <MudItem xs="12">
                 <AdaptiveTextArea @bind-Value="_request.Prompt" />
             </MudItem>

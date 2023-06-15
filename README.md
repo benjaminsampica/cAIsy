@@ -8,4 +8,4 @@ You must have:
 
 - .NET 7 SDK
 - WASM tools (can be installed via `dotnet workload install wasm-tools`)
-- Under index.html set <base href="/Caisy/" /> to <base href="/" />
+- Under index.html set <base href="/cAIsy/" /> to <base href="/" />

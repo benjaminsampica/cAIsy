@@ -21,7 +21,7 @@ else
             <MudCheckBox Label="Inlcude Test Case" @bind-Checked="_request.IncludeTestCase" For="() => _request.IncludeTestCase" />
         </MudItem>
         <MudItem xs="12">
-            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Check">
+                <MudButton Disabled="@_isInProgress" ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Check">
                 Send
             </MudButton>
         </MudItem>

@@ -48,7 +48,6 @@ public partial class Home
 
         _conversation.AppendUserInput(requestText); 
         _isInProgress = true;
-        _request.IncludeTestCase = false;
 
         await _conversation.GetResponseFromChatbotAsync();
 
@@ -60,6 +59,7 @@ public partial class Home
         }
 
         _isInProgress = false;
+        _request.IncludeTestCase = false;
     }
 }
 

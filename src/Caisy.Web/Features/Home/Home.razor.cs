@@ -23,6 +23,13 @@ public partial class Home
 
     private async Task OnValidSubmitAsync()
     {
+        if (ProfileState.ApiKey == null)
+        {
+            //TODO:  snackbar or validation message?
+            Snackbar.Add("No ApiKey found.  Please set up your Profile first.", Severity.Error);
+            return;
+        }
+
         _isInProgress = true;
 
         var result = await OpenAiApi.Completions.GetCompletion(_request.Prompt);

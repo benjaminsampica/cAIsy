@@ -1,4 +1,8 @@
-﻿namespace Caisy.Web.Features.Home;
+﻿using Caisy.Web.Features.Profile;
+using OpenAI_API;
+using OpenAI_API.Chat;
+
+namespace Caisy.Web.Features.Home;
 
 public partial class Home
 {

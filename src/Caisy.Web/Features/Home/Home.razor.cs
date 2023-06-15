@@ -39,10 +39,10 @@ public partial class Home
     {
         string requestText = _request.Prompt;
 
-            if (_request.IncludeTestCase)
-            //{
-                requestText = requestText + " Inlcude XUnit Test Case as well.";
-            }
+        if (_request.IncludeTestCase)
+        {
+            requestText = requestText + " Inlcude XUnit Test Case as well.";
+        }
 
         _conversation.AppendSystemMessage(String.Join(", ", _options));
 

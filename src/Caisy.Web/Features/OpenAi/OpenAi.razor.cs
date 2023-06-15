@@ -1,6 +1,4 @@
-﻿using Caisy.Web.Features.Profile;
-using OpenAI_API;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+﻿using OpenAI_API;
 
 namespace Caisy.Web.Features.OpenAi
 {
@@ -29,7 +27,7 @@ namespace Caisy.Web.Features.OpenAi
         private async Task OnValidSubmitAsync()
         {
             var result = await OpenAiApi.Completions.GetCompletion(_request.Prompt);
-            var _response = new OpenApiResponse()
+            _response = new OpenApiResponse()
             {
                 Response = result
             };

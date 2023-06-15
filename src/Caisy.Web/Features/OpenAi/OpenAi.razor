@@ -1,6 +1,6 @@
 ﻿@page "/"
 
-<h1>Testing chat call</h1>
+<h1>Home</h1>
 
 ﻿<EditForm OnValidSubmit="OnValidSubmitAsync" Model="_request">
     <DataAnnotationsValidator />
@@ -17,7 +17,7 @@
         @if (_response is not null)
         {
             <MudItem xs="12">
-                <MudTextField Label="Response" @bind-Value="_response.Response"/>
+                <MudTextField ReadOnly=true Label="Response" @bind-Value="_response.Response"/>
             </MudItem>      
         }
     </MudGrid>

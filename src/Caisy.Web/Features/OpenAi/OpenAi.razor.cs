@@ -29,7 +29,7 @@ namespace Caisy.Web.Features.OpenAi
         private async Task OnValidSubmitAsync()
         {
             var result = await OpenAiApi.Completions.GetCompletion(_request.Prompt);
-            _response = new OpenApiResponse()
+            var _response = new OpenApiResponse()
             {
                 Response = result
             };

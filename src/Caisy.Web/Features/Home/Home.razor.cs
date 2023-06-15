@@ -1,27 +1,27 @@
-﻿using OpenAI_API;
+﻿using Caisy.Web.Features.Profile;
+using OpenAI_API;
 using OpenAI_API.Chat;
 
 namespace Caisy.Web.Features.Home;
 
 public partial class Home
 {
-    [Inject] public IRepository<UserProfile> ProfileRepository { get; set; } = null!;
+    [Inject] public ProfileState ProfileState { get; set; } = null!;
     [Inject] public ISnackbar Snackbar { get; set; } = null!;
     private OpenAIAPI OpenAiApi { get; set; }
     private OpenApiRequest _request = new();
     private OpenApiResponse _response = new();
     private Conversation _conversation;
-    private readonly CancellationTokenSource _cts = new();
     private bool _isInProgress = false;
+
+    private readonly CancellationTokenSource _cts = new();
     private List<string> _options = new();
 
     protected override async Task OnInitializedAsync()
     {
-        var profile = (await ProfileRepository.GetAllAsync(_cts.Token)).FirstOrDefault();
-
-        if (profile != null)
+        if (ProfileState.ApiKey != null)
         {
-            OpenAiApi = new OpenAIAPI(profile.ApiKey);
+            OpenAiApi = new OpenAIAPI(ProfileState.ApiKey);
         }
         else
         {
@@ -40,8 +40,8 @@ public partial class Home
         string requestText = _request.Prompt;
 
             if (_request.IncludeTestCase)
-            {
-                requestText = requestText + " Inlcude Test Case as well.";
+            //{
+                requestText = requestText + " Inlcude XUnit Test Case as well.";
             }
 
         _conversation.AppendSystemMessage(String.Join(", ", _options));
@@ -58,6 +58,8 @@ public partial class Home
             if (msg.Role == ChatMessageRole.System) continue;
             _response.Response += $"{Environment.NewLine} {msg.Role}: {msg.Content}";
         }
+
+        _isInProgress = false;
     }
 }
 

@@ -18,17 +18,16 @@ public partial class Profile : IDisposable
 
     private async Task OnValidSubmitAsync()
     {
-        var existingUserProfile = await ProfileRepository.FindAsync(_model.ApiKey, _cts.Token);
-
-        if (existingUserProfile != null)
+        if (ProfileState.Id != null)
         {
-            await ProfileRepository.RemoveAsync(existingUserProfile.Id, _cts.Token);
+            await ProfileRepository.RemoveAsync(ProfileState.Id, _cts.Token);
         }
 
         var newUserProfile = new UserProfile { ApiKey = _model.ApiKey };
         await ProfileRepository.AddAsync(newUserProfile, _cts.Token);
 
         ProfileState.ApiKey = newUserProfile.ApiKey;
+        ProfileState.Id = newUserProfile.Id;
 
         Snackbar.Add("Successfully updated profile.", Severity.Success);
     }
@@ -48,4 +47,5 @@ public class ProfileRequest
 public class ProfileState
 {
     public string? ApiKey { get; set; }
+    public string? Id { get; set; }
 }

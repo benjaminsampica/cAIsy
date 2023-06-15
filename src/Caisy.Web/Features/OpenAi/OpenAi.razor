@@ -22,15 +22,3 @@
         }
     </MudGrid>
 </EditForm>
-
-@code {
-    private string text = string.Empty;
-
-    private void UpdateTextAreaHeight(ChangeEventArgs e)
-    {
-        var textarea = (ElementReference)e.Source;
-        textarea.Style.Height = "auto";
-        textarea.Style.Height = $"{textarea.ScrollHeight}px";
-        text = e.Value.ToString();
-    }
-}

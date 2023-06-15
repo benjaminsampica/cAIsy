@@ -48,12 +48,6 @@ public partial class Home
 
     private async Task OnValidSubmitAsync()
     {
-        if (ProfileState.ApiKey == null)
-        {
-            Snackbar.Add("No ApiKey found.  Please set up your Profile first.", Severity.Error);
-            return;
-        }
-
         _isInProgress = true;
 
         _conversation.AppendUserInput(_request.Prompt);

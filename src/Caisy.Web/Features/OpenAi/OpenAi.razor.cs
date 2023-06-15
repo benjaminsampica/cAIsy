@@ -12,6 +12,7 @@ namespace Caisy.Web.Features.OpenAi
         private OpenApiResponse _response = new();
         private Conversation _conversation;
         private readonly CancellationTokenSource _cts = new();
+        private List<string> _options = new();
 
         protected override async Task OnInitializedAsync()
         {
@@ -27,14 +28,15 @@ namespace Caisy.Web.Features.OpenAi
             }       
 
             _conversation = OpenAiApi.Chat.CreateConversation();
+
+            //TESTING options. This will ideally come in through the UI (checkboxes?):   
+            _options.Add("Prefer Java");
+            _options.Add("Prefer EF Core");
         }
 
         private async Task OnValidSubmitAsync()
         {
-
-            /// give instruction as System
-            /// This is probably where we will massage the prompt
-            //chat.AppendSystemMessage("You are a teacher who helps children understand if things are animals or not.  If the user tells you an animal, you say \"yes\".  If the user tells you something that is not an animal, you say \"no\".  You only ever respond with \"yes\" or \"no\".  You do not say anything else.");
+            _conversation.AppendSystemMessage(String.Join(", ", _options));
 
             _conversation.AppendUserInput(_request.Prompt);
             _response.Response = await _conversation.GetResponseFromChatbotAsync();       

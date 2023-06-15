@@ -34,6 +34,19 @@ else
                 <AdaptiveTextArea @bind-Value="_request.Prompt" />
                 <MudProgressLinear Color="Color.Primary" Indeterminate="@_isInProgress" Striped=true />
             </MudItem>
+            <MudItem xs="2">
+            <MudCheckBox Label="Inlcude Test Case" @bind-Checked="_request.IncludeTestCase" For="() => _request.IncludeTestCase" />
+        </MudItem>
+        <MudItem xs="4">
+                @if (_request.IncludeTestCase)
+                {
+                    <MudSelect Label="Test Case Type" Variant="Variant.Text" @bind-Value="_request.TestCaseType">
+                        <MudSelectItem Value="@("XUnit")" />
+                        <MudSelectItem Value="@("MSTest")" />
+                    </MudSelect>
+                }
+
+        </MudItem>
             <MudItem xs="12">
                 <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Check">
                     Send

@@ -32,37 +32,58 @@ else
             </MudSelect>
             <MudItem xs="12">
                 <AdaptiveTextArea @bind-Value="_request.Prompt" />
-                <MudProgressLinear Color="Color.Primary" Indeterminate="@_isInProgress" Striped=true />
             </MudItem>
             <MudItem xs="2">
-            <MudCheckBox Label="Inlcude Test Case" @bind-Checked="_request.IncludeTestCase" For="() => _request.IncludeTestCase" />
-        </MudItem>
-        <MudItem xs="4">
-                @if (_request.IncludeTestCase)
-                {
-                    <MudSelect Label="Test Case Type" Variant="Variant.Text" @bind-Value="_request.TestCaseType">
-                        <MudSelectItem Value="@("XUnit")" />
-                        <MudSelectItem Value="@("MSTest")" />
-                    </MudSelect>
-                }
+                <MudCheckBox Label="Inlcude Test Case" @bind-Checked="_request.IncludeTestCase" For="() => _request.IncludeTestCase" />
+            </MudItem>
+            <MudItem xs="4">
+                    @if (_request.IncludeTestCase)
+                    {
+                        <MudSelect Label="Test Case Type" Variant="Variant.Text" @bind-Value="_request.TestCaseType">
+                            <MudSelectItem Value="@("XUnit")" />
+                            <MudSelectItem Value="@("MSTest")" />
+                        </MudSelect>
+                    }
 
-        </MudItem>
+            </MudItem>
             <MudItem xs="12">
                 <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Check">
                     Send
                 </MudButton>
             </MudItem>
-
-            <div class="chat-container">
-                @foreach (var message in _conversation.Messages)
+            <MudItem xs="12">
+                @if (_isInProgress)
                 {
-                    if (@message.Role == OpenAI_API.Chat.ChatMessageRole.System) continue;
-                    <MudItem xs="12" Variant="Variant.Outlined">
-                        <h3>@message.Role</h3>
-                        <p>@message.Content</p>
-                    </MudItem>
+                    <MudProgressLinear Color="Color.Primary" Indeterminate="@_isInProgress" Striped=true />
                 }
-            </div>
+            </MudItem>
+            @if (_conversation.Messages.Count > 1)
+            {
+                <MudItem xs="12">
+                    <div class="chat-container">
+
+                            <MudTimeline TimelinePosition="TimelinePosition.Start">
+                                @foreach (var message in _conversation.Messages)
+                                {
+                                    if (message.Role == OpenAI_API.Chat.ChatMessageRole.System) continue;
+                                    var isUserMessage = message.Role == OpenAI_API.Chat.ChatMessageRole.User;
+                                    var color = isUserMessage ? Color.Dark : Color.Primary;
+                                    var icon = isUserMessage ? Icons.Material.Outlined.SupervisedUserCircle : Icons.Material.Outlined.Computer;
+
+                                    <MudTimelineItem Color="color" Size="Size.Large" Elevation="0">
+                                        <ItemDot>
+                                            <MudIcon Icon="@icon"></MudIcon>
+                                        </ItemDot>
+                                        <ItemContent>
+                                            <MudAlert Severity="Severity.Normal" NoIcon=true>@message.Content</MudAlert>
+                                        </ItemContent>
+                                    </MudTimelineItem>
+                                }
+                            </MudTimeline>
+                    </div>
+                </MudItem>
+            }
+                
         </MudGrid>
     </EditForm>
 }

@@ -10,6 +10,7 @@ public partial class Home
     private OpenAIAPI OpenAiApi { get; set; }
     private OpenApiRequest _request = new();
     private OpenApiResponse? _response;
+    private bool _isInProgress = false;
     private readonly CancellationTokenSource _cts = new();
 
     protected override async Task OnInitializedAsync()
@@ -22,11 +23,15 @@ public partial class Home
 
     private async Task OnValidSubmitAsync()
     {
+        _isInProgress = true;
+
         var result = await OpenAiApi.Completions.GetCompletion(_request.Prompt);
         _response = new OpenApiResponse
         {
             Response = result
         };
+
+        _isInProgress = false;
     }
 
     public void Dispose()

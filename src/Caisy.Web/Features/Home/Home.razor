@@ -6,9 +6,9 @@
     <DataAnnotationsValidator />
     <MudGrid>
         <MudItem xs="12">
-            <MudTextField Label="Chat" Lines="5" @bind-Value="_request.Prompt" Variant="Variant.Filled" For="() => _request.Prompt">
-                <InputTextArea @bind-Value="text" OnInput="UpdateTextAreaHeight" />
-            </MudTextField>
+            <AdaptiveTextArea @bind-Value="_request.Prompt"/>     
+            <MudProgressLinear Color="Color.Primary" Indeterminate="@_isInProgress" Striped=true />
+
         </MudItem>
         <MudItem xs="12">
             <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Check">
@@ -16,8 +16,7 @@
             </MudButton>
         </MudItem>
 
-        @if (_response is not null)
-        {
+        @if (_response is not null)        {
             <MudItem xs="12">
                 <MudTextField ReadOnly=true Label="Response" @bind-Value="_response.Response" />
             </MudItem>
@@ -26,13 +25,5 @@
 </EditForm>
 
 @code {
-    private string text = string.Empty;
-
-    private void UpdateTextAreaHeight(ChangeEventArgs e)
-    {
-        var textarea = (ElementReference)e.Source;
-        textarea.Style.Height = "auto";
-        textarea.Style.Height = $"{textarea.ScrollHeight}px";
-        text = e.Value.ToString();
-    }
+    public string text { get; set; }
 }

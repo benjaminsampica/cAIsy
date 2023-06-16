@@ -24,11 +24,15 @@ else
                 <MudSelect Value=_source Label="Source" ValueChanged="@(EventCallback.Factory.Create<string>(this, OnSourceChangedAsync))">
                     <MudSelectItem Value="@("SQL")">SQL</MudSelectItem>
                     <MudSelectItem Value="@("Entity Framework")">Entity Framework</MudSelectItem>
+                    <MudSelectItem Value="@("Dapper")">Dapper</MudSelectItem>
+                    <MudSelectItem Value="@("ADO.NET")">ADO.NET</MudSelectItem>
                 </MudSelect>
                 <MudIcon Icon="@Icons.Material.Outlined.ArrowForward" Class="mx-3"></MudIcon>
                 <MudSelect Value=_destination Label="Destination" ValueChanged="@(EventCallback.Factory.Create<string>(this, OnDestinationChangedAsync))">
                     <MudSelectItem Value=@("SQL")>SQL</MudSelectItem>
                     <MudSelectItem Value=@("Entity Framework")>Entity Framework</MudSelectItem>
+                    <MudSelectItem Value="@("Dapper")">Dapper</MudSelectItem>
+                    <MudSelectItem Value="@("ADO.NET")">ADO.NET</MudSelectItem>
                 </MudSelect>
             </MudItem>
             <MudItem xs="12">

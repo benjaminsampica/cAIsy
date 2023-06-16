@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
 using OpenAI_API;
 using OpenAI_API.Chat;
+using OpenAI_API.Completions;
 using System.Text.Json;
 
 namespace Caisy.Web.Features.Home;

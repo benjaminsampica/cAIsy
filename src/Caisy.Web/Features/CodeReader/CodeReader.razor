@@ -12,6 +12,13 @@ else
         <DataAnnotationsValidator />
         <MudGrid>
             <MudItem xs="12">
+                <MudSelect Value=_temperament Label="Temperament" ValueChanged="@(EventCallback.Factory.Create<string>(this, OnTemperamentChangedAsync))">
+                    <MudSelectItem Value=@(" ")>Nice</MudSelectItem>
+                    <MudSelectItem Value="@("Be as rude as possible.")">Rude</MudSelectItem>
+                </MudSelect>
+            </MudItem>
+
+            <MudItem xs="12">
                 <MudFileUpload Context="fileUploadContext" T="IBrowserFile" OnFilesChanged="OnFileUploadAsync">
                     <ButtonTemplate>
                         <MudButton HtmlTag="label"
@@ -23,10 +30,6 @@ else
                         </MudButton>
                     </ButtonTemplate>
                 </MudFileUpload>
-                <MudSelect Value=_temperament Label="Temperament" ValueChanged="@(EventCallback.Factory.Create<string>(this, OnTemperamentChangedAsync))">
-                    <MudSelectItem Value=@(" ")>Nice</MudSelectItem>
-                    <MudSelectItem Value="@("Be as rude as possible.")">Rude</MudSelectItem>
-                </MudSelect>
             </MudItem>
 
             <MudItem xs="12" Class="pb-0">

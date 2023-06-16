@@ -32,13 +32,14 @@ public class ChatDetail
     public string? Source { get; set; }
     public string? Destination { get; set; }
     public DateTime ChatTime { get;set;}
-    public string MessageForGrid {
+    public string MessageForGrid
+    {
         get
         {
             var messgae = string.Empty;
-            if(Messages.Count > 0)
+            if (Messages.Count > 1)
             {
-                messgae = Messages[0].Content;
+                messgae = Messages[1].Content.Substring(0, Math.Min(Messages[1].Content.Length, 100)) + " ...";
             }
             return messgae;
         }

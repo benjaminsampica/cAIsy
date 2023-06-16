@@ -8,11 +8,20 @@ public class ChatDetail
     {
 
     }
-    public ChatDetail(List<ChatMessage> chatMessages, string source, string destination)
+    public ChatDetail(List<ChatMessage> chatMessages, string source, string destination, int? id = null)
     {
         this.Source = source;
         this.Destination = destination;
         this.ChatTime = DateTime.Now;
+        if(id == null)
+        {
+            this.Id = new Random().Next(1, 9999);
+        }
+        else
+        {
+            this.Id = id.Value;
+        }
+        
         
         this.Messages = new List<MessageContent>();
 
@@ -29,6 +38,7 @@ public class ChatDetail
         }
     }
 
+    public int? Id { get;set;}
     public string? Source { get; set; }
     public string? Destination { get; set; }
     public DateTime ChatTime { get;set;}

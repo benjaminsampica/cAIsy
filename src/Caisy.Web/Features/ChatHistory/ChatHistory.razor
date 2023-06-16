@@ -3,6 +3,7 @@
 @using System.Text.Json;
 @using OpenAI_API.Chat;
 @inject IJSRuntime JSRuntime;
+@inject NavigationManager NavigationManager
 
 <MudText Typo="Typo.h4">Chat History</MudText>
 <MudItem xs="12">
@@ -13,6 +14,13 @@
         <PropertyColumn Property="x => x.Source" Title="Convert From" />
         <PropertyColumn Property="x => x.Destination" Title="Convert To" />
         <PropertyColumn Property="x => x.MessageForGrid" Title="Message" />
+            <TemplateColumn CellClass="d-flex justify-end">
+                <CellTemplate>
+                    <MudStack Row>
+                    <MudButton Size="@Size.Small" Variant="@Variant.Filled" @onclick="() => NavigateToHome(context)" Color="@Color.Primary">View Chat</MudButton>
+                    </MudStack>
+                </CellTemplate>
+            </TemplateColumn>
     </Columns>
 </MudDataGrid>
 
@@ -28,5 +36,10 @@
                 details.Add(JsonSerializer.Deserialize<ChatDetail>(chat));
             }
         }
+    }
+
+    public void NavigateToHome(CellContext<ChatDetail> chatDetail)
+    {
+        NavigationManager.NavigateTo("/" + chatDetail.Item.Id);
     }
 }

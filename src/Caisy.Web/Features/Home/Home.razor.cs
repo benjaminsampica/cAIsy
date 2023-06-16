@@ -6,8 +6,8 @@ namespace Caisy.Web.Features.Home;
 
 public partial class Home
 {
-    [Inject] public ProfileState ProfileState { get; set; } = null!;
     [Inject] public ISnackbar Snackbar { get; set; } = null!;
+    [CascadingParameter] public ProfileState ProfileState { get; set; } = null!;
     private OpenAIAPI OpenAiApi { get; set; }
     private OpenApiRequest _request = new();
     private Conversation _conversation;

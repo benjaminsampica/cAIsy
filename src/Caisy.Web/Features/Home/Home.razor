@@ -34,18 +34,20 @@ else
             <MudItem xs="12">
                 <AdaptiveTextArea @bind-Value="_request.Prompt" Placeholder="Enter your code..." Label="Code to Convert" />
             </MudItem>
-            <MudItem xs="2">
+            <MudItem xs="12">
+                <MudButton Disabled="@_isInProgress" ButtonType="ButtonType.Submit" OnClick="OnValidSubmitAsync" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Check">
+                    Generate Code
+                </MudButton>
+            </MudItem>
+            <MudItem md="2" sm="12">
                 <MudSelect Label="Testing Framework" Variant="Variant.Text" @bind-Value="_request.TestCaseFramework">
                     <MudSelectItem Value="@("XUnit")" />
                     <MudSelectItem Value="@("MSTest")" />
                 </MudSelect>
             </MudItem>
             <MudItem xs="12">
-                <MudButton Disabled="@_isInProgress" ButtonType="ButtonType.Submit" OnClick="OnValidSubmitAsync" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Check">
-                    Get Code
-                </MudButton>
                 <MudButton Disabled="@(_isInProgress || !_anyCode || (_destination == "SQL"))" ButtonType="ButtonType.Submit" OnClick="GetTestCaseResult" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Check">
-                    Get Tests
+                    Generate Tests
                 </MudButton>
             </MudItem>
             <MudItem xs="12">
@@ -58,7 +60,6 @@ else
             {
                 <MudItem xs="12">
                     <div class="chat-container">
-
                             <MudTimeline TimelinePosition="TimelinePosition.Start">
                                 @foreach (var message in _conversation.Messages)
                                 {
@@ -80,8 +81,8 @@ else
 
                                         </ItemDot>
                                         <ItemContent>
-                                            <MudAlert Severity="Severity.Normal" NoIcon=true>
-                                                <MudMarkdown Value="@message.Content" CodeBlockTheme="CodeBlockTheme.AtomOneDark" />
+                                            <MudAlert Severity="Severity.Normal" NoIcon=true Class="alert-code">
+                                                <MudMarkdown Value="@message.Content" CodeBlockTheme="ProfileState.CodeBlockTheme"/>
                                             </MudAlert>
                                         </ItemContent>
                                     </MudTimelineItem>

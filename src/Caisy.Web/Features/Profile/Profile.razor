@@ -1,12 +1,18 @@
 ﻿@page "/profile"
 
-<h3>
+<MudText Typo="Typo.h3">
     Profile
-</h3>
+</MudText>
+<MudText>
+    Manage various settings across the entire application.
+</MudText>
 
 ﻿<EditForm OnValidSubmit="OnValidSubmitAsync" Model="_model">
     <DataAnnotationsValidator />
     <MudGrid>
+        <MudItem xs="3">
+            <MudSwitch @bind-Checked=_model.PrefersDarkMode UnCheckedColor="Color.Warning" Color=Color.Dark ThumbIcon="@GetThemeIcon()">Light / Dark Mode</MudSwitch>
+        </MudItem>
         <MudItem xs="12">
             <MudTextField Label="Api Key" @bind-Value="_model.ApiKey" For="() => _model.ApiKey" />
         </MudItem>

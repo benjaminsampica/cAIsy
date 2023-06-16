@@ -27,3 +27,15 @@
     font-weight: bold;
     font-size: 60px;
 }
+
+.mud-markdown-body p:last-child {
+    margin-bottom: 0px !important;
+}
+
+.mud-markdown-body code {
+    margin-bottom: 1.25em;
+}
+
+.alert-code > .mud-alert-position {
+    display: block !important;
+}

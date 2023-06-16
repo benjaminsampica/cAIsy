@@ -1,9 +1,11 @@
 ﻿@page "/"
 
 <div style="display: flex; align-items: center;">
-    <h1 style="margin-right: auto;">Code Converter</h1>
+    <MudText Typo="Typo.h3" Class="mr-auto">
+        Code Converter
+    </MudText>
     <div id="new-chat-button">
-        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Outlined" Color="Color.Primary">
             + New Chat
         </MudButton>
     </div>
@@ -43,6 +45,7 @@ else
                                Variant="Variant.Filled"
                                Color="Color.Primary"
                                StartIcon="@Icons.Material.Filled.CloudUpload"
+                               Size="Size.Large"
                                    for="@fileUploadContext">
                             Upload File
                         </MudButton>
@@ -61,7 +64,7 @@ else
                 <AdaptiveTextArea @bind-Value="_request.Prompt" Placeholder="Enter your code..." />
             </MudItem>
             <MudItem xs="12">
-                <MudButton Disabled="@_isInProgress" ButtonType="ButtonType.Submit" OnClick="OnValidSubmitAsync" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Check">
+                <MudButton Disabled="@_isInProgress" ButtonType="ButtonType.Submit" OnClick="OnValidSubmitAsync" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Refresh">
                     Generate Code
                 </MudButton>
             </MudItem>
@@ -72,7 +75,7 @@ else
                 </MudSelect>
             </MudItem>
             <MudItem xs="12">
-                <MudButton Disabled="@(_isInProgress || !_anyCode || (_destination == "SQL"))" ButtonType="ButtonType.Submit" OnClick="GetTestCaseResult" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Check">
+                <MudButton Disabled="@(_isInProgress || !_anyCode || (_destination == "SQL"))" ButtonType="ButtonType.Submit" OnClick="GetTestCaseResult" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Refresh">
                     Generate Tests
                 </MudButton>
             </MudItem>

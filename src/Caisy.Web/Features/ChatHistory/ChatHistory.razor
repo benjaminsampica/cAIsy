@@ -4,9 +4,8 @@
 @using OpenAI_API.Chat;
 @inject IJSRuntime JSRuntime;
 
-<MudText Typo="Typo.h4">Chat History</MudText>
-<MudItem xs="12">
-   </MudItem>
+<MudText Typo="Typo.h3">Chat History</MudText>
+
 <MudDataGrid Items="@details.OrderByDescending(x => x.ChatTime)">
     <Columns>
         <PropertyColumn Property="x => x.ChatTime" Title="Time Of Chat" />

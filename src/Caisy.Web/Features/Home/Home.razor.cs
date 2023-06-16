@@ -13,7 +13,7 @@ public partial class Home
     [Inject] public ISnackbar Snackbar { get; set; } = null!;
     [Inject] public IJSRuntime JSRuntime { get; set; } = null!;
     [CascadingParameter] public ProfileState ProfileState { get; set; } = null!;
-    [Parameter]public int? Id { get;set;}
+    [Parameter] public int? Id { get; set; }
     private OpenAIAPI OpenAiApi { get; set; }
     private OpenApiRequest _request = new();
     private Conversation _conversation;
@@ -32,24 +32,30 @@ public partial class Home
 
         StartConversation();
 
-        if(Id != null)
+        if (Id != null)
         {
             var chatHistory = await JSRuntime.InvokeAsync<string>("localStorage.getItem", Id.ToString());
-            var detail = JsonSerializer.Deserialize<ChatDetail>(chatHistory);
-            _source = detail.Source;
-            _destination = detail.Destination;
-
-            foreach(var message in detail.Messages.Where(x=> x.Role.ToLower() != "system"))
+            if (chatHistory != null)
             {
-                if(message.Role.ToLower() == "user")
+                var detail = JsonSerializer.Deserialize<ChatDetail>(chatHistory);
+                if (detail != null)
                 {
-                    _conversation.AppendMessage(new ChatMessage(ChatMessageRole.User, message.Content));
+                    _source = detail.Source;
+                    _destination = detail.Destination;
+
+                    foreach (var message in detail.Messages.Where(x => x.Role.ToLower() != "system"))
+                    {
+                        if (message.Role.ToLower() == "user")
+                        {
+                            _conversation.AppendMessage(new ChatMessage(ChatMessageRole.User, message.Content));
+                        }
+                        else
+                        {
+                            _conversation.AppendMessage(new ChatMessage(ChatMessageRole.Assistant, message.Content));
+                        }
+
+                    }
                 }
-                else
-                {
-                    _conversation.AppendMessage(new ChatMessage(ChatMessageRole.Assistant, message.Content));
-                }
-                
             }
         }
     }
@@ -71,7 +77,7 @@ public partial class Home
             await JSRuntime.InvokeVoidAsync("localStorage.setItem", chatDetail.Id.ToString(), chatHistory);
         }
 
-        _source = value;        
+        _source = value;
         StartConversation();
     }
     private async Task OnDestinationChangedAsync(string value)

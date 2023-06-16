@@ -25,6 +25,11 @@ public partial class Home
             OpenAiApi = new OpenAIAPI(ProfileState.ApiKey);
         }
 
+        StartConversation();
+    }
+
+    private void StartConversation()
+    {
         _conversation = OpenAiApi.Chat.CreateConversation();
         _conversation.AppendSystemMessage($"Convert {_source} to {_destination}");
     }
@@ -33,15 +38,13 @@ public partial class Home
     {
         if (_source == value) return;
         _source = value;
-        _conversation = OpenAiApi.Chat.CreateConversation();
-        _conversation.AppendSystemMessage($"Convert {_source} to {_destination}");
+        StartConversation();
     }
     private async Task OnDestinationChangedAsync(string value)
     {
         if (_destination == value) return;
         _destination = value;
-        _conversation = OpenAiApi.Chat.CreateConversation();
-        _conversation.AppendSystemMessage($"Convert {_source} to {_destination}");
+        StartConversation();
     }
 
     private async Task OnValidSubmitAsync()

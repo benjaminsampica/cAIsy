@@ -13,7 +13,7 @@ public partial class CodeReader
     private OpenApiRequest _request = new();
     private Conversation _conversation;
     private bool _isInProgress = false;
-    private string _temperament = string.Empty;
+    private string _temperament = " ";
 
     protected override async Task OnInitializedAsync()
     {

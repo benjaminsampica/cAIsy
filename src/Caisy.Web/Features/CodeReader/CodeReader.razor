@@ -24,7 +24,7 @@ else
                     </ButtonTemplate>
                 </MudFileUpload>
                 <MudSelect Value=_temperament Label="Temperament" ValueChanged="@(EventCallback.Factory.Create<string>(this, OnTemperamentChangedAsync))">
-                    <MudSelectItem Value=string.Empty>Nice</MudSelectItem>
+                    <MudSelectItem Value=@(" ")>Nice</MudSelectItem>
                     <MudSelectItem Value="@("Be as rude as possible.")">Rude</MudSelectItem>
                 </MudSelect>
             </MudItem>

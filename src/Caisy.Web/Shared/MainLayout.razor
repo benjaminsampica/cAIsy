@@ -1,9 +1,13 @@
 ﻿@inherits LayoutComponentBase
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+
 <MudLayout>
     <MudAppBar Color="Color.Primary">
         <MudIconButton Icon="@Icons.Material.Outlined.Menu" OnClick="DrawerToggle" />
-        <MudImage Src="favicon.ico" /> <MudText Typo="Typo.h6">cAIsy</MudText>
+        <MudImage Src="favicon.ico" /> <MudText Typo="Typo.h4"><headerFont>c<b><accent>AI</accent></b>sy</headerFont></MudText>
     </MudAppBar>
     <MudDrawer @bind-Open="@_drawerOpen" Variant="@DrawerVariant.Temporary">
         <MudNavMenu>

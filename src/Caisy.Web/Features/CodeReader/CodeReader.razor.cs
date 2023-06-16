@@ -13,6 +13,7 @@ public partial class CodeReader
     private OpenApiRequest _request = new();
     private Conversation _conversation;
     private bool _isInProgress = false;
+    private string _temperament = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -23,6 +24,14 @@ public partial class CodeReader
 
         _conversation = OpenAiApi.Chat.CreateConversation();
         _conversation.AppendSystemMessage("Document the code provided. Explain in simple terms.");
+    }
+
+    private async Task OnTemperamentChangedAsync(string value)
+    {
+        if (_temperament == value) return;
+        _temperament = value;
+        _conversation = OpenAiApi.Chat.CreateConversation();
+        _conversation.AppendSystemMessage("Document the code provided. Explain in simple terms. " + value);
     }
 
     private async Task OnValidSubmitAsync()

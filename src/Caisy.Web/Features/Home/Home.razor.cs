@@ -1,13 +1,16 @@
 ﻿using Caisy.Web.Features.Profile;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.JSInterop;
 using OpenAI_API;
 using OpenAI_API.Chat;
+using System.Text.Json;
 
 namespace Caisy.Web.Features.Home;
 
 public partial class Home
 {
     [Inject] public ISnackbar Snackbar { get; set; } = null!;
+    [Inject] public IJSRuntime JSRuntime { get; set; } = null!;
     [CascadingParameter] public ProfileState ProfileState { get; set; } = null!;
     private OpenAIAPI OpenAiApi { get; set; }
     private OpenApiRequest _request = new();
@@ -37,12 +40,28 @@ public partial class Home
     private async Task OnSourceChangedAsync(string value)
     {
         if (_source == value) return;
-        _source = value;
+
+        if (_conversation.Messages.Count > 1)
+        {
+            var chatDetail = new ChatDetail(_conversation.Messages.ToList(), _source, _destination);
+            var chatHistory = JsonSerializer.Serialize(chatDetail);
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", DateTime.Now.ToString(), chatHistory);
+        }
+
+        _source = value;        
         StartConversation();
     }
     private async Task OnDestinationChangedAsync(string value)
     {
         if (_destination == value) return;
+
+        if (_conversation.Messages.Count > 1)
+        {
+            var chatDetail = new ChatDetail(_conversation.Messages.ToList(), _source, _destination);
+            var chatHistory = JsonSerializer.Serialize(chatDetail);
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", DateTime.Now.ToString(), chatHistory);
+        }
+
         _destination = value;
         StartConversation();
     }

@@ -1,6 +1,32 @@
 ﻿@page "/ChatHistory"
+@using Microsoft.JSInterop;
+@using System.Text.Json;
+@using OpenAI_API.Chat;
+@inject IJSRuntime JSRuntime;
+
 <MudText Typo="Typo.h4">Chat History</MudText>
+<MudItem xs="12">
+   </MudItem>
+<MudDataGrid Items="@details.OrderByDescending(x => x.ChatTime)">
+    <Columns>
+        <PropertyColumn Property="x => x.ChatTime" Title="Time Of Chat" />
+        <PropertyColumn Property="x => x.Source" Title="Convert From" />
+        <PropertyColumn Property="x => x.Destination" Title="Convert To" />
+        <PropertyColumn Property="x => x.MessageForGrid" Title="Message" />
+    </Columns>
+</MudDataGrid>
 
 @code {
-    
+    List<ChatDetail> details = new List<ChatDetail>();
+    protected override async Task OnInitializedAsync()
+    {
+        var chatHistory = await JSRuntime.InvokeAsync<string[]>("GetAllChatHistory");
+        if(chatHistory != null)
+        {
+            foreach(var chat in chatHistory)
+            {
+                details.Add(JsonSerializer.Deserialize<ChatDetail>(chat));
+            }
+        }
+    }
 }

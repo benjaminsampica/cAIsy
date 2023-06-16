@@ -61,14 +61,13 @@ public partial class Home
         if (e.FileCount == 0) return;
 
         var file = e.File;
-        using (var streamReader = new StreamReader(file.OpenReadStream()))
-        {
-            var fileContent = await streamReader.ReadToEndAsync();
-            _request.Prompt = fileContent;
-        }
+        using var streamReader = new StreamReader(file.OpenReadStream());
+
+        var fileContent = await streamReader.ReadToEndAsync();
+        _request.Prompt = fileContent;
     }
 
-        private async Task GetTestCaseResult()
+    private async Task GetTestCaseResult()
     {
         _isInProgress = true;
         _conversation.AppendUserInput($"Get {_request.TestCaseFramework} test case for above result.");

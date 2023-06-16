@@ -23,5 +23,6 @@ var existingUserProfile = (await repository.GetAllAsync(CancellationToken.None))
 var profileState = app.Services.GetRequiredService<ProfileState>();
 profileState.ApiKey = existingUserProfile?.ApiKey;
 profileState.Id = existingUserProfile?.Id;
+profileState.PrefersDarkMode = existingUserProfile?.PrefersDarkMode ?? false;
 
 await app.RunAsync();

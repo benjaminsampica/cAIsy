@@ -23,10 +23,6 @@ public partial class Home
         {
             OpenAiApi = new OpenAIAPI(ProfileState.ApiKey);
         }
-        else
-        {
-            Snackbar.Add("No profile found.", Severity.Error);
-        }
 
         _conversation = OpenAiApi.Chat.CreateConversation();
         _conversation.AppendSystemMessage($"Convert {_source} to {_destination}");

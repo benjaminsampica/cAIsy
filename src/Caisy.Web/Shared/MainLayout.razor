@@ -6,14 +6,14 @@
     <MudLayout>
         <MudAppBar Color="Color.Primary">
             <MudIconButton Icon="@Icons.Material.Outlined.Menu" OnClick="DrawerToggle" />
-            <MudImage Src="favicon.ico" /> <MudText Typo="Typo.h4"><headerFont>c<b><accent>AI</accent></b>sy</headerFont></MudText>
+            <MudImage Src="favicon.ico" /> <MudText Typo="Typo.h4">c<b><accent>AI</accent></b>sy</MudText>
         </MudAppBar>
         <MudDrawer @bind-Open="@_drawerOpen" Variant="@DrawerVariant.Temporary">
             <MudNavMenu>
-                <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Home">Code Converter</MudNavLink>
-                <MudNavLink Href="Profile" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.PeopleAlt">Profile</MudNavLink>
-                <MudNavLink Href="ChatHistory" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.ChatBubbleOutline">Chat History</MudNavLink>
-                <MudNavLink Href="CodeReader" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.MenuBook">Code Reader</MudNavLink>
+                <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Home"><headerFont>Code Converter</headerFont></MudNavLink>
+                <MudNavLink Href="Profile" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.PeopleAlt"><headerFont>Profile</headerFont></MudNavLink>
+                <MudNavLink Href="ChatHistory" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.ChatBubbleOutline"><headerFont>Chat History</headerFont></MudNavLink>
+                <MudNavLink Href="CodeReader" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.MenuBook"><headerFont>Code Reader</headerFont></MudNavLink>
             </MudNavMenu>
         </MudDrawer>
         <MudMainContent>

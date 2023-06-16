@@ -58,7 +58,7 @@ public partial class Home
     private async Task GetTestCaseResult()
     {
         _isInProgress = true;
-        _conversation.AppendUserInput($"Get {_request.TestCaseType} test case for above result.");
+        _conversation.AppendUserInput($"Get {_request.TestCaseFramework} test case for above result.");
         await _conversation.GetResponseFromChatbotAsync();
 
         _isInProgress = false;
@@ -68,7 +68,7 @@ public partial class Home
 public class OpenApiRequest
 {
     public string? Prompt { get; set; }
-    public string? TestCaseType { get; set; }
+    public string? TestCaseFramework { get; set; }
 }
 
 public class OpenApiResponse

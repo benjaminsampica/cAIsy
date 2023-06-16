@@ -35,8 +35,30 @@ else
                     <MudSelectItem Value="@("ADO.NET")">ADO.NET</MudSelectItem>
                 </MudSelect>
             </MudItem>
+
             <MudItem xs="12">
-                <AdaptiveTextArea @bind-Value="_request.Prompt" Placeholder="Enter your code..." Label="Code to Convert" />
+                <MudFileUpload Context="fileUploadContext" T="IBrowserFile" OnFilesChanged="OnFileUploadAsync">
+                    <ButtonTemplate>
+                        <MudButton HtmlTag="label"
+                               Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.CloudUpload"
+                                   for="@fileUploadContext">
+                            Upload File
+                        </MudButton>
+                    </ButtonTemplate>
+                </MudFileUpload>
+            </MudItem>
+
+            <MudItem xs="12" Class="pb-0">
+                <h3>OR</h3>
+            </MudItem>
+            <MudItem xs="12" Class="pb-0">
+                <h3>Paste your code</h3>
+            </MudItem>
+
+            <MudItem xs="12">
+                <AdaptiveTextArea @bind-Value="_request.Prompt" Placeholder="Enter your code..."/>
             </MudItem>
             <MudItem xs="2">
                 <MudSelect Label="Testing Framework" Variant="Variant.Text" @bind-Value="_request.TestCaseFramework">
@@ -63,17 +85,17 @@ else
                 <MudItem xs="12">
                     <div class="chat-container">
 
-                            <MudTimeline TimelinePosition="TimelinePosition.Start">
-                                @foreach (var message in _conversation.Messages)
-                                {
-                                    if (message.Role == OpenAI_API.Chat.ChatMessageRole.System) continue;
-                                    var isUserMessage = message.Role == OpenAI_API.Chat.ChatMessageRole.User;
-                                    var color = isUserMessage ? Color.Dark : Color.Primary;
-                                    var icon = isUserMessage ? Icons.Material.Outlined.Person : Icons.Material.Outlined.Computer;
+                        <MudTimeline TimelinePosition="TimelinePosition.Start">
+                            @foreach (var message in _conversation.Messages)
+                            {
+                                if (message.Role == OpenAI_API.Chat.ChatMessageRole.System) continue;
+                                var isUserMessage = message.Role == OpenAI_API.Chat.ChatMessageRole.User;
+                                var color = isUserMessage ? Color.Dark : Color.Primary;
+                                var icon = isUserMessage ? Icons.Material.Outlined.Person : Icons.Material.Outlined.Computer;
 
-                                    <MudTimelineItem Color="color" Size="Size.Large" Elevation="0">
-                                        <ItemDot>
-                                            @if(isUserMessage)
+                                <MudTimelineItem Color="color" Size="Size.Large" Elevation="0">
+                                    <ItemDot>
+                                        @if (isUserMessage)
                                         {
                                             <MudIcon Icon="@icon"></MudIcon>
                                         }
@@ -82,15 +104,15 @@ else
                                             <MudImage Src="caisy.png" Height="30" />
                                         }
 
-                                        </ItemDot>
-                                        <ItemContent>
-                                            <MudAlert Severity="Severity.Normal" NoIcon=true>
-                                                <MudMarkdown Value="@message.Content" CodeBlockTheme="CodeBlockTheme.AtomOneDark" />
-                                            </MudAlert>
-                                        </ItemContent>
-                                    </MudTimelineItem>
-                                }
-                            </MudTimeline>
+                                    </ItemDot>
+                                    <ItemContent>
+                                        <MudAlert Severity="Severity.Normal" NoIcon=true>
+                                            <MudMarkdown Value="@message.Content" CodeBlockTheme="CodeBlockTheme.AtomOneDark" />
+                                        </MudAlert>
+                                    </ItemContent>
+                                </MudTimelineItem>
+                            }
+                        </MudTimeline>
                     </div>
                 </MudItem>
             }

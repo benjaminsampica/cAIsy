@@ -1,4 +1,5 @@
 ﻿using Caisy.Web.Features.Profile;
+using Microsoft.AspNetCore.Components.Forms;
 using OpenAI_API;
 using OpenAI_API.Chat;
 
@@ -55,7 +56,19 @@ public partial class Home
         _anyCode = true;
     }
 
-    private async Task GetTestCaseResult()
+    private async Task OnFileUploadAsync(InputFileChangeEventArgs e)
+    {
+        if (e.FileCount == 0) return;
+
+        var file = e.File;
+        using (var streamReader = new StreamReader(file.OpenReadStream()))
+        {
+            var fileContent = await streamReader.ReadToEndAsync();
+            _request.Prompt = fileContent;
+        }
+    }
+
+        private async Task GetTestCaseResult()
     {
         _isInProgress = true;
         _conversation.AppendUserInput($"Get {_request.TestCaseFramework} test case for above result.");

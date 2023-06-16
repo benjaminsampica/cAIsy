@@ -1,15 +1,4 @@
-﻿@page "/"
-
-<div class="d-flex align-center">
-    <MudText Typo="Typo.h3" Class="mr-auto">
-        Code Converter
-    </MudText>
-    <div id="new-chat-button">
-        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Add">
-            New Chat
-        </MudButton>
-    </div>
-</div>
+﻿@page "/codereader"
 
 @if (ProfileState.Id is null)
 {
@@ -22,22 +11,6 @@ else
     <EditForm Model="_request" OnValidSubmit="OnValidSubmitAsync">
         <DataAnnotationsValidator />
         <MudGrid>
-            <MudItem xs="12" Class="d-flex align-end">
-                <MudSelect Value=_source Label="Source" ValueChanged="@(EventCallback.Factory.Create<string>(this, OnSourceChangedAsync))">
-                    <MudSelectItem Value="@("SQL")">SQL</MudSelectItem>
-                    <MudSelectItem Value="@("Entity Framework")">Entity Framework</MudSelectItem>
-                    <MudSelectItem Value="@("Dapper")">Dapper</MudSelectItem>
-                    <MudSelectItem Value="@("ADO.NET")">ADO.NET</MudSelectItem>
-                </MudSelect>
-                <MudIcon Icon="@Icons.Material.Outlined.ArrowForward" Class="mx-3"></MudIcon>
-                <MudSelect Value=_destination Label="Destination" ValueChanged="@(EventCallback.Factory.Create<string>(this, OnDestinationChangedAsync))">
-                    <MudSelectItem Value=@("SQL")>SQL</MudSelectItem>
-                    <MudSelectItem Value=@("Entity Framework")>Entity Framework</MudSelectItem>
-                    <MudSelectItem Value="@("Dapper")">Dapper</MudSelectItem>
-                    <MudSelectItem Value="@("ADO.NET")">ADO.NET</MudSelectItem>
-                </MudSelect>
-            </MudItem>
-
             <MudItem xs="12">
                 <MudFileUpload Context="fileUploadContext" T="IBrowserFile" OnFilesChanged="OnFileUploadAsync">
                     <ButtonTemplate>
@@ -45,12 +18,15 @@ else
                                Variant="Variant.Filled"
                                Color="Color.Primary"
                                StartIcon="@Icons.Material.Filled.CloudUpload"
-                               Size="Size.Large"
                                    for="@fileUploadContext">
                             Upload File
                         </MudButton>
                     </ButtonTemplate>
                 </MudFileUpload>
+                <MudSelect Value=_temperament Label="Temperament" ValueChanged="@(EventCallback.Factory.Create<string>(this, OnTemperamentChangedAsync))">
+                    <MudSelectItem Value=@(" ")>Nice</MudSelectItem>
+                    <MudSelectItem Value="@("Be as rude as possible.")">Rude</MudSelectItem>
+                </MudSelect>
             </MudItem>
 
             <MudItem xs="12" Class="pb-0">
@@ -64,19 +40,8 @@ else
                 <AdaptiveTextArea @bind-Value="_request.Prompt" Placeholder="Enter your code..." />
             </MudItem>
             <MudItem xs="12">
-                <MudButton Disabled="@_isInProgress" ButtonType="ButtonType.Submit" OnClick="OnValidSubmitAsync" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Refresh">
-                    Generate Code
-                </MudButton>
-            </MudItem>
-            <MudItem md="2" sm="12">
-                <MudSelect Label="Testing Framework" Variant="Variant.Text" @bind-Value="_request.TestCaseFramework">
-                    <MudSelectItem Value="@("XUnit")" />
-                    <MudSelectItem Value="@("MSTest")" />
-                </MudSelect>
-            </MudItem>
-            <MudItem xs="12">
-                <MudButton Disabled="@(_isInProgress || !_anyCode || (_destination == "SQL"))" ButtonType="ButtonType.Submit" OnClick="GetTestCaseResult" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Refresh">
-                    Generate Tests
+                <MudButton Disabled="@_isInProgress" ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.MenuBook">
+                    Read Code
                 </MudButton>
             </MudItem>
             <MudItem xs="12">

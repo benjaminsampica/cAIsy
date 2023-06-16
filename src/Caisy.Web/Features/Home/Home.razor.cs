@@ -1,4 +1,5 @@
 ﻿using Caisy.Web.Features.Profile;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
 using OpenAI_API;
 using OpenAI_API.Chat;
@@ -27,6 +28,11 @@ public partial class Home
             OpenAiApi = new OpenAIAPI(ProfileState.ApiKey);
         }
 
+        StartConversation();
+    }
+
+    private void StartConversation()
+    {
         _conversation = OpenAiApi.Chat.CreateConversation();
         _conversation.AppendSystemMessage($"Convert {_source} to {_destination}");
     }
@@ -43,8 +49,7 @@ public partial class Home
         }
 
         _source = value;        
-        _conversation = OpenAiApi.Chat.CreateConversation();
-        _conversation.AppendSystemMessage($"Convert {_source} to {_destination}");
+        StartConversation();
     }
     private async Task OnDestinationChangedAsync(string value)
     {
@@ -58,8 +63,7 @@ public partial class Home
         }
 
         _destination = value;
-        _conversation = OpenAiApi.Chat.CreateConversation();
-        _conversation.AppendSystemMessage($"Convert {_source} to {_destination}");
+        StartConversation();
     }
 
     private async Task OnValidSubmitAsync()
@@ -72,6 +76,17 @@ public partial class Home
 
         _isInProgress = false;
         _anyCode = true;
+    }
+
+    private async Task OnFileUploadAsync(InputFileChangeEventArgs e)
+    {
+        if (e.FileCount == 0) return;
+
+        var file = e.File;
+        using var streamReader = new StreamReader(file.OpenReadStream());
+
+        var fileContent = await streamReader.ReadToEndAsync();
+        _request.Prompt = fileContent;
     }
 
     private async Task GetTestCaseResult()

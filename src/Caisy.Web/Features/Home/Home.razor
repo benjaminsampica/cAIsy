@@ -26,13 +26,13 @@ else
                     <MudSelectItem Value="@("Entity Framework")">Entity Framework</MudSelectItem>
                 </MudSelect>
                 <MudIcon Icon="@Icons.Material.Outlined.ArrowForward" Class="mx-3"></MudIcon>
-                <MudSelect Value=_destination Label="Destination" ValueChanged="@(EventCallback.Factory.Create<string>(this, OnDestinationChangedAsync))" Placeholder="Enter your code...">
+                <MudSelect Value=_destination Label="Destination" ValueChanged="@(EventCallback.Factory.Create<string>(this, OnDestinationChangedAsync))">
                     <MudSelectItem Value=@("SQL")>SQL</MudSelectItem>
                     <MudSelectItem Value=@("Entity Framework")>Entity Framework</MudSelectItem>
                 </MudSelect>
             </MudItem>
             <MudItem xs="12">
-                <AdaptiveTextArea @bind-Value="_request.Prompt" />
+                <AdaptiveTextArea @bind-Value="_request.Prompt" Placeholder="Enter your code..." Label="Code to Convert" />
             </MudItem>
             <MudItem xs="2">
                 <MudSelect Label="Testing Framework" Variant="Variant.Text" @bind-Value="_request.TestCaseFramework">
@@ -90,7 +90,6 @@ else
                     </div>
                 </MudItem>
             }
-                
         </MudGrid>
     </EditForm>
 }

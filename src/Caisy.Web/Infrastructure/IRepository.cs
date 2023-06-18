@@ -1,6 +1,6 @@
 ﻿namespace Caisy.Web.Infrastructure;
 
-public interface IRepository<T> where T : IEntity
+public interface IRepository<T> where T : BaseEntity<T>
 {
     ValueTask<ICollection<T>> GetAllAsync(CancellationToken cancellationToken);
     ValueTask<T?> FindAsync(string id, CancellationToken cancellationToken);

@@ -7,7 +7,7 @@
 
 <MudText Typo="Typo.h3">Chat History</MudText>
 
-<MudDataGrid Items="@details.OrderByDescending(x => x.ChatTime)">
+<MudDataGrid Items="@_details.OrderByDescending(x => x.ChatTime)">
     <Columns>
         <PropertyColumn Property="x => x.ChatTime" Title="Time Of Chat" />
         <PropertyColumn Property="x => x.Source" Title="Convert From" />
@@ -24,21 +24,6 @@
 </MudDataGrid>
 
 @code {
-    List<ChatDetail> details = new List<ChatDetail>();
-    protected override async Task OnInitializedAsync()
-    {
-        var chatHistory = await JSRuntime.InvokeAsync<string[]>("GetAllChatHistory");
-        if(chatHistory != null)
-        {
-            foreach(var chat in chatHistory)
-            {
-                details.Add(JsonSerializer.Deserialize<ChatDetail>(chat));
-            }
-        }
-    }
 
-    public void NavigateToHome(CellContext<ChatDetail> chatDetail)
-    {
-        NavigationManager.NavigateTo("/" + chatDetail.Item.Id);
-    }
+
 }

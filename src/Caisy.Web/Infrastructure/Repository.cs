@@ -2,7 +2,7 @@
 
 namespace Caisy.Web.Infrastructure;
 
-public class Repository<T> : IRepository<T> where T : IEntity
+public class Repository<T> : IRepository<T> where T : BaseEntity<T>
 {
     private readonly ILocalStorageService _localStorageService;
 

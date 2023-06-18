@@ -2,32 +2,19 @@
 
 namespace Caisy.Web.Infrastructure.Models;
 
-public class ChatDetail
+public class ChatDetail : BaseEntity<ChatDetail>
 {
-    public ChatDetail()
-    {
-
-    }
-    public ChatDetail(List<ChatMessage> chatMessages, string source, string destination, int? id = null)
+    public ChatDetail(List<ChatMessage> chatMessages, string source, string destination)
     {
         this.Source = source;
         this.Destination = destination;
         this.ChatTime = DateTime.Now;
-        if(id == null)
-        {
-            this.Id = new Random().Next(1, 9999);
-        }
-        else
-        {
-            this.Id = id.Value;
-        }
-        
-        
+
         this.Messages = new List<MessageContent>();
 
-        if(chatMessages != null && chatMessages.Count > 0)
+        if (chatMessages != null && chatMessages.Count > 0)
         {
-            foreach(var chatMessage in chatMessages)
+            foreach (var chatMessage in chatMessages)
             {
                 this.Messages.Add(new MessageContent
                 {
@@ -38,10 +25,9 @@ public class ChatDetail
         }
     }
 
-    public int? Id { get;set;}
     public string? Source { get; set; }
     public string? Destination { get; set; }
-    public DateTime ChatTime { get;set;}
+    public DateTime ChatTime { get; set; }
     public string MessageForGrid
     {
         get
@@ -54,7 +40,7 @@ public class ChatDetail
             return messgae;
         }
     }
-    public List<MessageContent>? Messages {get; set;}
+    public List<MessageContent>? Messages { get; set; }
 }
 
 public class MessageContent

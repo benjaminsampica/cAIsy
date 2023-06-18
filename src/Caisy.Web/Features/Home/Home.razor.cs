@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
 using OpenAI_API;
 using OpenAI_API.Chat;
-using OpenAI_API.Completions;
 using System.Text.Json;
 
 namespace Caisy.Web.Features.Home;
@@ -72,7 +71,7 @@ public partial class Home
 
         if (_conversation.Messages.Count > 1)
         {
-            var chatDetail = new ChatDetail(_conversation.Messages.ToList(), _source, _destination, Id);
+            var chatDetail = new ChatDetail(_conversation.Messages.ToList(), _source, _destination); // Broken -- need to fix this functionality.
             var chatHistory = JsonSerializer.Serialize(chatDetail);
             await JSRuntime.InvokeVoidAsync("localStorage.setItem", chatDetail.Id.ToString(), chatHistory);
         }
@@ -86,7 +85,7 @@ public partial class Home
 
         if (_conversation.Messages.Count > 1)
         {
-            var chatDetail = new ChatDetail(_conversation.Messages.ToList(), _source, _destination);
+            var chatDetail = new ChatDetail(_conversation.Messages.ToList(), _source, _destination); // Broken -- need to fix this functionality.
             var chatHistory = JsonSerializer.Serialize(chatDetail);
             await JSRuntime.InvokeVoidAsync("localStorage.setItem", DateTime.Now.ToString(), chatHistory);
         }

@@ -1,5 +1,6 @@
 using Blazored.LocalStorage;
 using Caisy.Web.Features.CodeConverter;
+using Caisy.Web.Features.Shared.Models;
 using Caisy.Web.Features.Shared.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;

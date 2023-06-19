@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Caisy.Web.Features.Shared.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace Caisy.Web.Features.Settings;
 

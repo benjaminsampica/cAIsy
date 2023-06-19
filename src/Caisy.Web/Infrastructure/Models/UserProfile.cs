@@ -1,4 +1,6 @@
-﻿namespace Caisy.Web.Infrastructure.Models;
+﻿using Caisy.Web.Features.Shared.Models;
+
+namespace Caisy.Web.Infrastructure.Models;
 
 public class UserProfile : BaseEntity<UserProfile>, IUser
 {

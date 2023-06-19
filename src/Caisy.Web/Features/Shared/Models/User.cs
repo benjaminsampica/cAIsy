@@ -1,4 +1,4 @@
-﻿namespace Caisy.Web.Features.Settings;
+﻿namespace Caisy.Web.Features.Shared.Models;
 
 public interface IUser
 {

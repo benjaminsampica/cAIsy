@@ -1,29 +1,31 @@
-﻿@page "/ChatHistory"
+﻿@page "/chathistory"
 @using Microsoft.JSInterop;
 @using System.Text.Json;
 @using OpenAI_API.Chat;
-@inject IJSRuntime JSRuntime;
 @inject NavigationManager NavigationManager
 
-<MudText Typo="Typo.h3">Chat History</MudText>
+<MudText Typo="Typo.h3">
+    Chat History
+</MudText>
 
-<MudDataGrid Items="@_details.OrderByDescending(x => x.ChatTime)">
-    <Columns>
-        <PropertyColumn Property="x => x.ChatTime" Title="Time Of Chat" />
-        <PropertyColumn Property="x => x.Source" Title="Convert From" />
-        <PropertyColumn Property="x => x.Destination" Title="Convert To" />
-        <PropertyColumn Property="x => x.MessageForGrid" Title="Message" />
+@if(_response != null)
+{
+    <MudDataGrid Items="@_response.ChatHistories">
+        <Columns>
+            <PropertyColumn Property="x => x.Summary" Title="Summary" />
+            <PropertyColumn Property="x => x.CreatedOn" Title="Created" />
             <TemplateColumn CellClass="d-flex justify-end">
                 <CellTemplate>
-                    <MudStack Row>
-                    <MudButton Size="@Size.Small" Variant="@Variant.Filled" @onclick="() => NavigateToHome(context)" Color="@Color.Primary">View Chat</MudButton>
+                     <MudStack Row>
+                        <MudButton Size="@Size.Small" Variant="@Variant.Filled" OnClick="() => NavigateToHome(context.Item.Id)" Color="@Color.Primary">View Chat</MudButton>
                     </MudStack>
                 </CellTemplate>
             </TemplateColumn>
-    </Columns>
-</MudDataGrid>
-
-@code {
-
-
+        </Columns>
+        <NoRecordsContent>
+            <MudAlert Severity="Severity.Info">
+                No history has been recorded yet.
+            </MudAlert>
+        </NoRecordsContent>
+    </MudDataGrid>
 }

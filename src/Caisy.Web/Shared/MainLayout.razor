@@ -1,8 +1,7 @@
-﻿@using Caisy.Web.Features.Profile;
-@implements IDisposable
+﻿@implements IDisposable
 @inherits LayoutComponentBase
 
-<CascadingValue Value="ProfileState">
+<CascadingValue Value="UserProfileState">
     <MudLayout>
         <MudAppBar Color="Color.Primary">
             <MudIconButton Icon="@Icons.Material.Outlined.Menu" OnClick="DrawerToggle" />
@@ -11,9 +10,9 @@
         <MudDrawer @bind-Open="@_drawerOpen" Variant="@DrawerVariant.Temporary">
             <MudNavMenu>
                 <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Home"><headerFont>Code Converter</headerFont></MudNavLink>
-                <MudNavLink Href="Profile" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.PeopleAlt"><headerFont>Profile</headerFont></MudNavLink>
-                <MudNavLink Href="ChatHistory" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.ChatBubbleOutline"><headerFont>Chat History</headerFont></MudNavLink>
-                <MudNavLink Href="CodeReader" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.MenuBook"><headerFont>Code Reader</headerFont></MudNavLink>
+                <MudNavLink Href="codeReader" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.MenuBook"><headerFont>Code Reader</headerFont></MudNavLink>
+                <MudNavLink Href="chatHistory" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.ChatBubbleOutline"><headerFont>Chat History</headerFont></MudNavLink>
+                <MudNavLink Href="settings" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.PeopleAlt"><headerFont>Settings</headerFont></MudNavLink>
             </MudNavMenu>
         </MudDrawer>
         <MudMainContent>
@@ -30,17 +29,17 @@
     </MudLayout>
 </CascadingValue>
 
-<MudThemeProvider @ref=ProfileState.MudThemeProvider Theme=_baseTheme IsDarkMode=ProfileState.PrefersDarkMode />
+<MudThemeProvider @ref=UserProfileState.MudThemeProvider Theme=_baseTheme IsDarkMode=UserProfileState.PrefersDarkMode />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
 @code {
-    [Inject] public ProfileState ProfileState { get; set; } = null!;
+    [Inject] public UserProfileState UserProfileState { get; set; } = null!;
     private bool _drawerOpen;
 
     protected override void OnInitialized()
     {
-        ProfileState.OnUserSettingsChanged += StateHasChanged;
+        UserProfileState.OnUserSettingsChanged += StateHasChanged;
     }
 
     private void DrawerToggle()
@@ -50,21 +49,21 @@
 
     public void Dispose()
     {
-        ProfileState.OnUserSettingsChanged -= StateHasChanged;
+        UserProfileState.OnUserSettingsChanged -= StateHasChanged;
     }
 
     private static readonly string[] _headerFontFamily = new[] { "Orbitron", "sans-serif" };
-    private MudTheme _baseTheme = new MudTheme()
+    private MudTheme _baseTheme = new MudTheme
+    {
+        Typography = new Typography
         {
-            Typography = new Typography
-            {
-                Default = new Default { FontFamily = new[] { "Roboto", "sans-serif" } },
-                H1 = new H1 { FontFamily = _headerFontFamily },
-                H2 = new H2 { FontFamily = _headerFontFamily },
-                H3 = new H3 { FontFamily = _headerFontFamily },
-                H4 = new H4 { FontFamily = _headerFontFamily },
-                H5 = new H5 { FontFamily = _headerFontFamily },
-                H6 = new H6 { FontFamily = _headerFontFamily }
-            }
-        };
+            Default = new Default { FontFamily = new[] { "Roboto", "sans-serif" } },
+            H1 = new H1 { FontFamily = _headerFontFamily },
+            H2 = new H2 { FontFamily = _headerFontFamily },
+            H3 = new H3 { FontFamily = _headerFontFamily },
+            H4 = new H4 { FontFamily = _headerFontFamily },
+            H5 = new H5 { FontFamily = _headerFontFamily },
+            H6 = new H6 { FontFamily = _headerFontFamily }
+        }
+    };
 }

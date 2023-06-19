@@ -5,14 +5,14 @@
     <MudText Typo="Typo.h3" Class="mr-auto">
         Code Converter
     </MudText>
-    <div id="new-chat-button">
+@*    <div id="new-chat-button">
         <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Outlined" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Add">
             New Chat
         </MudButton>
-    </div>
+    </div>*@
 </div>
 
-@if (ProfileState.Id is null)
+@if (User is null)
 {
     <MudAlert Severity=Severity.Warning Icon="@Icons.Material.Outlined.Warning">
         An api key has not been set. Please go to your <MudLink Href="profile">profile</MudLink> and add an API key.
@@ -86,7 +86,7 @@ else
                     <MudProgressLinear Color="Color.Primary" Indeterminate="@_isInProgress" Striped=true />
                 }
             </MudItem>
-            @if (_conversation.Messages.Count > 1)
+            @if (_conversation.Messages.Count > 0)
             {
                 <MudItem xs="12">
                     <div class="chat-container">
@@ -112,7 +112,7 @@ else
                                     </ItemDot>
                                     <ItemContent>
                                         <MudAlert Severity="Severity.Normal" NoIcon=true Class="alert-code">
-                                            <MudMarkdown Value="@message.Content" CodeBlockTheme="ProfileState.CodeBlockTheme" />
+                                            <MudMarkdown Value="@message.Content" CodeBlockTheme="UserProfileState.CodeBlockTheme" />
                                         </MudAlert>
                                     </ItemContent>
                                 </MudTimelineItem>

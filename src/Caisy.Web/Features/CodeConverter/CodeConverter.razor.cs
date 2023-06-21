@@ -28,6 +28,8 @@ public partial class CodeConverter : IDisposable
 
         if (ChatHistoryId != null)
         {
+            // Blazor doesn't accept string route parameters and in order to look up items we append the "table" name onto their guids in local storage.
+            // Only the GUID is be passed to the route so we must append the table name back onto it.
             _actualExistingChatHistoryId = nameof(Infrastructure.Models.ChatHistory) + ChatHistoryId.ToString();
         }
 

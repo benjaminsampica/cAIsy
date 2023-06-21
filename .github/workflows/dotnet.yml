@@ -37,6 +37,10 @@ jobs:
       run: dotnet workload install wasm-tools 
     - name: Restore dependencies
       run: dotnet restore
+    - name: Test
+      run: dotnet test -c Release --collect:"XPlat Code Coverage" --results-directory ./coverage
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v3
     - name: Publish
       run: dotnet publish -c Release -o drop
     - name: Change base-tag in index.html from / to cAIsy

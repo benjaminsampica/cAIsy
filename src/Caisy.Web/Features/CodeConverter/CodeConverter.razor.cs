@@ -1,4 +1,5 @@
 ﻿using Caisy.Web.Features.Shared;
+using Caisy.Web.Features.Shared.Handlers;
 using Caisy.Web.Features.Shared.Services;
 using Caisy.Web.Features.Shared.Utilities;
 using Microsoft.AspNetCore.Components.Forms;
@@ -12,8 +13,9 @@ public partial class CodeConverter : IDisposable
     [Inject] public IMediator Mediator { get; set; } = null!;
     [Inject] public CodeConverterState CodeConverterState { get; set; } = null!;
     [CascadingParameter] public IUser? User { get; set; }
-    [Parameter] public string? ChatHistoryId { get; set; }
+    [Parameter] public Guid? ChatHistoryId { get; set; }
 
+    private string _actualExistingChatHistoryId { get; set; } = string.Empty;
     private bool _isGenerating = false;
     private bool _hasGeneratedCode = false;
     private readonly CancellationTokenSource _cts = new();
@@ -24,8 +26,14 @@ public partial class CodeConverter : IDisposable
     {
         if (User == null) return;
 
+        if (ChatHistoryId != null)
+        {
+            _actualExistingChatHistoryId = nameof(Infrastructure.Models.ChatHistory) + ChatHistoryId.ToString();
+        }
+
         CodeConverterState.OnCodeConverterStateChanged += StateHasChanged;
-        CodeConverterState.Conversation = await Mediator.Send(new GetCodeConverterConversationQuery(ChatHistoryId), _cts.Token);
+        CodeConverterState.OnCodeConverterStateChanged += SaveToChatHistoryAsync;
+        CodeConverterState.Conversation = await Mediator.Send(new GetCodeConverterConversationQuery(_actualExistingChatHistoryId), _cts.Token);
     }
 
     private async Task OnValidSubmitAsync()
@@ -47,6 +55,11 @@ public partial class CodeConverter : IDisposable
 
         var fileContent = await streamReader.ReadToEndAsync(_cts.Token);
         _convertCodeModel.Code = fileContent;
+    }
+
+    private async void SaveToChatHistoryAsync()
+    {
+        _actualExistingChatHistoryId = await Mediator.Send(new SaveChatHistoryCommand { Conversation = CodeConverterState.Conversation, ExistingChatHistoryId = _actualExistingChatHistoryId }, _cts.Token);
     }
 
     private async Task GenerateTests()

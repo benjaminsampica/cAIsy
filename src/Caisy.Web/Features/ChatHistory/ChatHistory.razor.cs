@@ -16,7 +16,10 @@ public partial class ChatHistory : IDisposable
 
     public void NavigateToHome(string Id)
     {
-        NavigationManager.NavigateTo("/" + Id);
+        // Blazor doesn't accept string route parameters and in order to look up items we append the "table" name onto their guids in local storage.
+        // Only the GUID should be passed to the route.
+        var guid = Id[nameof(Infrastructure.Models.ChatHistory).Length..];
+        NavigationManager.NavigateTo("/" + guid);
     }
 
     public void Dispose()
@@ -55,15 +58,19 @@ public class GetChatHistoryListHandler : IRequestHandler<GetChatHistoryListQuery
 
 public class GetChatHistoryListResponse
 {
-    public required IEnumerable<ChatHistoryItem> ChatHistories { get; set; } = Array.Empty<ChatHistoryItem>();
+    public required IEnumerable<ChatHistoryItem> ChatHistories { get; set; } = new HashSet<ChatHistoryItem>();
 
-    public record ChatHistoryItem(string Id, DateTimeOffset CreatedOn, string Summary)
+    public class ChatHistoryItem
     {
+        public required string Id { get; set; }
+        public required DateTimeOffset CreatedOn { get; set; }
+        public required string Summary { get; set; }
+
         public class ChatHistoryItemProfile : Profile
         {
             public ChatHistoryItemProfile()
             {
-                CreateMap<ChatHistoryItem, ChatHistory>();
+                CreateMap<Infrastructure.Models.ChatHistory, ChatHistoryItem>();
             }
         }
     };

@@ -19,7 +19,6 @@ builder.Services.AddAutoMapper(typeof(App));
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<ApplicationState>();
 builder.Services.AddScoped<IIdentityProvider, IdentityProvider>();
-builder.Services.AddScoped<IChatHistoryService, ChatHistoryService>();
 builder.Services.AddTransient<IOpenAIApiService, OpenAIApiService>();
 builder.Services.AddScoped<CodeConverterState>();
 

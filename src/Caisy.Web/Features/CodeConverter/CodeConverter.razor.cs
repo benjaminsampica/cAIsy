@@ -31,9 +31,10 @@ public partial class CodeConverter : IDisposable
             _actualExistingChatHistoryId = nameof(Infrastructure.Models.ChatHistory) + ChatHistoryId.ToString();
         }
 
+        CodeConverterState.Conversation = await Mediator.Send(new GetCodeConverterConversationQuery(_actualExistingChatHistoryId), _cts.Token);
+
         CodeConverterState.OnCodeConverterStateChanged += StateHasChanged;
         CodeConverterState.OnCodeConverterStateChanged += SaveToChatHistoryAsync;
-        CodeConverterState.Conversation = await Mediator.Send(new GetCodeConverterConversationQuery(_actualExistingChatHistoryId), _cts.Token);
     }
 
     private async Task OnValidSubmitAsync()
@@ -76,6 +77,7 @@ public partial class CodeConverter : IDisposable
     public void Dispose()
     {
         CodeConverterState.OnCodeConverterStateChanged -= StateHasChanged;
+        CodeConverterState.OnCodeConverterStateChanged -= SaveToChatHistoryAsync;
         _cts.Cancel();
         _cts.Dispose();
     }

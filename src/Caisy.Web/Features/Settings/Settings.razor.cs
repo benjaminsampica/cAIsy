@@ -1,4 +1,4 @@
-﻿using Caisy.Web.Features.Shared.Models;
+﻿using Caisy.Web.Features.Shared;
 using System.ComponentModel.DataAnnotations;
 
 namespace Caisy.Web.Features.Settings;
@@ -7,7 +7,9 @@ public partial class Settings : IDisposable
 {
     [Inject] public IRepository<UserProfile> ProfileRepository { get; set; } = null!;
     [Inject] public ISnackbar Snackbar { get; set; } = null!;
-    [CascadingParameter] public UserProfileState UserProfileState { get; set; } = null!;
+    [Inject] public ApplicationState ApplicationState { get; set; } = null!;
+    [Inject] public IIdentityProvider IdentityProvider { get; set; } = null!;
+
 
     private readonly CancellationTokenSource _cts = new();
     private readonly GetUserProfileQuery _model = new();
@@ -16,25 +18,24 @@ public partial class Settings : IDisposable
 
     protected override async Task OnInitializedAsync()
     {
-        _model.ApiKey = UserProfileState?.User?.ApiKey ?? string.Empty;
-        _model.PrefersDarkMode = UserProfileState?.User?.PrefersDarkMode ?? false;
+        _model.ApiKey = IdentityProvider?.User?.ApiKey ?? string.Empty;
+        _model.PrefersDarkMode = IdentityProvider?.User?.PrefersDarkMode ?? false;
     }
 
     private async Task OnValidSubmitAsync()
     {
-        if (UserProfileState.User?.Id != null)
+        if (IdentityProvider.User?.Id != null)
         {
-            await ProfileRepository.RemoveAsync(UserProfileState.User.Id, _cts.Token);
+            await ProfileRepository.RemoveAsync(IdentityProvider.User.Id, _cts.Token);
         }
 
         var newUserProfile = new UserProfile { ApiKey = _model.ApiKey, PrefersDarkMode = _model.PrefersDarkMode };
         await ProfileRepository.AddAsync(newUserProfile, _cts.Token);
 
-        UserProfileState.User = newUserProfile;
+        IdentityProvider.User = newUserProfile;
+        ApplicationState.OnUserSettingsChanged?.Invoke();
 
-        UserProfileState.OnUserSettingsChanged?.Invoke();
-
-        Snackbar.Add("Successfully updated profile.", Severity.Success);
+        Snackbar.Add("Successfully updated settings.", Severity.Success);
     }
 
     public void Dispose()
@@ -50,15 +51,8 @@ public class GetUserProfileQuery
     public bool PrefersDarkMode { get; set; }
 }
 
-public class UserProfileState
+public class ApplicationState
 {
-    public UserProfileState(IUser user)
-    {
-        User = user;
-    }
-
-    public IUser? User { get; set; }
-    public CodeBlockTheme CodeBlockTheme => User!.PrefersDarkMode ? CodeBlockTheme.AtomOneDark : CodeBlockTheme.AtomOneLight;
     public Action? OnUserSettingsChanged { get; set; }
     public MudThemeProvider MudThemeProvider { get; set; } = null!;
 }

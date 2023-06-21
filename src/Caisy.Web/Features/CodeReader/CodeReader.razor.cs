@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components.Forms;
+﻿using Caisy.Web.Features.Shared;
+using Microsoft.AspNetCore.Components.Forms;
 using OpenAI_API;
 using OpenAI_API.Chat;
 
@@ -7,7 +8,7 @@ namespace Caisy.Web.Features.CodeReader;
 public partial class CodeReader
 {
     [Inject] public ISnackbar Snackbar { get; set; } = null!;
-    [CascadingParameter] public UserProfileState UserProfileState { get; set; } = null!;
+    [CascadingParameter] public IUser User { get; set; } = null!;
     private OpenAIAPI OpenAiApi { get; set; }
     private OpenApiRequest _request = new();
     private Conversation _conversation;
@@ -16,9 +17,9 @@ public partial class CodeReader
 
     protected override async Task OnInitializedAsync()
     {
-        if (UserProfileState.ApiKey != null)
+        if (User.ApiKey != null)
         {
-            OpenAiApi = new OpenAIAPI(UserProfileState.ApiKey);
+            OpenAiApi = new OpenAIAPI(User.ApiKey);
         }
 
         _conversation = OpenAiApi.Chat.CreateConversation();

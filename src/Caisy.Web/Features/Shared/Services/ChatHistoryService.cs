@@ -1,5 +1,4 @@
-﻿using Caisy.Web.Features.Shared.Models;
-using static Caisy.Web.Infrastructure.Models.ChatHistory;
+﻿using static Caisy.Web.Infrastructure.Models.ChatHistory;
 
 namespace Caisy.Web.Features.Shared.Services;
 

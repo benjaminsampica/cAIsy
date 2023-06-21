@@ -1,13 +1,12 @@
-﻿using Caisy.Web.Features.Shared.Models;
-using OpenAI_API;
+﻿using OpenAI_API;
 using OpenAI_API.Chat;
-using static Caisy.Web.Features.Shared.Models.ConversationBase;
+using static Caisy.Web.Features.Shared.ConversationBase;
 
 namespace Caisy.Web.Features.Shared.Services;
 
 public interface IOpenAIApiService
 {
-    Task<Message> GetBestCompletionAsync(ConversationBase conversation);
+    Task<Message> GetBestCompletionAsync(ConversationBase conversation, CancellationToken cancellationToken = default);
 }
 
 public class OpenAIApiService : IOpenAIApiService
@@ -15,13 +14,13 @@ public class OpenAIApiService : IOpenAIApiService
     private readonly OpenAIAPI _openAIApi;
     private readonly IMapper _mapper;
 
-    public OpenAIApiService(IUser user, IMapper mapper)
+    public OpenAIApiService(IIdentityProvider identityProvider, IMapper mapper)
     {
-        _openAIApi = new OpenAIAPI(user.ApiKey);
+        _openAIApi = new OpenAIAPI(identityProvider.User!.ApiKey);
         _mapper = mapper;
     }
 
-    public async Task<Message> GetBestCompletionAsync(ConversationBase conversation)
+    public async Task<Message> GetBestCompletionAsync(ConversationBase conversation, CancellationToken cancellationToken = default)
     {
         var existingMessages = _mapper.Map<List<ChatMessage>>(conversation.Messages);
 

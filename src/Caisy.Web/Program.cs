@@ -1,6 +1,6 @@
 using Blazored.LocalStorage;
 using Caisy.Web.Features.CodeConverter;
-using Caisy.Web.Features.Shared.Models;
+using Caisy.Web.Features.Shared;
 using Caisy.Web.Features.Shared.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -17,17 +17,17 @@ builder.Services.AddMediatR(config => config.RegisterServicesFromAssemblyContain
 builder.Services.AddAutoMapper(typeof(App));
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-builder.Services.AddScoped<UserProfileState>();
-builder.Services.AddScoped<IUser, UserProfile>();
+builder.Services.AddScoped<ApplicationState>();
+builder.Services.AddScoped<IIdentityProvider, IdentityProvider>();
 builder.Services.AddScoped<IChatHistoryService, ChatHistoryService>();
-builder.Services.AddTransient<CodeConverterState>();
+builder.Services.AddTransient<IOpenAIApiService, OpenAIApiService>();
+builder.Services.AddScoped<CodeConverterState>();
 
 var app = builder.Build();
 
-var repository = app.Services.GetRequiredService<IRepository<UserProfile>>();
-var existingUserProfile = (await repository.GetAllAsync(CancellationToken.None)).FirstOrDefault();
-
-var user = app.Services.GetRequiredService<IUser>();
-user = existingUserProfile;
+var userProfileRepository = app.Services.GetRequiredService<IRepository<UserProfile>>();
+var existingUserProfile = (await userProfileRepository.GetAllAsync(CancellationToken.None)).FirstOrDefault();
+var identityProvider = app.Services.GetRequiredService<IIdentityProvider>();
+identityProvider.User = existingUserProfile;
 
 await app.RunAsync();

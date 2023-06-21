@@ -1,10 +1,8 @@
-﻿using Caisy.Web.Features.Shared.Models;
+﻿using Caisy.Web.Features.Shared;
 using Caisy.Web.Features.Shared.Services;
+using Caisy.Web.Features.Shared.Utilities;
 using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.JSInterop;
-using OpenAI_API.Chat;
-using System.Text.Json;
-using static Caisy.Web.Features.CodeConverter.ConvertCodeCommand;
+using System.ComponentModel.DataAnnotations;
 
 namespace Caisy.Web.Features.CodeConverter;
 
@@ -13,14 +11,14 @@ public partial class CodeConverter : IDisposable
     [Inject] public ISnackbar Snackbar { get; set; } = null!;
     [Inject] public IMediator Mediator { get; set; } = null!;
     [Inject] public CodeConverterState CodeConverterState { get; set; } = null!;
-    [Inject] public IUser? User { get; set; }
+    [CascadingParameter] public IUser? User { get; set; }
     [Parameter] public string? ChatHistoryId { get; set; }
 
-    private bool _isInProgress = false;
-    private bool _anyCode = false;
+    private bool _isGenerating = false;
+    private bool _hasGeneratedCode = false;
     private readonly CancellationTokenSource _cts = new();
-    private string _source = "SQL";
-    private string _destination = "Entity Framework";
+    private readonly ConvertCodeCommand _convertCodeModel = new();
+    private readonly GenerateTestsCommand _generateTestsModel = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -30,45 +28,14 @@ public partial class CodeConverter : IDisposable
         CodeConverterState.Conversation = await Mediator.Send(new GetCodeConverterConversationQuery(ChatHistoryId), _cts.Token);
     }
 
-    private async Task OnSourceChangedAsync(string value)
-    {
-        if (_source == value) return;
-
-        if (_conversation.Messages.Count > 0)
-        {
-            var chatDetail = new Infrastructure.Models.ChatHistory(_conversation.Messages.ToList<ChatMessage>(), _source, _destination); // Broken -- need to fix this functionality.
-            var chatHistory = JsonSerializer.Serialize(chatDetail);
-            await JSRuntime.InvokeVoidAsync("localStorage.setItem", chatDetail.Id.ToString(), chatHistory);
-        }
-
-        _source = value;
-        StartConversation();
-    }
-    private async Task OnDestinationChangedAsync(string value)
-    {
-        if (_destination == value) return;
-
-        if (_conversation.Messages.Count > 0)
-        {
-            var chatDetail = new Infrastructure.Models.ChatHistory(_conversation.Messages.ToList(), _source, _destination);  // Broken -- need to fix this functionality.
-            var chatHistory = JsonSerializer.Serialize(chatDetail);
-            await JSRuntime.InvokeVoidAsync("localStorage.setItem", DateTime.Now.ToString(), chatHistory);
-        }
-
-        _destination = value;
-        StartConversation();
-    }
-
     private async Task OnValidSubmitAsync()
     {
-        _isInProgress = true;
+        _isGenerating = true;
 
-        _conversation.AppendUserInput(_request.Prompt);
+        await Mediator.Send(_convertCodeModel);
 
-        await _conversation.GetResponseFromChatbotAsync();
-
-        _isInProgress = false;
-        _anyCode = true;
+        _isGenerating = false;
+        _hasGeneratedCode = true;
     }
 
     private async Task OnFileUploadAsync(InputFileChangeEventArgs e)
@@ -79,17 +46,19 @@ public partial class CodeConverter : IDisposable
         using var streamReader = new StreamReader(file.OpenReadStream());
 
         var fileContent = await streamReader.ReadToEndAsync(_cts.Token);
-        _request.Prompt = fileContent;
+        _convertCodeModel.Code = fileContent;
     }
 
-    private async Task GetTestCaseResult()
+    private async Task GenerateTests()
     {
-        _isInProgress = true;
-        _conversation.AppendUserInput($"Write {_request.TestCaseFramework} test cases for above result.");
-        await _conversation.GetResponseFromChatbotAsync();
+        _isGenerating = true;
 
-        _isInProgress = false;
+        await Mediator.Send(_generateTestsModel);
+
+        _isGenerating = false;
     }
+
+    private bool GenerateTestsButtonIsDisabled => _isGenerating || !_hasGeneratedCode;
 
     public void Dispose()
     {
@@ -101,46 +70,87 @@ public partial class CodeConverter : IDisposable
 
 public class CodeConverterState
 {
-    public GetCodeConverterConversationResponse? Conversation { get; set; }
+    public GetCodeConverterConversationResponse Conversation { get; set; } = new GetCodeConverterConversationResponse();
 
     public Action? OnCodeConverterStateChanged { get; set; }
 }
 
-public record ConvertCodeCommand(string Code, ConvertCodeOption Source, ConvertCodeOption Destination) : IRequest<ConvertCodeCommandResponse>
+public class ConvertCodeCommand : IRequest
 {
+    public string Code { get; set; } = string.Empty;
+    public ConvertCodeOption Source { get; set; } = ConvertCodeOption.SQL;
+    public ConvertCodeOption Destination { get; set; } = ConvertCodeOption.EntityFrameworkCore;
+
+    public string FormattedContent => $"Convert {Source.GetDisplayName()} to {Destination.GetDisplayName()}.\n\n```{Code}```";
+
     public enum ConvertCodeOption
     {
+        [Display(Name = "Entity Framework Core")]
         EntityFrameworkCore,
         Dapper,
         ADO,
-        Sql
+        SQL
     }
-};
+}
 
-public class ConvertCodeCommandHandler : IRequestHandler<ConvertCodeCommand, ConvertCodeCommandResponse>
+public class ConvertCodeCommandHandler : IRequestHandler<ConvertCodeCommand>
 {
     private readonly CodeConverterState _codeConverterState;
-    private readonly OpenAIApiService _openAIApiService;
-    private readonly IMapper _mapper;
+    private readonly IOpenAIApiService _openAIApiService;
 
-    public ConvertCodeCommandHandler(CodeConverterState codeConverterState, OpenAIApiService openAIApiService, IMapper mapper)
+    public ConvertCodeCommandHandler(CodeConverterState codeConverterState, IOpenAIApiService openAIApiService)
     {
         _codeConverterState = codeConverterState;
-        _mapper = mapper;
         _openAIApiService = openAIApiService;
     }
 
-    public async Task<ConvertCodeCommandResponse> Handle(ConvertCodeCommand command, CancellationToken cancellationToken)
+    public async Task Handle(ConvertCodeCommand command, CancellationToken cancellationToken)
     {
-        var prompt = "Convert code ";
+        var requestMessage = new ConversationBase.Message { Content = command.FormattedContent, Role = ConversationBase.MessageRole.User };
+        _codeConverterState.Conversation.Messages.Add(requestMessage);
+
+        var responseMessage = await _openAIApiService.GetBestCompletionAsync(_codeConverterState.Conversation, cancellationToken);
+        _codeConverterState.Conversation.Messages.Add(responseMessage);
+
+        _codeConverterState.OnCodeConverterStateChanged?.Invoke();
     }
 }
 
-public class ConvertCodeCommandResponse
-{
-}
 
-// todo: get test cases mq/r
+public class GenerateTestsCommand : IRequest
+{
+    public TestFramework Framework { get; set; } = TestFramework.XUnit;
+
+    public enum TestFramework
+    {
+        XUnit,
+        NUnit,
+        MSTest
+    }
+};
+
+public class GenerateTestsCommandHandler : IRequestHandler<GenerateTestsCommand>
+{
+    private readonly CodeConverterState _codeConverterState;
+    private readonly IOpenAIApiService _openAIApiService;
+
+    public GenerateTestsCommandHandler(CodeConverterState codeConverterState, IOpenAIApiService openAIApiService)
+    {
+        _codeConverterState = codeConverterState;
+        _openAIApiService = openAIApiService;
+    }
+
+    public async Task Handle(GenerateTestsCommand command, CancellationToken cancellationToken)
+    {
+        var requestMessage = new ConversationBase.Message { Content = "Generate tests for the above code.", Role = ConversationBase.MessageRole.User };
+        _codeConverterState.Conversation.Messages.Add(requestMessage);
+
+        var responseMessage = await _openAIApiService.GetBestCompletionAsync(_codeConverterState.Conversation, cancellationToken);
+        _codeConverterState.Conversation.Messages.Add(responseMessage);
+
+        _codeConverterState.OnCodeConverterStateChanged?.Invoke();
+    }
+}
 
 public record GetCodeConverterConversationQuery(string? ChatHistoryId) : IRequest<GetCodeConverterConversationResponse>;
 
@@ -157,13 +167,13 @@ public class GetCodeConverterConversationHandler : IRequestHandler<GetCodeConver
 
     public async Task<GetCodeConverterConversationResponse> Handle(GetCodeConverterConversationQuery query, CancellationToken cancellationToken)
     {
-        var messages = Array.Empty<ConversationBase.Message>();
+        var messages = new List<ConversationBase.Message>();
 
         if (query.ChatHistoryId is not null)
         {
             var chatHistory = await _chatHistoryRepository.FindAsync(query.ChatHistoryId, cancellationToken);
 
-            messages = _mapper.Map<ConversationBase.Message[]>(chatHistory!.Messages);
+            messages = _mapper.Map<List<ConversationBase.Message>>(chatHistory!.Messages);
         }
 
         return new GetCodeConverterConversationResponse

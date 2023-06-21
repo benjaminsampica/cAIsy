@@ -1,4 +1,4 @@
-﻿using static Caisy.Web.Features.Shared.Models.ConversationBase;
+﻿using static Caisy.Web.Features.Shared.ConversationBase;
 
 namespace Caisy.Web.Infrastructure.Models;
 

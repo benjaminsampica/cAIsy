@@ -28,6 +28,16 @@
     font-size: 60px;
 }
 
+.caisy-header
+{
+    font-weight: bold;
+}
+
+.ai-header {
+    color: var(--mud-palette-secondary);
+}
+
+/* MudBlazor Overrides */
 .mud-markdown-body p:last-child {
     margin-bottom: 0px !important;
 }
@@ -38,4 +48,8 @@
 
 .alert-code > .mud-alert-position {
     display: block !important;
+}
+
+.mud-nav-link-text, .mud-button {
+    font-family: "Orbitron";
 }

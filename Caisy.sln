@@ -5,6 +5,8 @@ VisualStudioVersion = 17.2.32505.173
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caisy.Web", "src\Caisy.Web\Caisy.Web.csproj", "{2810AFEC-DD4F-4468-B0ED-CCE1DCEF6307}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caisy.Tests", "src\Caisy.Tests\Caisy.Tests.csproj", "{23A254E2-1E4B-4931-9984-92972DD033DF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{2810AFEC-DD4F-4468-B0ED-CCE1DCEF6307}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2810AFEC-DD4F-4468-B0ED-CCE1DCEF6307}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2810AFEC-DD4F-4468-B0ED-CCE1DCEF6307}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23A254E2-1E4B-4931-9984-92972DD033DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23A254E2-1E4B-4931-9984-92972DD033DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23A254E2-1E4B-4931-9984-92972DD033DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23A254E2-1E4B-4931-9984-92972DD033DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

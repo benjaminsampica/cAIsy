@@ -1,6 +1,5 @@
 ﻿using OpenAI_API;
 using OpenAI_API.Chat;
-using static Caisy.Web.Features.Shared.ConversationBase;
 
 namespace Caisy.Web.Features.Shared.Services;
 

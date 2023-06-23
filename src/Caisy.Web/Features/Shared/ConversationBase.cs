@@ -38,12 +38,12 @@ public abstract class ConversationBase
         }
 
         public bool IsUserMessage => Role == MessageRole.User;
-    }
 
-    public enum MessageRole
-    {
-        User,
-        Caisy,
-        Hidden
+        public enum MessageRole
+        {
+            User,
+            Caisy,
+            Hidden
+        }
     }
 }

@@ -1,6 +1,4 @@
-﻿using static Caisy.Web.Features.Shared.ConversationBase;
-
-namespace Caisy.Web.Infrastructure.Models;
+﻿namespace Caisy.Web.Infrastructure.Models;
 
 public class ChatHistory : BaseEntity<ChatHistory>
 {
@@ -22,7 +20,7 @@ public class ChatHistory : BaseEntity<ChatHistory>
 
     public class ChatHistoryMessage
     {
-        public required MessageRole Role { get; set; }
+        public required Message.MessageRole Role { get; set; }
         public required string Content { get; set; }
     }
 }

@@ -115,7 +115,7 @@ public class ConvertCodeCommandHandler : IRequestHandler<ConvertCodeCommand>
 
     public async Task Handle(ConvertCodeCommand command, CancellationToken cancellationToken)
     {
-        var requestMessage = new ConversationBase.Message { Content = command.FormattedContent, Role = ConversationBase.MessageRole.User };
+        var requestMessage = new Message { Content = command.FormattedContent, Role = Message.MessageRole.User };
         _codeConverterState.Conversation.Messages.Add(requestMessage);
 
         var responseMessage = await _openAIApiService.GetBestCompletionAsync(_codeConverterState.Conversation, cancellationToken);
@@ -151,7 +151,7 @@ public class GenerateTestsCommandHandler : IRequestHandler<GenerateTestsCommand>
 
     public async Task Handle(GenerateTestsCommand command, CancellationToken cancellationToken)
     {
-        var requestMessage = new ConversationBase.Message { Content = "Generate tests for the above code.", Role = ConversationBase.MessageRole.User };
+        var requestMessage = new Message { Content = "Generate tests for the above code.", Role = Message.MessageRole.User };
         _codeConverterState.Conversation.Messages.Add(requestMessage);
 
         var responseMessage = await _openAIApiService.GetBestCompletionAsync(_codeConverterState.Conversation, cancellationToken);
@@ -176,13 +176,13 @@ public class GetCodeConverterConversationHandler : IRequestHandler<GetCodeConver
 
     public async Task<GetCodeConverterConversationResponse> Handle(GetCodeConverterConversationQuery query, CancellationToken cancellationToken)
     {
-        var messages = new List<ConversationBase.Message>();
+        var messages = new List<Message>();
 
         if (query.ChatHistoryId is not null)
         {
             var chatHistory = await _chatHistoryRepository.FindAsync(query.ChatHistoryId.Value, cancellationToken);
 
-            messages = _mapper.Map<List<ConversationBase.Message>>(chatHistory!.Messages);
+            messages = _mapper.Map<List<Message>>(chatHistory!.Messages);
         }
 
         return new GetCodeConverterConversationResponse

@@ -1,4 +1,5 @@
 ﻿using Blazored.LocalStorage;
+using Caisy.Web.Infrastructure.Extensions;
 
 namespace Caisy.Web.Infrastructure;
 
@@ -11,7 +12,7 @@ public class Repository<T> : IRepository<T> where T : BaseEntity<T>
         _localStorageService = localStorageService;
     }
 
-    public async ValueTask<T?> FindAsync(string id, CancellationToken cancellationToken)
+    public async ValueTask<T?> FindAsync(long id, CancellationToken cancellationToken)
     {
         return await _localStorageService.GetItemAsync<T>(id.ToString(), cancellationToken);
     }
@@ -20,7 +21,7 @@ public class Repository<T> : IRepository<T> where T : BaseEntity<T>
     {
         var allKeys = await _localStorageService.KeysAsync(cancellationToken);
 
-        var relevantKeys = allKeys.Where(k => k.Contains(typeof(T).Name)).ToList();
+        var relevantKeys = allKeys.Where(k => k.Contains(LocalStorageExtensions.GetTableId<T>().ToString())).ToList();
 
         var allTopicsTasks = new List<Task<T>>();
         foreach (var key in relevantKeys)
@@ -36,11 +37,11 @@ public class Repository<T> : IRepository<T> where T : BaseEntity<T>
 
     public async ValueTask AddAsync(T entity, CancellationToken cancellationToken)
     {
-        await _localStorageService.SetItemAsync(entity.Id, entity, cancellationToken);
+        await _localStorageService.SetItemAsync(entity.Id.ToString(), entity, cancellationToken);
     }
 
-    public async ValueTask RemoveAsync(string id, CancellationToken cancellationToken)
+    public async ValueTask RemoveAsync(long id, CancellationToken cancellationToken)
     {
-        await _localStorageService.RemoveItemAsync(id, cancellationToken);
+        await _localStorageService.RemoveItemAsync(id.ToString(), cancellationToken);
     }
 }

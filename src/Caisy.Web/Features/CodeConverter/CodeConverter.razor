@@ -1,5 +1,5 @@
 ﻿@page "/"
-@page "/{ChatHistoryId:guid}"
+@page "/{ChatHistoryId:long}"
 @using Caisy.Web.Features.Shared.Utilities;
 
 <div class="d-flex align-center">
@@ -11,7 +11,7 @@
 @if (User is null)
 {
     <MudAlert Severity=Severity.Warning Icon="@Icons.Material.Outlined.Warning">
-        An api key has not been set. Please go to your <MudLink Href="profile">profile</MudLink> and add an API key.
+        An Open AI API key has not been set. Retrieve an API key from the Open AI website, creating an account if necessary, and then navigate to <MudLink Href="settings">settings</MudLink> and add an API key.
     </MudAlert>
 }
 else

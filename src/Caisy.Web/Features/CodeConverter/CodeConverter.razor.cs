@@ -13,9 +13,8 @@ public partial class CodeConverter : IDisposable
     [Inject] public IMediator Mediator { get; set; } = null!;
     [Inject] public CodeConverterState CodeConverterState { get; set; } = null!;
     [CascadingParameter] public IUser? User { get; set; }
-    [Parameter] public Guid? ChatHistoryId { get; set; }
+    [Parameter] public long? ChatHistoryId { get; set; }
 
-    private string? _actualExistingChatHistoryId;
     private bool _isGenerating = false;
     private bool _hasGeneratedCode = false;
     private readonly CancellationTokenSource _cts = new();
@@ -26,14 +25,7 @@ public partial class CodeConverter : IDisposable
     {
         if (User == null) return;
 
-        if (ChatHistoryId != null)
-        {
-            // Blazor doesn't accept string route parameters and in order to look up items we append the "table" name onto their guids in local storage.
-            // Only the GUID is be passed to the route so we must append the table name back onto it.
-            _actualExistingChatHistoryId = nameof(Infrastructure.Models.ChatHistory) + ChatHistoryId.ToString();
-        }
-
-        CodeConverterState.Conversation = await Mediator.Send(new GetCodeConverterConversationQuery(_actualExistingChatHistoryId), _cts.Token);
+        CodeConverterState.Conversation = await Mediator.Send(new GetCodeConverterConversationQuery(ChatHistoryId), _cts.Token);
 
         CodeConverterState.OnCodeConverterStateChanged += StateHasChanged;
         CodeConverterState.OnCodeConverterStateChanged += SaveToChatHistoryAsync;
@@ -62,7 +54,7 @@ public partial class CodeConverter : IDisposable
 
     private async void SaveToChatHistoryAsync()
     {
-        _actualExistingChatHistoryId = await Mediator.Send(new SaveChatHistoryCommand { Conversation = CodeConverterState.Conversation, ExistingChatHistoryId = _actualExistingChatHistoryId }, _cts.Token);
+        ChatHistoryId = await Mediator.Send(new SaveChatHistoryCommand { Conversation = CodeConverterState.Conversation, ExistingChatHistoryId = ChatHistoryId }, _cts.Token);
     }
 
     private async Task GenerateTests()
@@ -169,7 +161,7 @@ public class GenerateTestsCommandHandler : IRequestHandler<GenerateTestsCommand>
     }
 }
 
-public record GetCodeConverterConversationQuery(string? ChatHistoryId) : IRequest<GetCodeConverterConversationResponse>;
+public record GetCodeConverterConversationQuery(long? ChatHistoryId) : IRequest<GetCodeConverterConversationResponse>;
 
 public class GetCodeConverterConversationHandler : IRequestHandler<GetCodeConverterConversationQuery, GetCodeConverterConversationResponse>
 {
@@ -188,7 +180,7 @@ public class GetCodeConverterConversationHandler : IRequestHandler<GetCodeConver
 
         if (query.ChatHistoryId is not null)
         {
-            var chatHistory = await _chatHistoryRepository.FindAsync(query.ChatHistoryId, cancellationToken);
+            var chatHistory = await _chatHistoryRepository.FindAsync(query.ChatHistoryId.Value, cancellationToken);
 
             messages = _mapper.Map<List<ConversationBase.Message>>(chatHistory!.Messages);
         }

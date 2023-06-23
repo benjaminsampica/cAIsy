@@ -14,12 +14,10 @@ public partial class ChatHistory : IDisposable
         _response = await Mediator.Send(new GetChatHistoryListQuery(), _cts.Token);
     }
 
-    public void NavigateToHome(string Id)
+    public void NavigateToExistingChat(long Id)
     {
-        // Blazor doesn't accept string route parameters and in order to look up items we append the "table" name onto their guids in local storage.
-        // Only the GUID should be passed to the route.
-        var guid = Id[nameof(Infrastructure.Models.ChatHistory).Length..];
-        NavigationManager.NavigateTo("/" + guid);
+
+        NavigationManager.NavigateTo("/" + Id);
     }
 
     public void Dispose()
@@ -62,7 +60,7 @@ public class GetChatHistoryListResponse
 
     public class ChatHistoryItem
     {
-        public required string Id { get; set; }
+        public required long Id { get; set; }
         public required DateTimeOffset CreatedOn { get; set; }
         public required string Summary { get; set; }
 

@@ -28,8 +28,7 @@
     font-size: 60px;
 }
 
-.caisy-header
-{
+.caisy-header {
     font-weight: bold;
 }
 
@@ -38,18 +37,23 @@
 }
 
 /* MudBlazor Overrides */
-.mud-markdown-body p:last-child {
-    margin-bottom: 0px !important;
-}
-
-.mud-markdown-body code {
-    margin-bottom: 1.25em;
-}
-
 .alert-code > .mud-alert-position {
     display: block !important;
 }
 
 .mud-nav-link-text, .mud-button {
     font-family: "Orbitron";
+}
+
+/* MudBlazor Markdown Overrides */
+.mud-markdown-body p:last-child {
+    margin-bottom: 0px !important;
+}
+
+.mud-markdown-body code {
+    margin-bottom: 0em;
+}
+
+.mud-markdown-body p:not(:first-child) {
+    margin-top: 1.25em;
 }

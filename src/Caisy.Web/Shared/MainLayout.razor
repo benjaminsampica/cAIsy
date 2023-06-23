@@ -14,7 +14,7 @@
                 <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Home">Code Converter</MudNavLink>
                 <MudNavLink Href="codeReader" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.MenuBook">Code Reader</MudNavLink>
                 <MudNavLink Href="chatHistory" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.ChatBubbleOutline">Chat History</MudNavLink>
-                <MudNavLink Href="settings" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.PeopleAlt">Settings</MudNavLink>
+                <MudNavLink Href="settings" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.Settings">Settings</MudNavLink>
             </MudNavMenu>
         </MudDrawer>
         <MudMainContent>
@@ -38,7 +38,22 @@
 @code {
     [Inject] public IIdentityProvider IdentityProvider { get; set; } = null!;
     [Inject] public ApplicationState ApplicationState { get; set; } = null!;
+
     private bool _drawerOpen;
+    private static readonly string[] _headerFontFamily = new[] { "Orbitron", "sans-serif" };
+    private MudTheme _baseTheme = new MudTheme
+    {
+        Typography = new Typography
+        {
+            Default = new Default { FontFamily = new[] { "Roboto", "sans-serif" } },
+            H1 = new H1 { FontFamily = _headerFontFamily },
+            H2 = new H2 { FontFamily = _headerFontFamily },
+            H3 = new H3 { FontFamily = _headerFontFamily },
+            H4 = new H4 { FontFamily = _headerFontFamily },
+            H5 = new H5 { FontFamily = _headerFontFamily },
+            H6 = new H6 { FontFamily = _headerFontFamily }
+        }
+    };
 
     protected override void OnInitialized()
     {
@@ -54,19 +69,4 @@
     {
         ApplicationState.OnUserSettingsChanged -= StateHasChanged;
     }
-
-    private static readonly string[] _headerFontFamily = new[] { "Orbitron", "sans-serif" };
-    private MudTheme _baseTheme = new MudTheme
-    {
-        Typography = new Typography
-        {
-            Default = new Default { FontFamily = new[] { "Roboto", "sans-serif" } },
-            H1 = new H1 { FontFamily = _headerFontFamily },
-            H2 = new H2 { FontFamily = _headerFontFamily },
-            H3 = new H3 { FontFamily = _headerFontFamily },
-            H4 = new H4 { FontFamily = _headerFontFamily },
-            H5 = new H5 { FontFamily = _headerFontFamily },
-            H6 = new H6 { FontFamily = _headerFontFamily }
-        }
-    };
 }

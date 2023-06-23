@@ -17,7 +17,7 @@
             <TemplateColumn CellClass="d-flex justify-end">
                 <CellTemplate>
                      <MudStack Row>
-                        <MudButton Size="@Size.Small" Variant="@Variant.Filled" OnClick="() => NavigateToHome(context.Item.Id)" Color="@Color.Primary">View Chat</MudButton>
+                        <MudButton Size="@Size.Small" Variant="@Variant.Filled" OnClick="() => NavigateToExistingChat(context.Item.Id)" Color="@Color.Primary">View Chat</MudButton>
                     </MudStack>
                 </CellTemplate>
             </TemplateColumn>

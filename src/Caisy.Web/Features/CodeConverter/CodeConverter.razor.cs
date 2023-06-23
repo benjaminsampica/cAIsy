@@ -15,7 +15,7 @@ public partial class CodeConverter : IDisposable
     [CascadingParameter] public IUser? User { get; set; }
     [Parameter] public Guid? ChatHistoryId { get; set; }
 
-    private string _actualExistingChatHistoryId { get; set; } = string.Empty;
+    private string? _actualExistingChatHistoryId;
     private bool _isGenerating = false;
     private bool _hasGeneratedCode = false;
     private readonly CancellationTokenSource _cts = new();

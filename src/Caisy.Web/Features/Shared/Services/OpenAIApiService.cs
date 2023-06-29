@@ -5,7 +5,7 @@ namespace Caisy.Web.Features.Shared.Services;
 
 public interface IOpenAIApiService
 {
-    Task<Message> GetBestCompletionAsync(ConversationBase conversation, CancellationToken cancellationToken = default);
+    Task<string> GetBestCompletionAsync(ConversationBase conversation, CancellationToken cancellationToken = default);
 }
 
 public class OpenAIApiService : IOpenAIApiService
@@ -19,14 +19,15 @@ public class OpenAIApiService : IOpenAIApiService
         _mapper = mapper;
     }
 
-    public async Task<Message> GetBestCompletionAsync(ConversationBase conversation, CancellationToken cancellationToken = default)
+    public async Task<string> GetBestCompletionAsync(ConversationBase conversation, CancellationToken cancellationToken = default)
     {
         var existingMessages = _mapper.Map<List<ChatMessage>>(conversation.Messages);
 
         var completion = await _openAIApi.Chat.CreateChatCompletionAsync(existingMessages);
 
-        var returnMessage = _mapper.Map<Message>(completion.Choices.Single().Message);
-        return returnMessage;
+        var response = completion.Choices.Single().Message.Content;
+
+        return response;
     }
 }
 

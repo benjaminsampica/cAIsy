@@ -5,7 +5,10 @@ namespace Caisy.Web.Features.Shared;
 
 public abstract class ConversationBase
 {
-    public ICollection<Message> Messages { get; set; } = new List<Message>();
+    internal ICollection<Message> Messages { get; set; } = new List<Message>();
+
+    public void AddUserMessage(string message) => Messages.Add(new Message { Content = message, Role = Message.MessageRole.User });
+    public void AddCaisyMessage(string message) => Messages.Add(new Message { Content = message, Role = Message.MessageRole.Caisy });
 
     public class Message
     {
@@ -14,7 +17,7 @@ public abstract class ConversationBase
 
         public class MessageProfile : Profile
         {
-            public static Dictionary<MessageRole, ChatMessageRole> RoleMapping { get; set; } = new()
+            private static Dictionary<MessageRole, ChatMessageRole> RoleMapping { get; set; } = new()
             {
                 { MessageRole.User, ChatMessageRole.User },
                 { MessageRole.Caisy, ChatMessageRole.Assistant },
@@ -31,9 +34,7 @@ public abstract class ConversationBase
                     .ConstructUsing((message, d) =>
                     {
                         return new ChatMessage();
-                    })
-                    .ReverseMap()
-                    .ForMember(d => d.Role, mo => mo.MapFrom(s => RoleMapping.Single(v => v.Value == s.Role).Key));
+                    });
             }
         }
 

@@ -1,6 +1,7 @@
 using Blazored.LocalStorage;
 using Caisy.Web.Features.CodeConverter;
 using Caisy.Web.Features.Shared;
+using Caisy.Web.Features.Shared.Handlers;
 using Caisy.Web.Features.Shared.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -14,6 +15,7 @@ builder.Services.AddMudServices();
 builder.Services.AddMudMarkdownServices();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddMediatR(config => config.RegisterServicesFromAssemblyContaining<App>());
+builder.Services.AddTransient<INotificationHandler<SaveChatHistoryCommand<CodeConverterState>>, SaveChatHistoryCommandHandler<CodeConverterState>>();
 builder.Services.AddAutoMapper(typeof(App));
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));

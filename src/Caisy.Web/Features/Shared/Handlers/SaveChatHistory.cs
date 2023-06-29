@@ -2,30 +2,38 @@
 
 namespace Caisy.Web.Features.Shared.Handlers;
 
-public record SaveChatHistoryCommand : IRequest<long>
+public interface IArchivingState
 {
-    public long? ExistingChatHistoryId { get; set; }
-    public required ConversationBase Conversation { get; set; }
+    public long? ChatHistoryId { get; set; }
+    public ConversationBase Conversation { get; set; }
 }
 
-public class SaveChatHistory : IRequestHandler<SaveChatHistoryCommand, long>
+public record SaveChatHistoryCommand<TState> : INotification
+    where TState : class, IArchivingState
+{
+}
+
+public class SaveChatHistoryCommandHandler<TState> : INotificationHandler<SaveChatHistoryCommand<TState>>
+    where TState : class, IArchivingState
 {
     private readonly IRepository<Infrastructure.Models.ChatHistory> _chatHistoryRepository;
     private readonly IMapper _mapper;
+    private readonly TState _state;
 
-    public SaveChatHistory(IRepository<Infrastructure.Models.ChatHistory> chatHistoryRepository, IMapper mapper)
+    public SaveChatHistoryCommandHandler(IRepository<Infrastructure.Models.ChatHistory> chatHistoryRepository, IMapper mapper, TState state)
     {
         _chatHistoryRepository = chatHistoryRepository;
         _mapper = mapper;
+        _state = state;
     }
 
-    public async Task<long> Handle(SaveChatHistoryCommand command, CancellationToken cancellationToken)
+    public async Task Handle(SaveChatHistoryCommand<TState> command, CancellationToken cancellationToken)
     {
-        var chatHistoryMessages = _mapper.Map<List<ChatHistoryMessage>>(command.Conversation.Messages);
+        var chatHistoryMessages = _mapper.Map<List<ChatHistoryMessage>>(_state.Conversation.Messages);
 
-        if (command.ExistingChatHistoryId is not null)
+        if (_state.ChatHistoryId is not null)
         {
-            await _chatHistoryRepository.RemoveAsync(command.ExistingChatHistoryId.Value, cancellationToken);
+            await _chatHistoryRepository.RemoveAsync(_state.ChatHistoryId.Value, cancellationToken);
         }
 
         var chatHistory = new Infrastructure.Models.ChatHistory
@@ -35,6 +43,6 @@ public class SaveChatHistory : IRequestHandler<SaveChatHistoryCommand, long>
 
         await _chatHistoryRepository.AddAsync(chatHistory, cancellationToken);
 
-        return chatHistory.Id;
+        _state.ChatHistoryId = chatHistory.Id;
     }
 }

@@ -25,10 +25,8 @@ public partial class CodeConverter : IDisposable
     {
         if (User == null) return;
 
+        CodeConverterState.ChatHistoryId = ChatHistoryId;
         CodeConverterState.Conversation = await Mediator.Send(new GetCodeConverterConversationQuery(ChatHistoryId), _cts.Token);
-
-        CodeConverterState.OnCodeConverterStateChanged += StateHasChanged;
-        CodeConverterState.OnCodeConverterStateChanged += SaveToChatHistoryAsync;
     }
 
     private async Task OnValidSubmitAsync()
@@ -52,11 +50,6 @@ public partial class CodeConverter : IDisposable
         _convertCodeModel.Code = fileContent;
     }
 
-    private async void SaveToChatHistoryAsync()
-    {
-        ChatHistoryId = await Mediator.Send(new SaveChatHistoryCommand { Conversation = CodeConverterState.Conversation, ExistingChatHistoryId = ChatHistoryId }, _cts.Token);
-    }
-
     private async Task GenerateTests()
     {
         _isGenerating = true;
@@ -70,18 +63,15 @@ public partial class CodeConverter : IDisposable
 
     public void Dispose()
     {
-        CodeConverterState.OnCodeConverterStateChanged -= StateHasChanged;
-        CodeConverterState.OnCodeConverterStateChanged -= SaveToChatHistoryAsync;
         _cts.Cancel();
         _cts.Dispose();
     }
 }
 
-public class CodeConverterState
+public class CodeConverterState : IArchivingState
 {
-    public GetCodeConverterConversationResponse Conversation { get; set; } = new GetCodeConverterConversationResponse();
-
-    public Action? OnCodeConverterStateChanged { get; set; }
+    public ConversationBase Conversation { get; set; } = new GetCodeConverterConversationResponse();
+    public long? ChatHistoryId { get; set; }
 }
 
 public class ConvertCodeCommand : IRequest
@@ -106,22 +96,23 @@ public class ConvertCodeCommandHandler : IRequestHandler<ConvertCodeCommand>
 {
     private readonly CodeConverterState _codeConverterState;
     private readonly IOpenAIApiService _openAIApiService;
+    private readonly IMediator _mediator;
 
-    public ConvertCodeCommandHandler(CodeConverterState codeConverterState, IOpenAIApiService openAIApiService)
+    public ConvertCodeCommandHandler(CodeConverterState codeConverterState, IOpenAIApiService openAIApiService, IMediator mediator)
     {
         _codeConverterState = codeConverterState;
         _openAIApiService = openAIApiService;
+        _mediator = mediator;
     }
 
     public async Task Handle(ConvertCodeCommand command, CancellationToken cancellationToken)
     {
-        var requestMessage = new Message { Content = command.FormattedContent, Role = Message.MessageRole.User };
-        _codeConverterState.Conversation.Messages.Add(requestMessage);
+        _codeConverterState.Conversation.AddUserMessage(command.FormattedContent);
 
-        var responseMessage = await _openAIApiService.GetBestCompletionAsync(_codeConverterState.Conversation, cancellationToken);
-        _codeConverterState.Conversation.Messages.Add(responseMessage);
+        var response = await _openAIApiService.GetBestCompletionAsync(_codeConverterState.Conversation, cancellationToken);
+        _codeConverterState.Conversation.AddCaisyMessage(response);
 
-        _codeConverterState.OnCodeConverterStateChanged?.Invoke();
+        await _mediator.Publish(new SaveChatHistoryCommand<CodeConverterState>(), cancellationToken);
     }
 }
 
@@ -142,22 +133,23 @@ public class GenerateTestsCommandHandler : IRequestHandler<GenerateTestsCommand>
 {
     private readonly CodeConverterState _codeConverterState;
     private readonly IOpenAIApiService _openAIApiService;
+    private readonly IMediator _mediator;
 
-    public GenerateTestsCommandHandler(CodeConverterState codeConverterState, IOpenAIApiService openAIApiService)
+    public GenerateTestsCommandHandler(CodeConverterState codeConverterState, IOpenAIApiService openAIApiService, IMediator mediator)
     {
         _codeConverterState = codeConverterState;
         _openAIApiService = openAIApiService;
+        _mediator = mediator;
     }
 
     public async Task Handle(GenerateTestsCommand command, CancellationToken cancellationToken)
     {
-        var requestMessage = new Message { Content = "Generate tests for the above code.", Role = Message.MessageRole.User };
-        _codeConverterState.Conversation.Messages.Add(requestMessage);
+        _codeConverterState.Conversation.AddUserMessage("Generate tests for the above code.");
 
         var responseMessage = await _openAIApiService.GetBestCompletionAsync(_codeConverterState.Conversation, cancellationToken);
-        _codeConverterState.Conversation.Messages.Add(responseMessage);
+        _codeConverterState.Conversation.AddCaisyMessage(responseMessage);
 
-        _codeConverterState.OnCodeConverterStateChanged?.Invoke();
+        await _mediator.Publish(new SaveChatHistoryCommand<CodeConverterState>(), cancellationToken);
     }
 }
 

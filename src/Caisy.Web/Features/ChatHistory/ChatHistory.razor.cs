@@ -16,7 +16,6 @@ public partial class ChatHistory : IDisposable
 
     public void NavigateToExistingChat(long Id)
     {
-
         NavigationManager.NavigateTo("/" + Id);
     }
 

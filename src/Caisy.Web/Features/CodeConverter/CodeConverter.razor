@@ -1,6 +1,6 @@
 ﻿@page "/"
 @page "/{ChatHistoryId:long}"
-@using Caisy.Web.Features.Shared.Utilities;
+
 
 <div class="d-flex align-center">
     <MudText Typo="Typo.h3" Class="mr-auto">
@@ -56,7 +56,6 @@ else
             <MudItem xs="12" Class="pb-0">
                 <h3>Paste your code</h3>
             </MudItem>
-
             <MudItem xs="12">
                 <AdaptiveTextArea @bind-Value="_convertCodeModel.Code" Placeholder="Enter your code..." />
             </MudItem>
@@ -84,33 +83,7 @@ else
                     <MudProgressLinear Color="Color.Primary" Indeterminate="@_isGenerating" Striped=true />
                 }
             </MudItem>
-            @if (CodeConverterState.Conversation.Messages.Count > 0)
-            {
-                <MudItem xs="12">
-                    <div class="chat-container">
-                        <MudTimeline TimelinePosition="TimelinePosition.Start">
-                            @foreach (var message in CodeConverterState.Conversation.Messages)
-                            {
-                                var color = message.IsUserMessage ? Color.Dark : Color.Primary;
-                                RenderFragment dot = message.IsUserMessage 
-                                    ? @<MudIcon Icon=@Icons.Material.Outlined.Person></MudIcon> 
-                                    : @<MudImage Src="caisy.png" Height="30" />;
-
-                                <MudTimelineItem Color="color" Size="Size.Large" Elevation="0">
-                                    <ItemDot>
-                                        @dot
-                                    </ItemDot>
-                                    <ItemContent>
-                                        <MudAlert Severity="Severity.Normal" NoIcon=true Class="alert-code">
-                                            <MudMarkdown Value="@message.Content" CodeBlockTheme="User.CodeBlockTheme" />
-                                        </MudAlert>
-                                    </ItemContent>
-                                </MudTimelineItem>
-                            }
-                        </MudTimeline>
-                    </div>
-                </MudItem>
-            }
+            <ChatWindow Conversation="CodeConverterState.Conversation"></ChatWindow>
         </MudGrid>
     </EditForm>
 }

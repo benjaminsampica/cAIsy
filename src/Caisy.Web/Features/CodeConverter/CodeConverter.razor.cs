@@ -9,7 +9,6 @@ namespace Caisy.Web.Features.CodeConverter;
 
 public partial class CodeConverter : IDisposable
 {
-    [Inject] public ISnackbar Snackbar { get; set; } = null!;
     [Inject] public IMediator Mediator { get; set; } = null!;
     [Inject] public CodeConverterState CodeConverterState { get; set; } = null!;
     [CascadingParameter] public IUser? User { get; set; }
@@ -70,7 +69,7 @@ public partial class CodeConverter : IDisposable
 
 public class CodeConverterState : IArchivingState
 {
-    public ConversationBase Conversation { get; set; } = new GetCodeConverterConversationResponse();
+    public ConversationBase Conversation { get; set; } = new GetCodeConverterConversationQueryResponse();
     public long? ChatHistoryId { get; set; }
 }
 
@@ -116,7 +115,6 @@ public class ConvertCodeCommandHandler : IRequestHandler<ConvertCodeCommand>
     }
 }
 
-
 public class GenerateTestsCommand : IRequest
 {
     public TestFramework Framework { get; set; } = TestFramework.XUnit;
@@ -153,20 +151,20 @@ public class GenerateTestsCommandHandler : IRequestHandler<GenerateTestsCommand>
     }
 }
 
-public record GetCodeConverterConversationQuery(long? ChatHistoryId) : IRequest<GetCodeConverterConversationResponse>;
+public record GetCodeConverterConversationQuery(long? ChatHistoryId) : IRequest<GetCodeConverterConversationQueryResponse>;
 
-public class GetCodeConverterConversationHandler : IRequestHandler<GetCodeConverterConversationQuery, GetCodeConverterConversationResponse>
+public class GetCodeConverterConversationQueryHandler : IRequestHandler<GetCodeConverterConversationQuery, GetCodeConverterConversationQueryResponse>
 {
     private readonly IRepository<Infrastructure.Models.ChatHistory> _chatHistoryRepository;
     private readonly IMapper _mapper;
 
-    public GetCodeConverterConversationHandler(IRepository<Infrastructure.Models.ChatHistory> chatHistoryRepository, IMapper mapper)
+    public GetCodeConverterConversationQueryHandler(IRepository<Infrastructure.Models.ChatHistory> chatHistoryRepository, IMapper mapper)
     {
         _chatHistoryRepository = chatHistoryRepository;
         _mapper = mapper;
     }
 
-    public async Task<GetCodeConverterConversationResponse> Handle(GetCodeConverterConversationQuery query, CancellationToken cancellationToken)
+    public async Task<GetCodeConverterConversationQueryResponse> Handle(GetCodeConverterConversationQuery query, CancellationToken cancellationToken)
     {
         var messages = new List<Message>();
 
@@ -177,12 +175,12 @@ public class GetCodeConverterConversationHandler : IRequestHandler<GetCodeConver
             messages = _mapper.Map<List<Message>>(chatHistory!.Messages);
         }
 
-        return new GetCodeConverterConversationResponse
+        return new GetCodeConverterConversationQueryResponse
         {
             Messages = messages
         };
     }
 }
 
-public class GetCodeConverterConversationResponse : ConversationBase { }
+public class GetCodeConverterConversationQueryResponse : ConversationBase { }
 

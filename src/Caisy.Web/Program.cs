@@ -1,5 +1,6 @@
 using Blazored.LocalStorage;
 using Caisy.Web.Features.CodeConverter;
+using Caisy.Web.Features.CodeReader;
 using Caisy.Web.Features.Shared;
 using Caisy.Web.Features.Shared.Handlers;
 using Caisy.Web.Features.Shared.Services;
@@ -16,6 +17,8 @@ builder.Services.AddMudMarkdownServices();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddMediatR(config => config.RegisterServicesFromAssemblyContaining<App>());
 builder.Services.AddTransient<INotificationHandler<SaveChatHistoryCommand<CodeConverterState>>, SaveChatHistoryCommandHandler<CodeConverterState>>();
+// TODO: Make chat history work with both code conversion & code reading.
+//builder.Services.AddTransient<INotificationHandler<SaveChatHistoryCommand<CodeReaderState>>, SaveChatHistoryCommandHandler<CodeReaderState>>();
 builder.Services.AddAutoMapper(typeof(App));
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
@@ -23,6 +26,7 @@ builder.Services.AddScoped<ApplicationState>();
 builder.Services.AddScoped<IIdentityProvider, IdentityProvider>();
 builder.Services.AddTransient<IOpenAIApiService, OpenAIApiService>();
 builder.Services.AddScoped<CodeConverterState>();
+builder.Services.AddScoped<CodeReaderState>();
 
 var app = builder.Build();
 

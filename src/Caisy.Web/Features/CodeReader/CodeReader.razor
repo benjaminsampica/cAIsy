@@ -8,13 +8,15 @@
 }
 else
 {
-    <EditForm Model="_request" OnValidSubmit="OnValidSubmitAsync">
+    <EditForm Model="_model" OnValidSubmit="OnValidSubmitAsync">
         <DataAnnotationsValidator />
         <MudGrid>
             <MudItem xs="12">
-                <MudSelect Value=_temperament Label="Temperament" ValueChanged="@(EventCallback.Factory.Create<string>(this, OnTemperamentChangedAsync))">
-                    <MudSelectItem Value=@(" ")>Nice</MudSelectItem>
-                    <MudSelectItem Value="@("Be as rude as possible.")">Rude</MudSelectItem>
+                <MudSelect @bind-Value=_model.Temperament Label="Temperament">
+                    @foreach (var item in Enum.GetValues<ReadCodeCommand.ReaderTemperament>())
+                    {
+                        <MudSelectItem Value=item>@item.GetDisplayName()</MudSelectItem>
+                    }
                 </MudSelect>
             </MudItem>
 
@@ -40,54 +42,20 @@ else
             </MudItem>
 
             <MudItem xs="12">
-                <AdaptiveTextArea @bind-Value="_request.Prompt" Placeholder="Enter your code..." />
+                <AdaptiveTextArea @bind-Value="_model.Code" Placeholder="Enter your code..." />
             </MudItem>
             <MudItem xs="12">
-                <MudButton Disabled="@_isInProgress" ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.MenuBook">
+                <MudButton Disabled="@_isGenerating" ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Refresh">
                     Read Code
                 </MudButton>
             </MudItem>
             <MudItem xs="12">
-                @if (_isInProgress)
+                @if (_isGenerating)
                 {
-                    <MudProgressLinear Color="Color.Primary" Indeterminate="@_isInProgress" Striped=true />
+                    <MudProgressLinear Color="Color.Primary" Indeterminate="@_isGenerating" Striped=true />
                 }
             </MudItem>
-            @if (_conversation.Messages.Count > 1)
-            {
-                <MudItem xs="12">
-                    <div class="chat-container">
-                        <MudTimeline TimelinePosition="TimelinePosition.Start">
-                            @foreach (var message in _conversation.Messages)
-                            {
-                                if (message.Role == OpenAI_API.Chat.ChatMessageRole.System) continue;
-                                var isUserMessage = message.Role == OpenAI_API.Chat.ChatMessageRole.User;
-                                var color = isUserMessage ? Color.Dark : Color.Primary;
-                                var icon = isUserMessage ? Icons.Material.Outlined.Person : Icons.Material.Outlined.Computer;
-
-                                <MudTimelineItem Color="color" Size="Size.Large" Elevation="0">
-                                    <ItemDot>
-                                        @if (isUserMessage)
-                                        {
-                                            <MudIcon Icon="@icon"></MudIcon>
-                                        }
-                                        else
-                                        {
-                                            <MudImage Src="caisy.png" Height="30" />
-                                        }
-
-                                    </ItemDot>
-                                    <ItemContent>
-                                        <MudAlert Severity="Severity.Normal" NoIcon=true Class="alert-code">
-                                            <MudMarkdown Value="@message.Content" CodeBlockTheme="User.CodeBlockTheme" />
-                                        </MudAlert>
-                                    </ItemContent>
-                                </MudTimelineItem>
-                            }
-                        </MudTimeline>
-                    </div>
-                </MudItem>
-            }
+            <ChatWindow Conversation="CodeReaderState.Conversation"></ChatWindow>
         </MudGrid>
     </EditForm>
 }

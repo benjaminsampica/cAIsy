@@ -5,6 +5,7 @@ namespace Caisy.Web.Features.ChatHistory;
 public partial class ChatHistory : IDisposable
 {
     [Inject] private IMediator Mediator { get; set; } = null!;
+    [Inject] private NavigationManager NavigationManager { get; set; } = null!;
 
     private GetChatHistoryListResponse? _response;
     private readonly CancellationTokenSource _cts = new();

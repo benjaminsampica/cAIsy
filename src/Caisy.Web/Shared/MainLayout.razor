@@ -1,22 +1,20 @@
 ﻿@using Caisy.Web.Features.Shared;
+@using MudBlazor.Utilities;
 @implements IDisposable
 @inherits LayoutComponentBase
 
+<div>
 <CascadingValue Value="IdentityProvider.User">
     <MudLayout>
-        <MudAppBar Color="Color.Primary">
-            <MudIconButton Icon="@Icons.Material.Outlined.Menu" OnClick="DrawerToggle" />
+        <MudAppBar Color="Color.Dark">
             <MudImage Src="favicon.ico" /> 
             <MudText Typo="Typo.h4">c<span class="ai-header">AI</span>sy</MudText>
+            <MudNavLink Href="" Icon="@Icons.Material.Outlined.ChangeCircle" IconColor="Color.Primary">Converter</MudNavLink>
+            <MudNavLink Href="reader" Icon="@Icons.Material.Outlined.MenuBook" IconColor="Color.Primary">Reader</MudNavLink>
+            <MudNavLink Href="history" Icon="@Icons.Material.Outlined.History" IconColor="Color.Primary">History</MudNavLink>
+            <MudSpacer />
+            <MudIconButton Href="settings" Icon="@Icons.Material.Outlined.Settings" Color="Color.Primary" Size="Size.Large" />
         </MudAppBar>
-        <MudDrawer @bind-Open="@_drawerOpen" Variant="@DrawerVariant.Temporary">
-            <MudNavMenu>
-                <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Home">Code Converter</MudNavLink>
-                <MudNavLink Href="codeReader" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.MenuBook">Code Reader</MudNavLink>
-                <MudNavLink Href="chatHistory" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.ChatBubbleOutline">Chat History</MudNavLink>
-                <MudNavLink Href="settings" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Outlined.Settings">Settings</MudNavLink>
-            </MudNavMenu>
-        </MudDrawer>
         <MudMainContent>
             <ChildContent>
                 <MudMainContent Class="pt-2">
@@ -32,16 +30,15 @@
         </MudMainContent>
     </MudLayout>
 </CascadingValue>
+</div>
 
 <MudThemeProvider @ref=ApplicationState.MudThemeProvider Theme=_baseTheme IsDarkMode="IdentityProvider.User?.PrefersDarkMode ?? false" />
-<MudDialogProvider />
 <MudSnackbarProvider />
 
 @code {
     [Inject] public IIdentityProvider IdentityProvider { get; set; } = null!;
     [Inject] public ApplicationState ApplicationState { get; set; } = null!;
 
-    private bool _drawerOpen;
     private static readonly string[] _headerFontFamily = new[] { "Orbitron", "sans-serif" };
     private MudTheme _baseTheme = new MudTheme
     {
@@ -54,17 +51,16 @@
             H4 = new H4 { FontFamily = _headerFontFamily },
             H5 = new H5 { FontFamily = _headerFontFamily },
             H6 = new H6 { FontFamily = _headerFontFamily }
-        }
+        },
+        Palette = new PaletteLight
+        {
+            Primary = Colors.Pink.Default
+        },
     };
 
     protected override void OnInitialized()
     {
         ApplicationState.OnUserSettingsChanged += StateHasChanged;
-    }
-
-    private void DrawerToggle()
-    {
-        _drawerOpen = !_drawerOpen;
     }
 
     public void Dispose()

@@ -11,7 +11,7 @@
     {
         lines = Math.Max(value.Split('\n').Length, value.Split('\r').Length);
         lines = Math.Max(lines, 5);
-        lines = Math.Min(lines, 100);
+        lines = Math.Min(lines, 25);
 
         await ValueChanged.InvokeAsync(value);
     }

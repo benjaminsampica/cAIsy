@@ -3,7 +3,7 @@
 
 @if (_message is not null)
 {
-    <MudAlert Severity="Severity.Error" ShowCloseIcon="true">
+    <MudAlert Severity="Severity.Error" ShowCloseIcon="true" CloseIconClicked="ResetState">
         @_message
     </MudAlert>
 }
@@ -23,6 +23,13 @@
             ex.GetType(), ex.Message);
 
         _message = ex.Message;
+
+        StateHasChanged();
+    }
+
+    private void ResetState()
+    {
+        _message = null;
 
         StateHasChanged();
     }

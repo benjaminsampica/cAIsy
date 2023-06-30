@@ -1,29 +1,40 @@
 ﻿@if (Conversation.Messages.Count > 0)
 {
-    <MudItem xs="12">
-        <div class="chat-container">
-            <MudTimeline TimelinePosition="TimelinePosition.Start">
-                @foreach (var message in Conversation.Messages)
-                {
-                    var color = message.IsUserMessage ? Color.Dark : Color.Primary;
-                    RenderFragment dot = message.IsUserMessage
-                        ? @<MudIcon Icon=@Icons.Material.Outlined.Person></MudIcon>
-                    : @<MudImage Src="caisy.png" Height="30" />;
+    <MudGrid>
+        <MudItem xs="12">
+            <div class="chat-container">
+                <MudTimeline TimelinePosition="TimelinePosition.Start">
+                    @foreach (var message in Conversation.Messages)
+                    {
+                        var color = message.IsUserMessage ? Color.Dark : Color.Primary;
+                        RenderFragment dot = message.IsUserMessage
+                            ? @<MudIcon Icon=@Icons.Material.Outlined.Person></MudIcon>
+                        : @<MudImage Src="caisy.png" Height="30" />;
 
-                    <MudTimelineItem Color="color" Size="Size.Large" Elevation="0">
-                        <ItemDot>
-                            @dot
-                        </ItemDot>
-                        <ItemContent>
-                            <MudAlert Severity="Severity.Normal" NoIcon=true Class="alert-code">
-                                <MudMarkdown Value="@message.Content" CodeBlockTheme="User.CodeBlockTheme" />
-                            </MudAlert>
-                        </ItemContent>
-                    </MudTimelineItem>
-                }
-            </MudTimeline>
-        </div>
-    </MudItem>
+                        <MudTimelineItem Color="color" Size="Size.Large" Elevation="0">
+                            <ItemDot>
+                                @dot
+                            </ItemDot>
+                            <ItemContent>
+                                <MudAlert Severity="Severity.Normal" NoIcon=true Class="alert-code">
+                                    <MudMarkdown Value="@message.Content" CodeBlockTheme="User.CodeBlockTheme" />
+                                </MudAlert>
+                            </ItemContent>
+                        </MudTimelineItem>
+                    }
+                </MudTimeline>
+            </div>
+        </MudItem>
+    </MudGrid>
+}
+else
+{
+    <MudGrid>
+        <MudItem xs="12" Class="d-flex justify-center">
+            <MudImage Src="caisy.png" Style="width: 100%; height: 100%; max-width: 450px;" />
+        </MudItem>
+    </MudGrid>
+
 }
 
 @code {

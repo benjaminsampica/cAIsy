@@ -1,0 +1,29 @@
+﻿@using Microsoft.Extensions.Logging
+@inject ILogger<Error> Logger
+
+@if (_message is not null)
+{
+    <MudAlert Severity="Severity.Error" ShowCloseIcon="true">
+        @_message
+    </MudAlert>
+}
+<CascadingValue Value="this">
+    @ChildContent
+</CascadingValue>
+
+
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    private string? _message;
+
+    public void ProcessError(Exception ex)
+    {
+        Logger.LogError("Error:ProcessError - Type: {Type} Message: {Message}",
+            ex.GetType(), ex.Message);
+
+        _message = ex.Message;
+
+        StateHasChanged();
+    }
+}

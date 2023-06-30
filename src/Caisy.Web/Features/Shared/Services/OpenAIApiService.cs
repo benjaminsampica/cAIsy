@@ -23,21 +23,22 @@ public class OpenAIApiService : IOpenAIApiService
     {
         var existingMessages = _mapper.Map<List<ChatMessage>>(conversation.Messages);
 
-        var completion = await _openAIApi.Chat.CreateChatCompletionAsync(existingMessages);
+        try
+        {
+            var completion = await _openAIApi.Chat.CreateChatCompletionAsync(existingMessages);
 
-        var response = completion.Choices.Single().Message.Content;
+            var response = completion.Choices.Single().Message.Content;
 
-        return response;
+            return response;
+        }
+        catch (Exception ex)
+        {
+            throw new FailedOpenAIApiRequestException(ex.Message);
+        }
     }
 }
 
-public class OpenApiRequest
+public class FailedOpenAIApiRequestException : Exception
 {
-    public string? Prompt { get; set; }
-    public string? TestCaseFramework { get; set; }
-}
-
-public class OpenApiResponse
-{
-    public string? Response { get; set; }
+    public FailedOpenAIApiRequestException(string message) : base(message) { }
 }

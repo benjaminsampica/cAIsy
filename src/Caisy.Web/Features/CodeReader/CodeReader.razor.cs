@@ -1,7 +1,4 @@
 ﻿using Caisy.Web.Features.CodeConverter;
-using Caisy.Web.Features.Shared;
-using Caisy.Web.Features.Shared.Handlers;
-using Caisy.Web.Features.Shared.Services;
 using Microsoft.AspNetCore.Components.Forms;
 
 namespace Caisy.Web.Features.CodeReader;
@@ -11,6 +8,7 @@ public partial class CodeReader : IDisposable
     [Inject] public IMediator Mediator { get; set; } = null!;
     [Inject] public CodeReaderState CodeReaderState { get; set; } = null!;
     [CascadingParameter] public IUser? User { get; set; }
+    [CascadingParameter] public Error Error { get; set; } = null!;
     [Parameter] public long? ChatHistoryId { get; set; }
 
     private bool _isGenerating = false;
@@ -27,11 +25,19 @@ public partial class CodeReader : IDisposable
 
     private async Task OnValidSubmitAsync()
     {
-        _isGenerating = true;
-
-        await Mediator.Send(_model, _cts.Token);
-
-        _isGenerating = false;
+        try
+        {
+            _isGenerating = true;
+            await Mediator.Send(_model);
+        }
+        catch (FailedOpenAIApiRequestException ex)
+        {
+            Error.ProcessError(ex);
+        }
+        finally
+        {
+            _isGenerating = false;
+        }
     }
 
     private async Task OnFileUploadAsync(InputFileChangeEventArgs e)

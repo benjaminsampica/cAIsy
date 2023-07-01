@@ -5,7 +5,7 @@ namespace Caisy.Web.Features.Shared.Components;
 public partial class FileUploadReader : IDisposable
 {
     [Parameter] public string ReadContents { get; set; } = null!;
-    [Parameter] public EventCallback<string> ReadContentsChanged { get; set; } = null!;
+    [Parameter] public EventCallback<string> ReadContentsChanged { get; set; }
 
     private readonly CancellationTokenSource _cts = new();
 

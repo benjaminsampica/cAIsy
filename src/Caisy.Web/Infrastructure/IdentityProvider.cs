@@ -1,4 +1,4 @@
-﻿namespace Caisy.Web.Features.Shared;
+﻿namespace Caisy.Web.Infrastructure;
 
 public interface IIdentityProvider
 {

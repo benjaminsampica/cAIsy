@@ -9,6 +9,13 @@ public abstract class ConversationBase
 
     public void AddUserMessage(string message) => Messages.Add(new Message { Content = message, Role = Message.MessageRole.User });
     public void AddCaisyMessage(string message) => Messages.Add(new Message { Content = message, Role = Message.MessageRole.Caisy });
+    public void UndoLastConversation()
+    {
+        Messages.Remove(Messages.LastOrDefault()!);
+        Messages.Remove(Messages.LastOrDefault()!);
+    }
+
+    public int MessageCount => Messages.Count;
 
     public class Message
     {

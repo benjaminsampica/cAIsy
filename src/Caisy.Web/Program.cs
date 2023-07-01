@@ -1,9 +1,6 @@
 using Blazored.LocalStorage;
 using Caisy.Web.Features.CodeConverter;
 using Caisy.Web.Features.CodeReader;
-using Caisy.Web.Features.Shared;
-using Caisy.Web.Features.Shared.Handlers;
-using Caisy.Web.Features.Shared.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;

@@ -1,11 +1,11 @@
-﻿<MudFileUpload Context="fileUploadContext" T="IBrowserFile" OnFilesChanged="OnFileUploadAsync">
+﻿<MudFileUpload  T="IBrowserFile" OnFilesChanged="OnFileUploadAsync">
     <ButtonTemplate>
         <MudButton HtmlTag="label"
                    Variant="Variant.Filled"
                    Color="Color.Primary"
                    StartIcon="@Icons.Material.Filled.CloudUpload"
                    Size="Size.Large"
-                   for="@fileUploadContext">
+                   for="@context">
             Upload File
         </MudButton>
     </ButtonTemplate>

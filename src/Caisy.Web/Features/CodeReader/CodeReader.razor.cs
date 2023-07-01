@@ -7,7 +7,7 @@ public partial class CodeReader : IDisposable
     [Inject] public IMediator Mediator { get; set; } = null!;
     [Inject] public CodeReaderState CodeReaderState { get; set; } = null!;
     [CascadingParameter] public IUser? User { get; set; }
-    [CascadingParameter] public Error Error { get; set; } = null!;
+    [CascadingParameter] public ErrorHandler ErrorHandler { get; set; } = null!;
     [Parameter] public long? ChatHistoryId { get; set; }
 
     private bool _isGenerating = false;
@@ -31,7 +31,7 @@ public partial class CodeReader : IDisposable
         }
         catch (FailedOpenAIApiRequestException ex)
         {
-            Error.ProcessError(ex);
+            ErrorHandler.ProcessError(ex);
         }
         finally
         {

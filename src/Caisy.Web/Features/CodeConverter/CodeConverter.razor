@@ -17,7 +17,7 @@ else
                 <MudPaper Elevation="2" Class="pa-4">
                     <MudGrid>
                         <MudItem xs="12">
-                            <MudText Typo="Typo.h4" Class="mr-auto">
+                            <MudText Typo="Typo.h4">
                                 Code Converter
                             </MudText>
                         </MudItem>
@@ -48,7 +48,7 @@ else
                         <MudItem xs="12">
                             <AdaptiveTextArea @bind-Value="_model.Code" Placeholder="Enter your code..." />
                         </MudItem>
-                        <MudItem xs="4">
+                        <MudItem xs="12">
                             <MudButton Disabled="@_isGenerating" ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Refresh">
                                 Generate Code
                             </MudButton>
@@ -66,7 +66,11 @@ else
                     </ChatWindow>
                     @if (_isGenerating)
                     {
-                        <MudProgressLinear Color="Color.Primary" Indeterminate="@_isGenerating" Striped=true />
+                        <MudGrid Justify="Justify.Center">
+                            <MudItem xs="12">
+                                <MudProgressCircular Color="Color.Primary" Indeterminate="@_isGenerating" Size="Size.Large" />
+                            </MudItem>
+                        </MudGrid>
                     }
                 </MudPaper>
             </MudItem>

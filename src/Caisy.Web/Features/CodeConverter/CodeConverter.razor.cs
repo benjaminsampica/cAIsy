@@ -7,7 +7,7 @@ public partial class CodeConverter : IDisposable
     [Inject] public IMediator Mediator { get; set; } = null!;
     [Inject] public CodeConverterState CodeConverterState { get; set; } = null!;
     [CascadingParameter] public IUser? User { get; set; }
-    [CascadingParameter] public Error Error { get; set; } = null!;
+    [CascadingParameter] public ErrorHandler ErrorHandler { get; set; } = null!;
     [Parameter] public long? ChatHistoryId { get; set; }
 
     private readonly CancellationTokenSource _cts = new();
@@ -31,7 +31,7 @@ public partial class CodeConverter : IDisposable
         }
         catch (FailedOpenAIApiRequestException ex)
         {
-            Error.ProcessError(ex);
+            ErrorHandler.ProcessError(ex);
         }
         finally
         {

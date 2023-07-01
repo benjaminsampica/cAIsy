@@ -1,5 +1,4 @@
 ﻿@page "/reader"
-<MudText Typo="Typo.h4">Code Reader</MudText>
 @if (User is null)
 {
     <MudAlert Severity=Severity.Warning Icon="@Icons.Material.Outlined.Warning">
@@ -11,38 +10,54 @@ else
     <EditForm Model="_model" OnValidSubmit="OnValidSubmitAsync">
         <DataAnnotationsValidator />
         <MudGrid>
-            <MudItem xs="12">
-                <MudSelect @bind-Value=_model.Temperament Label="Temperament">
-                    @foreach (var item in Enum.GetValues<ReadCodeCommand.ReaderTemperament>())
+            <MudItem lg="5" md="12">
+                <MudPaper Elevation="2" Class="pa-4">
+                    <MudGrid>
+                        <MudItem xs="12">
+                            <MudText Typo="Typo.h4">Code Reader</MudText>
+                        </MudItem>
+                        <MudItem xs="12" Class="d-flex align-end">
+                            <MudSelect @bind-Value=_model.Temperament Label="Temperament">
+                                @foreach (var item in Enum.GetValues<ReadCodeCommand.ReaderTemperament>())
+                                {
+                                    <MudSelectItem Value=item>@item.GetDisplayName()</MudSelectItem>
+                                }
+                            </MudSelect>
+                        </MudItem>
+                        <MudItem xs="12">
+                            <FileUploadReader @bind-ReadContents="_model.Code" />
+                        </MudItem>
+                        <MudItem xs="12" Class="pb-0">
+                            <h3>OR</h3>
+                        </MudItem>
+                        <MudItem xs="12" Class="pb-0">
+                            <h3>Paste your code</h3>
+                        </MudItem>
+                        <MudItem xs="12">
+                            <AdaptiveTextArea @bind-Value="_model.Code" Placeholder="Enter your code..." />
+                        </MudItem>
+                        <MudItem xs="12">
+                            <MudButton Disabled="@_isGenerating" ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Refresh">
+                                Read Code
+                            </MudButton>
+                        </MudItem>
+                    </MudGrid>
+                </MudPaper>
+                
+            </MudItem>
+            <MudItem lg="7" md="12">
+                <MudPaper Class="pa-4">
+                    <ChatWindow Conversation="CodeReaderState.Conversation" />
+                    @if (_isGenerating)
                     {
-                        <MudSelectItem Value=item>@item.GetDisplayName()</MudSelectItem>
+                        <MudGrid Justify="Justify.Center">
+                            <MudItem xs="12">
+                                <MudProgressCircular Color="Color.Primary" Indeterminate="@_isGenerating" Size="Size.Large" />
+                            </MudItem>
+                        </MudGrid>
                     }
-                </MudSelect>
+                </MudPaper>
             </MudItem>
-            <MudItem xs="12">
-                <FileUploadReader @bind-ReadContents="_model.Code" />
-            </MudItem>
-            <MudItem xs="12" Class="pb-0">
-                <h3>OR</h3>
-            </MudItem>
-            <MudItem xs="12" Class="pb-0">
-                <h3>Paste your code</h3>
-            </MudItem>
-            <MudItem xs="12">
-                <AdaptiveTextArea @bind-Value="_model.Code" Placeholder="Enter your code..." />
-            </MudItem>
-            <MudItem xs="12">
-                <MudButton Disabled="@_isGenerating" ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Refresh">
-                    Read Code
-                </MudButton>
-            </MudItem>
-            <MudItem xs="12">
-                @if (_isGenerating)
-                {
-                    <MudProgressLinear Color="Color.Primary" Indeterminate="@_isGenerating" Striped=true />
-                }
-            </MudItem>
-            <ChatWindow Conversation="CodeReaderState.Conversation"></ChatWindow>
         </MudGrid>
     </EditForm>
 }

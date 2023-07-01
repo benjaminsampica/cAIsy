@@ -1,6 +1,6 @@
 ﻿@page "/reader"
 <MudText Typo="Typo.h4">Code Reader</MudText>
-@if (User.ApiKey is null)
+@if (User is null)
 {
     <MudAlert Severity=Severity.Warning Icon="@Icons.Material.Outlined.Warning">
         An api key has not been set. Please go to your <MudLink Href="profile">profile</MudLink> and add an API key.

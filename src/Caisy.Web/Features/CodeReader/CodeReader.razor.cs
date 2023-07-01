@@ -1,5 +1,4 @@
 ﻿using Caisy.Web.Features.CodeConverter;
-using Microsoft.AspNetCore.Components.Forms;
 
 namespace Caisy.Web.Features.CodeReader;
 
@@ -38,17 +37,6 @@ public partial class CodeReader : IDisposable
         {
             _isGenerating = false;
         }
-    }
-
-    private async Task OnFileUploadAsync(InputFileChangeEventArgs e)
-    {
-        if (e.FileCount == 0) return;
-
-        var file = e.File;
-        using var streamReader = new StreamReader(file.OpenReadStream());
-
-        var fileContent = await streamReader.ReadToEndAsync(_cts.Token);
-        _model.Code = fileContent;
     }
 
     public void Dispose()

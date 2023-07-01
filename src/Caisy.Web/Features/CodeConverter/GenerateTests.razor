@@ -1,7 +1,7 @@
 ﻿<MudGrid>
     <MudItem xs="12">
         <MudStack Row="true">
-            <MudSelect Label="Testing Framework" Variant="Variant.Text" @bind-Value="_generateTestsModel.Framework">
+            <MudSelect Label="Testing Framework" Variant="Variant.Text" @bind-Value="_model.Framework">
                 @foreach (var item in Enum.GetValues<GenerateTestsCommand.TestFramework>())
                 {
                     <MudSelectItem Value=item>@item.GetDisplayName()</MudSelectItem>

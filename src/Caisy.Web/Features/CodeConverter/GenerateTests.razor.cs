@@ -7,14 +7,14 @@ public partial class GenerateTests : IDisposable
     [Parameter] public EventCallback<bool> IsGeneratingChanged { get; set; }
 
 
-    private readonly GenerateTestsCommand _generateTestsModel = new();
+    private readonly GenerateTestsCommand _model = new();
     private readonly CancellationTokenSource _cts = new();
 
     private async Task OnClickAsync()
     {
         await IsGeneratingChanged.InvokeAsync(true);
 
-        await Mediator.Send(_generateTestsModel);
+        await Mediator.Send(_model);
 
         await IsGeneratingChanged.InvokeAsync(false);
     }

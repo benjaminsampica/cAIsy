@@ -2,6 +2,9 @@
 {
     <MudGrid>
         <MudItem xs="12">
+            @AboveChatContent
+        </MudItem>
+        <MudItem xs="12">
             <div class="chat-container">
                 <MudTimeline TimelinePosition="TimelinePosition.Start">
                     @foreach (var message in Conversation.Messages)
@@ -40,4 +43,5 @@ else
 @code {
     [CascadingParameter] public IUser User { get; set; } = null!;
     [Parameter, EditorRequired] public ConversationBase Conversation { get; set; } = null!;
+    [Parameter] public RenderFragment? AboveChatContent { get; set; }
 }

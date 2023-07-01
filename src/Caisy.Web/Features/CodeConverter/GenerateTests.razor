@@ -1,0 +1,16 @@
+﻿<MudGrid>
+    <MudItem xs="12">
+        <MudStack Row="true">
+            <MudSelect Label="Testing Framework" Variant="Variant.Text" @bind-Value="_generateTestsModel.Framework">
+                @foreach (var item in Enum.GetValues<GenerateTestsCommand.TestFramework>())
+                {
+                    <MudSelectItem Value=item>@item.GetDisplayName()</MudSelectItem>
+                }
+            </MudSelect>
+            <MudButton Disabled="IsGenerating" ButtonType="ButtonType.Button" OnClick="OnClickAsync" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Build">
+                Generate Tests
+            </MudButton>
+        </MudStack>
+       
+    </MudItem>
+</MudGrid>

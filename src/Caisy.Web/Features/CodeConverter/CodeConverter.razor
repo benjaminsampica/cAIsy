@@ -10,7 +10,7 @@
 }
 else
 {
-    <EditForm Model="_convertCodeModel" OnValidSubmit="OnValidSubmitAsync">
+    <EditForm Model="_model" OnValidSubmit="OnValidSubmitAsync">
         <DataAnnotationsValidator />
         <MudGrid>
             <MudItem lg="5" md="12">
@@ -22,33 +22,22 @@ else
                             </MudText>
                         </MudItem>
                         <MudItem xs="12" Class="d-flex align-end">
-                            <MudSelect @bind-Value=_convertCodeModel.Source Label="Source">
+                            <MudSelect @bind-Value=_model.Source Label="Source">
                                 @foreach (var item in Enum.GetValues<ConvertCodeCommand.ConvertCodeOption>())
                                 {
                                     <MudSelectItem Value=item>@item.GetDisplayName()</MudSelectItem>
                                 }
                             </MudSelect>
                             <MudIcon Icon="@Icons.Material.Outlined.ArrowForward" Class="mx-3"></MudIcon>
-                            <MudSelect @bind-Value=_convertCodeModel.Destination Label="Destination">
+                            <MudSelect @bind-Value=_model.Destination Label="Destination">
                                 @foreach (var item in Enum.GetValues<ConvertCodeCommand.ConvertCodeOption>())
                                 {
                                     <MudSelectItem Value=item>@item.GetDisplayName()</MudSelectItem>
                                 }
                             </MudSelect>
                         </MudItem>
-                        <MudItem xs="12" Class="d-flex align-end">
-                            <MudFileUpload Context="fileUploadContext" T="IBrowserFile" OnFilesChanged="OnFileUploadAsync">
-                                <ButtonTemplate>
-                                    <MudButton HtmlTag="label"
-                                           Variant="Variant.Filled"
-                                           Color="Color.Primary"
-                                           StartIcon="@Icons.Material.Filled.CloudUpload"
-                                           Size="Size.Large"
-                                               for="@fileUploadContext">
-                                        Upload File
-                                    </MudButton>
-                                </ButtonTemplate>
-                            </MudFileUpload>
+                        <MudItem xs="12">
+                            <FileUploadReader @bind-ReadContents="_model.Code" />
                         </MudItem>
                         <MudItem xs="12" Class="pb-0">
                             <h3>OR</h3>
@@ -57,25 +46,12 @@ else
                             <h3>Paste your code</h3>
                         </MudItem>
                         <MudItem xs="12">
-                            <AdaptiveTextArea @bind-Value="_convertCodeModel.Code" Placeholder="Enter your code..." />
+                            <AdaptiveTextArea @bind-Value="_model.Code" Placeholder="Enter your code..." />
                         </MudItem>
                         <MudItem xs="4">
                             <MudButton Disabled="@_isGenerating" ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Refresh">
                                 Generate Code
                             </MudButton>
-                        </MudItem>
-                        <MudItem xs="4">
-                            <MudButton Disabled="GenerateTestsButtonIsDisabled" ButtonType="ButtonType.Button" OnClick="GenerateTests" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Refresh">
-                                Generate Tests
-                            </MudButton>
-                        </MudItem>
-                        <MudItem xs="4">
-                            <MudSelect Label="Testing Framework" Variant="Variant.Text" @bind-Value="_generateTestsModel.Framework">
-                                @foreach (var item in Enum.GetValues<GenerateTestsCommand.TestFramework>())
-                                {
-                                    <MudSelectItem Value=item>@item.GetDisplayName()</MudSelectItem>
-                                }
-                            </MudSelect>
                         </MudItem>
                     </MudGrid>
                 </MudPaper>
@@ -83,7 +59,11 @@ else
             </MudItem>
             <MudItem lg="7" md="12">
                 <MudPaper Class="pa-4">
-                    <ChatWindow Conversation="CodeConverterState.Conversation"></ChatWindow>
+                    <ChatWindow Conversation="CodeConverterState.Conversation">
+                        <AboveChatContent>
+                            <GenerateTests @bind-IsGenerating=@_isGenerating />
+                        </AboveChatContent>
+                    </ChatWindow>
                     @if (_isGenerating)
                     {
                         <MudProgressLinear Color="Color.Primary" Indeterminate="@_isGenerating" Striped=true />

@@ -19,28 +19,15 @@ else
                     }
                 </MudSelect>
             </MudItem>
-
             <MudItem xs="12">
-                <MudFileUpload Context="fileUploadContext" T="IBrowserFile" OnFilesChanged="OnFileUploadAsync">
-                    <ButtonTemplate>
-                        <MudButton HtmlTag="label"
-                               Variant="Variant.Filled"
-                               Color="Color.Primary"
-                               StartIcon="@Icons.Material.Filled.CloudUpload"
-                                   for="@fileUploadContext">
-                            Upload File
-                        </MudButton>
-                    </ButtonTemplate>
-                </MudFileUpload>
+                <FileUploadReader @bind-ReadContents="_model.Code" />
             </MudItem>
-
             <MudItem xs="12" Class="pb-0">
                 <h3>OR</h3>
             </MudItem>
             <MudItem xs="12" Class="pb-0">
                 <h3>Paste your code</h3>
             </MudItem>
-
             <MudItem xs="12">
                 <AdaptiveTextArea @bind-Value="_model.Code" Placeholder="Enter your code..." />
             </MudItem>

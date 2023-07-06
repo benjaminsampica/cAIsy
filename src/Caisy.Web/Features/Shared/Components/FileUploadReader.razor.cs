@@ -6,6 +6,7 @@ public partial class FileUploadReader : IDisposable
 {
     [Parameter] public string ReadContents { get; set; } = null!;
     [Parameter] public EventCallback<string> ReadContentsChanged { get; set; }
+    [Parameter] public string? Class { get; set; }
 
     private readonly CancellationTokenSource _cts = new();
 
@@ -18,7 +19,7 @@ public partial class FileUploadReader : IDisposable
 
         var fileContent = await streamReader.ReadToEndAsync(_cts.Token);
 
-        await ReadContentsChanged.InvokeAsync(ReadContents);
+        await ReadContentsChanged.InvokeAsync(fileContent);
     }
 
     public void Dispose()

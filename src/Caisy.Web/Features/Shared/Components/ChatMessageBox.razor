@@ -1,0 +1,18 @@
+﻿<div>
+    <MudGrid Class="chat-message-box">
+        <MudItem xs="12">
+            <AdaptiveTextArea Value="@Message" ValueChanged="MessageChanged" Placeholder="Enter/Paste your code..." />
+        </MudItem>
+        <MudItem xs="12">
+            <MudPaper Class="mud-background-primary">
+                <MudToolBar Class="gap-1">
+                    @ToolbarContent
+                    <MudSpacer />
+                    <MudButton Disabled="@Loading" ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Refresh">
+                        @MessageButtonText
+                    </MudButton>
+                </MudToolBar>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+</div>

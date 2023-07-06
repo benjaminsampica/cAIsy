@@ -2,6 +2,15 @@
 @page "/{ChatHistoryId:long}"
 
 
+<MudGrid>
+    <MudItem xs="12">
+        <MudPaper Class="pa-4">
+            <MudText Typo="Typo.h4">
+                Code Converter
+            </MudText>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
 @if (User is null)
 {
     <MudAlert Severity=Severity.Warning Icon="@Icons.Material.Outlined.Warning">
@@ -13,67 +22,37 @@ else
     <EditForm Model="_model" OnValidSubmit="OnValidSubmitAsync">
         <DataAnnotationsValidator />
         <MudGrid>
-            <MudItem lg="5" md="12">
-                <MudPaper Elevation="2" Class="pa-4">
-                    <MudGrid>
-                        <MudItem xs="12">
-                            <MudText Typo="Typo.h4">
-                                Code Converter
-                            </MudText>
-                        </MudItem>
-                        <MudItem xs="12" Class="d-flex align-end">
-                            <MudSelect @bind-Value=_model.Source Label="Source">
-                                @foreach (var item in Enum.GetValues<ConvertCodeCommand.ConvertCodeOption>())
-                                {
-                                    <MudSelectItem Value=item>@item.GetDisplayName()</MudSelectItem>
-                                }
-                            </MudSelect>
-                            <MudIcon Icon="@Icons.Material.Outlined.ArrowForward" Class="mx-3"></MudIcon>
-                            <MudSelect @bind-Value=_model.Destination Label="Destination">
-                                @foreach (var item in Enum.GetValues<ConvertCodeCommand.ConvertCodeOption>())
-                                {
-                                    <MudSelectItem Value=item>@item.GetDisplayName()</MudSelectItem>
-                                }
-                            </MudSelect>
-                        </MudItem>
-                        <MudItem xs="12">
-                            <FileUploadReader @bind-ReadContents="_model.Code" />
-                        </MudItem>
-                        <MudItem xs="12" Class="pb-0">
-                            <h3>OR</h3>
-                        </MudItem>
-                        <MudItem xs="12" Class="pb-0">
-                            <h3>Paste your code</h3>
-                        </MudItem>
-                        <MudItem xs="12">
-                            <AdaptiveTextArea @bind-Value="_model.Code" Placeholder="Enter your code..." />
-                        </MudItem>
-                        <MudItem xs="12">
-                            <MudButton Disabled="@_isGenerating" ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Refresh">
-                                Generate Code
-                            </MudButton>
-                        </MudItem>
-                    </MudGrid>
-                </MudPaper>
-                
-            </MudItem>
-            <MudItem lg="7" md="12">
+            <MudItem xs="12">
                 <MudPaper Class="pa-4">
-                    <ChatWindow Conversation="CodeConverterState.Conversation">
-                        <AboveChatContent>
-                            <GenerateTests @bind-IsGenerating=@_isGenerating />
-                        </AboveChatContent>
-                    </ChatWindow>
-                    @if (_isGenerating)
-                    {
-                        <MudGrid Justify="Justify.Center">
-                            <MudItem xs="12">
-                                <MudProgressCircular Color="Color.Primary" Indeterminate="@_isGenerating" Size="Size.Large" />
-                            </MudItem>
-                        </MudGrid>
-                    }
+                    <ChatWindow Conversation="CodeConverterState.Conversation" />
                 </MudPaper>
             </MudItem>
         </MudGrid>
+        <ChatOptionsDrawer Open=_isOptionsOpen>
+            <MudGrid>
+                <MudItem xs="12" Class="d-flex align-end">
+                    <MudSelect @bind-Value=_model.Source Label="Source">
+                        @foreach (var item in Enum.GetValues<ConvertCodeCommand.ConvertCodeOption>())
+                        {
+                            <MudSelectItem Value=item>@item.GetDisplayName()</MudSelectItem>
+                        }
+                    </MudSelect>
+                    <MudIcon Icon="@Icons.Material.Outlined.ArrowForward" Class="mx-3"></MudIcon>
+                    <MudSelect @bind-Value=_model.Destination Label="Destination">
+                        @foreach (var item in Enum.GetValues<ConvertCodeCommand.ConvertCodeOption>())
+                        {
+                            <MudSelectItem Value=item>@item.GetDisplayName()</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+            </MudGrid>
+        </ChatOptionsDrawer>
+        <ChatMessageBox @bind-Loading="@_isGenerating" @bind-Message="@_model.Code" MessageButtonText="Generate Code">
+            <ToolbarContent>
+                <MudIconButton Icon="@Icons.Material.Outlined.Menu" Color="Color.Primary" Variant="Variant.Filled" OnClick="ToggleOptions" />
+                <FileUploadReader @bind-ReadContents="@_model.Code" Class="mt-0"/>
+            </ToolbarContent>
+        </ChatMessageBox>
+@*        <GenerateTests @bind-IsGenerating="@_isGenerating" />*@
     </EditForm>
 }

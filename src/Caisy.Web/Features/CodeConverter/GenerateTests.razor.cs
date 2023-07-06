@@ -3,20 +3,28 @@
 public partial class GenerateTests : IDisposable
 {
     [Inject] private IMediator Mediator { get; set; } = null!;
+    [CascadingParameter] public ErrorHandler ErrorHandler { get; set; } = null!;
     [Parameter] public bool IsGenerating { get; set; }
     [Parameter] public EventCallback<bool> IsGeneratingChanged { get; set; }
-
 
     private readonly GenerateTestsCommand _model = new();
     private readonly CancellationTokenSource _cts = new();
 
     private async Task OnClickAsync()
     {
-        await IsGeneratingChanged.InvokeAsync(true);
-
-        await Mediator.Send(_model);
-
-        await IsGeneratingChanged.InvokeAsync(false);
+        try
+        {
+            await IsGeneratingChanged.InvokeAsync(true);
+            await Mediator.Send(_model);
+        }
+        catch (FailedOpenAIApiRequestException ex)
+        {
+            ErrorHandler.ProcessError(ex);
+        }
+        finally
+        {
+            await IsGeneratingChanged.InvokeAsync(false);
+        }
     }
 
     public void Dispose()

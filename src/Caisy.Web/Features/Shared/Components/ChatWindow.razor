@@ -2,16 +2,13 @@
 {
     <MudGrid>
         <MudItem xs="12">
-            @AboveChatContent
-        </MudItem>
-        <MudItem xs="12">
             <MudTimeline TimelinePosition="TimelinePosition.Start">
                 @foreach (var message in Conversation.Messages)
                 {
                     var color = message.IsUserMessage ? Color.Dark : Color.Primary;
                     RenderFragment dot = message.IsUserMessage
                         ? @<MudIcon Icon=@Icons.Material.Outlined.Person></MudIcon>
-                    : @<MudImage Src="caisy.png" Height="30" />;
+                        : @<MudImage Src="caisy.png" Height="30" />;
 
                     <MudTimelineItem Color="color" Size="Size.Large" Elevation="0">
                         <ItemDot>
@@ -21,6 +18,17 @@
                             <MudAlert Severity="Severity.Normal" NoIcon=true Class="alert-code">
                                 <MudMarkdown Value="@message.Content" CodeBlockTheme="User.CodeBlockTheme" />
                             </MudAlert>
+                        </ItemContent>
+                    </MudTimelineItem>
+                }
+                @if (Loading)
+                {
+                    <MudTimelineItem Color="Color.Primary" Size="Size.Large" Elevation="0">
+                        <ItemDot>
+                            <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Large" />
+                        </ItemDot>
+                        <ItemContent>
+                            <MudSkeleton Height="100" Width="100%"></MudSkeleton>
                         </ItemContent>
                     </MudTimelineItem>
                 }
@@ -35,11 +43,10 @@ else
             <MudImage Src="caisy.png" Style="width: 100%; height: 100%; max-width: 450px;" />
         </MudItem>
     </MudGrid>
-
 }
 
 @code {
     [CascadingParameter] public IUser User { get; set; } = null!;
     [Parameter, EditorRequired] public ConversationBase Conversation { get; set; } = null!;
-    [Parameter] public RenderFragment? AboveChatContent { get; set; }
+    [Parameter] public bool Loading { get; set; }
 }

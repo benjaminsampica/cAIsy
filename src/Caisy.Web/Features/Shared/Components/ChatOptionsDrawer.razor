@@ -1,0 +1,9 @@
+﻿<MudDrawer Open="Open" Anchor="Anchor.Left" Elevation="1" Variant="@DrawerVariant.Persistent" OpenChanged="OpenChanged" ClipMode="DrawerClipMode.Always">
+    @ChildContent
+</MudDrawer>
+
+@code {
+    [Parameter] public bool Open { get; set; }
+    [Parameter] public EventCallback<bool> OpenChanged { get; set; }
+    [Parameter, EditorRequired] public RenderFragment ChildContent { get; set; } = null!;
+}

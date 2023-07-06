@@ -12,7 +12,8 @@ public partial class CodeConverter : IDisposable
 
     private readonly CancellationTokenSource _cts = new();
     private readonly ConvertCodeCommand _model = new();
-    private bool _isGenerating = false;
+    private bool _isGenerating;
+    private bool _isOptionsOpen;
 
     protected override async Task OnInitializedAsync()
     {
@@ -38,6 +39,8 @@ public partial class CodeConverter : IDisposable
             _isGenerating = false;
         }
     }
+
+    private void ToggleOptions() => _isOptionsOpen = !_isOptionsOpen;
 
     public void Dispose()
     {

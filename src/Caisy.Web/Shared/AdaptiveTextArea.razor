@@ -1,4 +1,4 @@
-﻿<MudTextField Lines="@lines" Value="@Value" ValueChanged="@(EventCallback.Factory.Create<string>(this, OnValueChangedAsync))" DebounceInterval="200" Placeholder="@Placeholder" Clearable="true"/>
+﻿<MudTextField Lines="@lines" Value="@Value" ValueChanged="(string value) => OnValueChangedAsync(value)" DebounceInterval="200" Placeholder="@Placeholder" Clearable="true" />
 
 @code {
     [Parameter] public string Value { get; set; } = null!;

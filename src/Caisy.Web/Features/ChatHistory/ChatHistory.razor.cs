@@ -18,17 +18,23 @@ public partial class ChatHistory : IDisposable
         _response = await Mediator.Send(new GetChatHistoryListQuery(), _cts.Token);
     }
 
-    public void NavigateToChat(long Id)
+    public void NavigateToChat(ChatHistoryItem item)
     {
-        NavigationManager.NavigateTo(Id.ToString());
+        if (item.Type is ChatHistoryType.Converter)
+        {
+            NavigationManager.NavigateTo("converter/" + item.Id.ToString());
+        }
+        else
+        {
+            NavigationManager.NavigateTo("reader/" + item.Id.ToString());
+        }
     }
 
-    public async Task DeleteChatAsync(long Id)
+    public async Task DeleteChatAsync(ChatHistoryItem item)
     {
-        await Mediator.Send(new DeleteChatHistoryCommand(Id));
+        await Mediator.Send(new DeleteChatHistoryCommand(item.Id));
 
-        var existingChatHistory = _response!.ChatHistories.First(ch => ch.Id == Id);
-        _response.ChatHistories.Remove(existingChatHistory);
+        _response!.ChatHistories.Remove(item);
     }
 
     public void Dispose()

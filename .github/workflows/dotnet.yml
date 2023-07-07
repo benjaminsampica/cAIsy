@@ -16,6 +16,9 @@ concurrency:
   group:  ${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  AZURE_WEBAPP_PACKAGE_PATH: './published'  
+
 jobs:
   build:
     environment:
@@ -33,7 +36,7 @@ jobs:
       run: | 
           dotnet restore
           dotnet test -c Release --collect:"XPlat Code Coverage" --results-directory ./coverage
-          dotnet publish -c Release -o drop
+          dotnet publish **/Caisy.sln -c Release -o ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
     - name: Deploy to Azure Web App
@@ -44,5 +47,5 @@ jobs:
         app-name: 'caisy'
         slot-name: 'production'
         publish-profile: ${{ secrets.PublishProfile }}
-        package: 'app'
+        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
           

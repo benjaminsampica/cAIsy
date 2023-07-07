@@ -1,11 +1,13 @@
-﻿namespace Caisy.Web.Features.CodeConverter;
+﻿using static Caisy.Web.Features.CodeConverter.GenerateTestsCommand;
+
+namespace Caisy.Web.Features.CodeConverter;
 
 public partial class GenerateTests : IDisposable
 {
     [Inject] private IMediator Mediator { get; set; } = null!;
     [CascadingParameter] public ErrorHandler ErrorHandler { get; set; } = null!;
-    [Parameter] public bool IsGenerating { get; set; }
-    [Parameter] public EventCallback<bool> IsGeneratingChanged { get; set; }
+    [Parameter] public bool IsDisabled { get; set; }
+    [Parameter] public EventCallback<bool> IsDisabledChanged { get; set; }
 
     private readonly GenerateTestsCommand _model = new();
     private readonly CancellationTokenSource _cts = new();
@@ -14,7 +16,7 @@ public partial class GenerateTests : IDisposable
     {
         try
         {
-            await IsGeneratingChanged.InvokeAsync(true);
+            await IsDisabledChanged.InvokeAsync(true);
             await Mediator.Send(_model);
         }
         catch (FailedOpenAIApiRequestException ex)
@@ -23,8 +25,13 @@ public partial class GenerateTests : IDisposable
         }
         finally
         {
-            await IsGeneratingChanged.InvokeAsync(false);
+            await IsDisabledChanged.InvokeAsync(false);
         }
+    }
+
+    private void SetTestingFramework(TestFramework testFramework)
+    {
+        _model.Framework = testFramework;
     }
 
     public void Dispose()

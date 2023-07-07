@@ -13,13 +13,18 @@ public partial class CodeConverter : IDisposable
     private readonly CancellationTokenSource _cts = new();
     private readonly ConvertCodeCommand _model = new();
     private bool _isGenerating;
+    private bool _hasGeneratedCode;
     private bool _isOptionsOpen;
+    private readonly string _title = "Code Converter";
+
+    private bool CannotGenerateTests => _isGenerating || !_hasGeneratedCode;
 
     protected override async Task OnInitializedAsync()
     {
         if (User == null) return;
 
         CodeConverterState.ChatHistoryId = ChatHistoryId;
+        _hasGeneratedCode = ChatHistoryId is not null;
         CodeConverterState.Conversation = await Mediator.Send(new GetCodeConverterConversationQuery(ChatHistoryId), _cts.Token);
     }
 
@@ -29,6 +34,7 @@ public partial class CodeConverter : IDisposable
         {
             _isGenerating = true;
             await Mediator.Send(_model);
+            _hasGeneratedCode = true;
         }
         catch (FailedOpenAIApiRequestException ex)
         {

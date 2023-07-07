@@ -1,63 +1,45 @@
 ﻿@page "/reader"
+
+<Title>
+    @_title
+</Title>
+<MudGrid>
+    <MudItem xs="12">
+        <MudPaper Class="pa-4">
+            <MudText Typo="Typo.h4">
+                @_title
+            </MudText>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
 @if (User is null)
 {
     <MudAlert Severity=Severity.Warning Icon="@Icons.Material.Outlined.Warning">
-        An api key has not been set. Please go to your <MudLink Href="profile">profile</MudLink> and add an API key.
+        An Open AI API key has not been set. Retrieve an API key from the Open AI website, creating an account if necessary, and then navigate to <MudLink Href="settings">settings</MudLink> and add an API key.
     </MudAlert>
 }
 else
 {
     <EditForm Model="_model" OnValidSubmit="OnValidSubmitAsync">
         <DataAnnotationsValidator />
-        <MudGrid>
-            <MudItem lg="5" md="12">
-                <MudPaper Elevation="2" Class="pa-4">
-                    <MudGrid>
-                        <MudItem xs="12">
-                            <MudText Typo="Typo.h4">Code Reader</MudText>
-                        </MudItem>
-                        <MudItem xs="12" Class="d-flex align-end">
-                            <MudSelect @bind-Value=_model.Temperament Label="Temperament">
-                                @foreach (var item in Enum.GetValues<ReadCodeCommand.ReaderTemperament>())
-                                {
-                                    <MudSelectItem Value=item>@item.GetDisplayName()</MudSelectItem>
-                                }
-                            </MudSelect>
-                        </MudItem>
-                        <MudItem xs="12">
-                            <FileUploadReader @bind-ReadContents="_model.Code" />
-                        </MudItem>
-                        <MudItem xs="12" Class="pb-0">
-                            <h3>OR</h3>
-                        </MudItem>
-                        <MudItem xs="12" Class="pb-0">
-                            <h3>Paste your code</h3>
-                        </MudItem>
-                        <MudItem xs="12">
-                            <AdaptiveTextArea @bind-Value="_model.Code" Placeholder="Enter your code..." />
-                        </MudItem>
-                        <MudItem xs="12">
-                            <MudButton Disabled="@_isGenerating" ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Refresh">
-                                Read Code
-                            </MudButton>
-                        </MudItem>
-                    </MudGrid>
-                </MudPaper>
-                
-            </MudItem>
-            <MudItem lg="7" md="12">
-                <MudPaper Class="pa-4">
-                    <ChatWindow Conversation="CodeReaderState.Conversation" />
-                    @if (_isGenerating)
-                    {
-                        <MudGrid Justify="Justify.Center">
-                            <MudItem xs="12">
-                                <MudProgressCircular Color="Color.Primary" Indeterminate="@_isGenerating" Size="Size.Large" />
-                            </MudItem>
-                        </MudGrid>
-                    }
-                </MudPaper>
-            </MudItem>
-        </MudGrid>
+        <ChatWindow Conversation="CodeReaderState.Conversation" />
+        <ChatMessageBox @bind-Loading="@_isGenerating" @bind-Message="@_model.Code" MessageButtonText="Generate">
+            <ToolbarContent>
+                <MudIconButton Icon="@Icons.Material.Outlined.Menu" Color="Color.Primary" Variant="Variant.Filled" OnClick="ToggleOptions" />
+                <FileUploadReader @bind-ReadContents="@_model.Code" Class="mt-0"/>
+            </ToolbarContent>
+        </ChatMessageBox>
+        <ChatOptionsDrawer Open="_isOptionsOpen">
+            <MudGrid>
+                <MudItem xs="12">
+                    <MudSelect @bind-Value=_model.Temperament Label="Temperament">
+                        @foreach (var item in Enum.GetValues<ReadCodeCommand.ReaderTemperament>())
+                        {
+                            <MudSelectItem Value=item>@item.GetDisplayName()</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+            </MudGrid>
+        </ChatOptionsDrawer>
     </EditForm>
 }

@@ -1,5 +1,12 @@
 ﻿<MudDrawer Open="Open" Anchor="Anchor.Left" Elevation="1" Variant="@DrawerVariant.Persistent" OpenChanged="OpenChanged" ClipMode="DrawerClipMode.Always">
-    @ChildContent
+    <MudDrawerHeader>
+        <MudText Typo="Typo.h4">
+            Options
+        </MudText>
+    </MudDrawerHeader>
+    <MudContainer Class="px-2">
+        @ChildContent
+    </MudContainer>
 </MudDrawer>
 
 @code {

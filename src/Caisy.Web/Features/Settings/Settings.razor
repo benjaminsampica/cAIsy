@@ -1,10 +1,14 @@
 ﻿@page "/settings"
 
-<MudGrid>
-    <MudItem xs="12">
-        <MudPaper Class="pa-4">
+<Title>
+    @_title
+</Title>
+
+<MudPaper Class="pa-4">
+    <MudGrid>
+        <MudItem xs="12">
             <MudText Typo="Typo.h4">
-                Settings
+                @_title
             </MudText>
             <MudText>
                 Manage various settings across the entire application.
@@ -20,12 +24,13 @@
                         <MudTextField Label="Api Key" @bind-Value="_model.ApiKey" For="() => _model.ApiKey" />
                     </MudItem>
                     <MudItem xs="12">
-                        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Outlined.Check">
+                        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Outlined.Check">
                             Save
                         </MudButton>
                     </MudItem>
                 </MudGrid>
             </EditForm>
-        </MudPaper>
-    </MudItem>
-</MudGrid>
+
+        </MudItem>
+    </MudGrid>
+</MudPaper>

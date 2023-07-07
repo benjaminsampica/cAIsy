@@ -10,9 +10,11 @@ public partial class CodeReader : IDisposable
     [CascadingParameter] public ErrorHandler ErrorHandler { get; set; } = null!;
     [Parameter] public long? ChatHistoryId { get; set; }
 
-    private bool _isGenerating = false;
     private readonly CancellationTokenSource _cts = new();
     private readonly ReadCodeCommand _model = new();
+    private readonly string _title = "Code Reader";
+    private bool _isGenerating = false;
+    private bool _isOptionsOpen;
 
     protected override async Task OnInitializedAsync()
     {
@@ -38,6 +40,8 @@ public partial class CodeReader : IDisposable
             _isGenerating = false;
         }
     }
+
+    private void ToggleOptions() => _isOptionsOpen = !_isOptionsOpen;
 
     public void Dispose()
     {

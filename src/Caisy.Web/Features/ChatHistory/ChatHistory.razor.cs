@@ -9,6 +9,7 @@ public partial class ChatHistory : IDisposable
 
     private GetChatHistoryListResponse? _response;
     private readonly CancellationTokenSource _cts = new();
+    private readonly string _title = "Chat History";
 
     protected override async Task OnInitializedAsync()
     {

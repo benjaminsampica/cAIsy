@@ -12,6 +12,7 @@ public partial class Settings : IDisposable
 
     private readonly CancellationTokenSource _cts = new();
     private readonly GetUserProfileQuery _model = new();
+    private readonly string _title = "Settings";
 
     private string GetThemeIcon() => _model.PrefersDarkMode ? Icons.Material.Filled.DarkMode : Icons.Material.Filled.LightMode;
 

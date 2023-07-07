@@ -14,15 +14,11 @@
             <MudIconButton Href="settings" Icon="@Icons.Material.Outlined.Settings" Color="Color.Primary" Size="Size.Large" />
         </MudAppBar>
         <MudMainContent>
-            <ChildContent>
-                <MudMainContent Class="pt-2">
-                    <MudContainer MaxWidth="MaxWidth.ExtraLarge">
-                        <ErrorHandler>
-                            @Body
-                        </ErrorHandler>
-                    </MudContainer>
-                </MudMainContent>
-            </ChildContent>
+            <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="pt-2">
+                <ErrorHandler>
+                    @Body
+                </ErrorHandler>
+            </MudContainer>
         </MudMainContent>
     </MudLayout>
 </CascadingValue>

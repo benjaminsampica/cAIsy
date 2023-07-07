@@ -1,4 +1,5 @@
-﻿using static Caisy.Web.Features.ChatHistory.GetChatHistoryListResponse;
+﻿using System.Collections.ObjectModel;
+using static Caisy.Web.Features.ChatHistory.GetChatHistoryListResponse;
 
 namespace Caisy.Web.Features.ChatHistory;
 
@@ -16,9 +17,17 @@ public partial class ChatHistory : IDisposable
         _response = await Mediator.Send(new GetChatHistoryListQuery(), _cts.Token);
     }
 
-    public void NavigateToExistingChat(long Id)
+    public void NavigateToChat(long Id)
     {
         NavigationManager.NavigateTo(Id.ToString());
+    }
+
+    public async Task DeleteChatAsync(long Id)
+    {
+        await Mediator.Send(new DeleteChatHistoryCommand(Id));
+
+        var existingChatHistory = _response!.ChatHistories.First(ch => ch.Id == Id);
+        _response.ChatHistories.Remove(existingChatHistory);
     }
 
     public void Dispose()
@@ -46,7 +55,7 @@ public class GetChatHistoryListHandler : IRequestHandler<GetChatHistoryListQuery
     {
         var chatHistories = await _chatHistoryRepository.GetAllAsync(cancellationToken);
 
-        var chatHistoryItems = _mapper.Map<ChatHistoryItem[]>(chatHistories);
+        var chatHistoryItems = _mapper.Map<ObservableCollection<ChatHistoryItem>>(chatHistories);
 
         return new GetChatHistoryListResponse
         {
@@ -57,7 +66,7 @@ public class GetChatHistoryListHandler : IRequestHandler<GetChatHistoryListQuery
 
 public class GetChatHistoryListResponse
 {
-    public required IEnumerable<ChatHistoryItem> ChatHistories { get; set; } = new HashSet<ChatHistoryItem>();
+    public required ObservableCollection<ChatHistoryItem> ChatHistories { get; set; } = new ObservableCollection<ChatHistoryItem>();
 
     public class ChatHistoryItem
     {
@@ -73,4 +82,22 @@ public class GetChatHistoryListResponse
             }
         }
     };
+}
+
+
+public record DeleteChatHistoryCommand(long Id) : IRequest;
+
+public class DeleteChatHistoryHandler : IRequestHandler<DeleteChatHistoryCommand>
+{
+    private readonly IRepository<Infrastructure.Models.ChatHistory> _chatHistoryRepository;
+
+    public DeleteChatHistoryHandler(IRepository<Infrastructure.Models.ChatHistory> chatHistoryRepository)
+    {
+        _chatHistoryRepository = chatHistoryRepository;
+    }
+
+    public async Task Handle(DeleteChatHistoryCommand command, CancellationToken cancellationToken)
+    {
+        await _chatHistoryRepository.RemoveAsync(command.Id, cancellationToken);
+    }
 }

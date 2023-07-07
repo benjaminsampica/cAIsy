@@ -20,15 +20,14 @@
         <MudItem xs="12">
             <MudDataGrid Items="@_response.ChatHistories">
                 <Columns>
+                    <TemplateColumn Sortable="false">
+                        <CellTemplate>
+                            <MudIconButton Size="@Size.Small" Variant="@Variant.Filled" OnClick="() => NavigateToChat(context.Item.Id)" Color="@Color.Primary" Icon="@Icons.Material.Outlined.OpenInBrowser" />
+                            <MudIconButton Size="@Size.Small" Variant="@Variant.Filled" OnClick="() => DeleteChatAsync(context.Item.Id)" Color="@Color.Error" Icon="@Icons.Material.Outlined.Delete" />
+                        </CellTemplate>
+                    </TemplateColumn>
                     <PropertyColumn Property="x => x.Summary" Title="Summary" />
                     <PropertyColumn Property="x => x.CreatedOn" Title="Created" />
-                    <TemplateColumn CellClass="d-flex justify-end">
-                        <CellTemplate>
-                            <MudStack Row>
-                            <MudButton Size="@Size.Small" Variant="@Variant.Filled" OnClick="() => NavigateToExistingChat(context.Item.Id)" Color="@Color.Primary">View Chat</MudButton>
-                        </MudStack>
-                    </CellTemplate>
-                </TemplateColumn>
             </Columns>
             <NoRecordsContent>
                 <MudAlert Severity="Severity.Info">

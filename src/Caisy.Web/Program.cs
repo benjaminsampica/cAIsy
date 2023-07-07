@@ -1,13 +1,12 @@
 using Blazored.LocalStorage;
 using Caisy.Web.Features.CodeConverter;
 using Caisy.Web.Features.CodeReader;
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
 
-var builder = WebAssemblyHostBuilder.CreateDefault(args);
-builder.RootComponents.Add<App>("#app");
-builder.RootComponents.Add<HeadOutlet>("head::after");
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddRazorPages(config => config.RootDirectory = "/Features");
+builder.Services.AddServerSideBlazor();
 
 builder.Services.AddMudServices();
 builder.Services.AddMudMarkdownServices();
@@ -26,9 +25,18 @@ builder.Services.AddScoped<CodeReaderState>();
 
 var app = builder.Build();
 
-var userProfileRepository = app.Services.GetRequiredService<IRepository<UserProfile>>();
-var existingUserProfile = (await userProfileRepository.GetAllAsync(CancellationToken.None)).FirstOrDefault();
-var identityProvider = app.Services.GetRequiredService<IIdentityProvider>();
-identityProvider.User = existingUserProfile;
+app.UseHttpsRedirection();
+
+app.UseStaticFiles();
+
+app.UseRouting();
+
+app.MapBlazorHub();
+app.MapFallbackToPage("/_Host");
+
+//var userProfileRepository = app.Services.GetRequiredService<IRepository<UserProfile>>();
+//var existingUserProfile = (await userProfileRepository.GetAllAsync(CancellationToken.None)).FirstOrDefault();
+//var identityProvider = app.Services.GetRequiredService<IIdentityProvider>();
+//identityProvider.User = existingUserProfile;
 
 await app.RunAsync();

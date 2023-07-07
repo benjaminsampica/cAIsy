@@ -45,5 +45,5 @@ jobs:
         app-name: 'caisy'
         slot-name: 'production'
         publish-profile: ${{ secrets.PublishProfile }}
-        package: './app'
+        package: 'app'
           

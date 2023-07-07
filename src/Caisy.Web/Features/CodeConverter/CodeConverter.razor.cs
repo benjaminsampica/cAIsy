@@ -75,7 +75,11 @@ public class ConvertCodeCommand : IRequest
         EntityFrameworkCore,
         Dapper,
         ADO,
-        SQL
+        SQL,
+        [Display(Name = "C#")]
+        CSharp,
+        [Display(Name = "VB.NET")]
+        VBDotNet
     }
 }
 

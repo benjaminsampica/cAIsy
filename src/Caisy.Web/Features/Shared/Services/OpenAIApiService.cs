@@ -13,9 +13,9 @@ public class OpenAIApiService : IOpenAIApiService
     private readonly OpenAIAPI _openAIApi;
     private readonly IMapper _mapper;
 
-    public OpenAIApiService(IIdentityProvider identityProvider, IMapper mapper)
+    public OpenAIApiService(OpenAIApiSettings settings, IMapper mapper)
     {
-        _openAIApi = new OpenAIAPI(identityProvider.User!.ApiKey);
+        _openAIApi = new OpenAIAPI(settings.ApiKey);
         _mapper = mapper;
     }
 
@@ -36,6 +36,11 @@ public class OpenAIApiService : IOpenAIApiService
             throw new FailedOpenAIApiRequestException(ex.Message);
         }
     }
+}
+
+public class OpenAIApiSettings
+{
+    public required string ApiKey { get; set; }
 }
 
 public class FailedOpenAIApiRequestException : Exception

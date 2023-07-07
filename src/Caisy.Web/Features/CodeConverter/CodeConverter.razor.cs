@@ -7,7 +7,6 @@ public partial class CodeConverter : IDisposable
 {
     [Inject] public IMediator Mediator { get; set; } = null!;
     [Inject] public CodeConverterState CodeConverterState { get; set; } = null!;
-    [CascadingParameter] public IUser? User { get; set; }
     [CascadingParameter] public ErrorHandler ErrorHandler { get; set; } = null!;
     [Parameter] public long? ChatHistoryId { get; set; }
 
@@ -22,8 +21,6 @@ public partial class CodeConverter : IDisposable
 
     protected override async Task OnInitializedAsync()
     {
-        if (User == null) return;
-
         CodeConverterState.ChatHistoryId = ChatHistoryId;
         _hasGeneratedCode = ChatHistoryId is not null;
         CodeConverterState.Conversation = await Mediator.Send(new GetCodeConverterConversationQuery(ChatHistoryId), _cts.Token);

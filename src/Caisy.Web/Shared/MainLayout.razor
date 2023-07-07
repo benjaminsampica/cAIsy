@@ -1,8 +1,8 @@
-﻿@implements IDisposable
+﻿@using Caisy.Web.Features.Settings
+@implements IDisposable
 @inherits LayoutComponentBase
 
 <div>
-<CascadingValue Value="IdentityProvider.User">
     <MudLayout>
         <MudAppBar Color="Color.Dark">
             <MudImage Src="favicon.ico" /> 
@@ -11,7 +11,7 @@
             <MudNavLink Href="reader" Icon="@Icons.Material.Outlined.MenuBook" IconColor="Color.Primary">Reader</MudNavLink>
             <MudNavLink Href="history" Icon="@Icons.Material.Outlined.History" IconColor="Color.Primary">History</MudNavLink>
             <MudSpacer />
-            <MudIconButton Href="settings" Icon="@Icons.Material.Outlined.Settings" Color="Color.Primary" Size="Size.Large" />
+            <Settings />
         </MudAppBar>
         <MudMainContent>
             <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="pt-2">
@@ -21,7 +21,6 @@
             </MudContainer>
         </MudMainContent>
     </MudLayout>
-</CascadingValue>
 </div>
 
 <MudThemeProvider @ref=ApplicationState.MudThemeProvider Theme=_baseTheme IsDarkMode="IdentityProvider.User?.PrefersDarkMode ?? false" />

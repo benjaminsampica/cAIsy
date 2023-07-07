@@ -15,41 +15,32 @@
     </MudItem>
 </MudGrid>
 
-@if (User is null)
-{
-    <MudAlert Severity=Severity.Warning Icon="@Icons.Material.Outlined.Warning">
-        An Open AI API key has not been set. Retrieve an API key from the Open AI website, creating an account if necessary, and then navigate to <MudLink Href="settings">settings</MudLink> and add an API key.
-    </MudAlert>
-}
-else
-{
-    <EditForm Model="_model" OnValidSubmit="OnValidSubmitAsync">
-        <DataAnnotationsValidator />
-        <ChatWindow Conversation="CodeConverterState.Conversation" />
-        <ChatMessageBox @bind-Loading="@_isGenerating" @bind-Message="@_model.Code" MessageButtonText="Generate">
-            <ToolbarContent>
-                <MudIconButton Icon="@Icons.Material.Outlined.Menu" Color="Color.Primary" Variant="Variant.Filled" OnClick="ToggleOptions" />
-                <FileUploadReader @bind-ReadContents="@_model.Code" Class="mt-0"/>
-                <GenerateTests IsDisabled="CannotGenerateTests" IsDisabledChanged="(value) => _isGenerating = value" />
-            </ToolbarContent>
-        </ChatMessageBox>
-        <ChatOptionsDrawer Open="_isOptionsOpen">
-            <MudGrid>
-                <MudItem xs="12">
-                    <MudSelect @bind-Value=_model.Source Label="Source">
-                        @foreach (var item in Enum.GetValues<ConvertCodeCommand.ConvertCodeOption>())
-                        {
-                            <MudSelectItem Value=item>@item.GetDisplayName()</MudSelectItem>
-                        }
-                    </MudSelect>
-                    <MudSelect @bind-Value=_model.Destination Label="Destination">
-                        @foreach (var item in Enum.GetValues<ConvertCodeCommand.ConvertCodeOption>())
-                        {
-                            <MudSelectItem Value=item>@item.GetDisplayName()</MudSelectItem>
-                        }
-                    </MudSelect>
-                </MudItem>
-            </MudGrid>
-        </ChatOptionsDrawer>
-    </EditForm>
-}
+<EditForm Model="_model" OnValidSubmit="OnValidSubmitAsync">
+    <DataAnnotationsValidator />
+    <ChatWindow Conversation="CodeConverterState.Conversation" />
+    <ChatMessageBox @bind-Loading="@_isGenerating" @bind-Message="@_model.Code" MessageButtonText="Generate">
+        <ToolbarContent>
+            <MudIconButton Icon="@Icons.Material.Outlined.Menu" Color="Color.Primary" Variant="Variant.Filled" OnClick="ToggleOptions" />
+            <FileUploadReader @bind-ReadContents="@_model.Code" Class="mt-0" />
+            <GenerateTests IsDisabled="CannotGenerateTests" IsDisabledChanged="(value) => _isGenerating = value" />
+        </ToolbarContent>
+    </ChatMessageBox>
+    <ChatOptionsDrawer Open="_isOptionsOpen">
+        <MudGrid>
+            <MudItem xs="12">
+                <MudSelect @bind-Value=_model.Source Label="Source">
+                    @foreach (var item in Enum.GetValues<ConvertCodeCommand.ConvertCodeOption>())
+                    {
+                        <MudSelectItem Value=item>@item.GetDisplayName()</MudSelectItem>
+                    }
+                </MudSelect>
+                <MudSelect @bind-Value=_model.Destination Label="Destination">
+                    @foreach (var item in Enum.GetValues<ConvertCodeCommand.ConvertCodeOption>())
+                    {
+                        <MudSelectItem Value=item>@item.GetDisplayName()</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+        </MudGrid>
+    </ChatOptionsDrawer>
+</EditForm>

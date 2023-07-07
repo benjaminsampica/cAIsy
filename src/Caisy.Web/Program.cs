@@ -1,6 +1,7 @@
 using Blazored.LocalStorage;
 using Caisy.Web.Features.CodeConverter;
 using Caisy.Web.Features.CodeReader;
+using Microsoft.Extensions.Options;
 using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +21,8 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<ApplicationState>();
 builder.Services.AddScoped<IIdentityProvider, IdentityProvider>();
 builder.Services.AddTransient<IOpenAIApiService, OpenAIApiService>();
+builder.Services.Configure<OpenAIApiSettings>(builder.Configuration.GetSection("OpenAiApi"))
+    .AddSingleton(provider => provider.GetRequiredService<IOptions<OpenAIApiSettings>>().Value);
 builder.Services.AddScoped<CodeConverterState>();
 builder.Services.AddScoped<CodeReaderState>();
 
@@ -33,10 +36,5 @@ app.UseRouting();
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
-
-//var userProfileRepository = app.Services.GetRequiredService<IRepository<UserProfile>>();
-//var existingUserProfile = (await userProfileRepository.GetAllAsync(CancellationToken.None)).FirstOrDefault();
-//var identityProvider = app.Services.GetRequiredService<IIdentityProvider>();
-//identityProvider.User = existingUserProfile;
 
 await app.RunAsync();

@@ -14,8 +14,7 @@ builder.Services.AddMudMarkdownServices();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddMediatR(config => config.RegisterServicesFromAssemblyContaining<App>());
 builder.Services.AddTransient<INotificationHandler<SaveChatHistoryCommand<CodeConverterState>>, SaveChatHistoryCommandHandler<CodeConverterState>>();
-// TODO: Make chat history work with both code conversion & code reading.
-//builder.Services.AddTransient<INotificationHandler<SaveChatHistoryCommand<CodeReaderState>>, SaveChatHistoryCommandHandler<CodeReaderState>>();
+builder.Services.AddTransient<INotificationHandler<SaveChatHistoryCommand<CodeReaderState>>, SaveChatHistoryCommandHandler<CodeReaderState>>();
 builder.Services.AddAutoMapper(typeof(App));
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));

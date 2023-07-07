@@ -4,8 +4,9 @@ namespace Caisy.Web.Features.Shared.Handlers;
 
 public interface IArchivingState
 {
-    public long? ChatHistoryId { get; set; }
-    public ConversationBase Conversation { get; set; }
+    long? ChatHistoryId { get; set; }
+    ConversationBase Conversation { get; set; }
+    abstract ChatHistoryType GetType();
 }
 
 public record SaveChatHistoryCommand<TState> : INotification
@@ -38,7 +39,8 @@ public class SaveChatHistoryCommandHandler<TState> : INotificationHandler<SaveCh
 
         var chatHistory = new Infrastructure.Models.ChatHistory
         {
-            Messages = chatHistoryMessages
+            Messages = chatHistoryMessages,
+            Type = _state.GetType()
         };
 
         await _chatHistoryRepository.AddAsync(chatHistory, cancellationToken);

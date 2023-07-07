@@ -16,11 +16,18 @@ public class ChatHistory : BaseEntity<ChatHistory>
         }
     }
 
+    public ChatHistoryType Type { get; set; }
     public required List<ChatHistoryMessage> Messages { get; set; }
 
     public class ChatHistoryMessage
     {
         public required Message.MessageRole Role { get; set; }
         public required string Content { get; set; }
+    }
+
+    public enum ChatHistoryType
+    {
+        Converter,
+        Reader
     }
 }

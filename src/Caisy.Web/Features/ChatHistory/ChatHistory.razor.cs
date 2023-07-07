@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using static Caisy.Web.Features.ChatHistory.GetChatHistoryListResponse;
+using static Caisy.Web.Infrastructure.Models.ChatHistory;
 
 namespace Caisy.Web.Features.ChatHistory;
 
@@ -73,6 +74,8 @@ public class GetChatHistoryListResponse
         public required long Id { get; set; }
         public required DateTimeOffset CreatedOn { get; set; }
         public required string Summary { get; set; }
+        public required ChatHistoryType Type { get; set; }
+
 
         public class ChatHistoryItemProfile : Profile
         {

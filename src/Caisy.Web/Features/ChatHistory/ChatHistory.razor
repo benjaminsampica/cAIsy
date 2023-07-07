@@ -27,6 +27,7 @@
                         </CellTemplate>
                     </TemplateColumn>
                     <PropertyColumn Property="x => x.Summary" Title="Summary" />
+                    <PropertyColumn Property="x => x.Type.GetDisplayName()" Title="Type" />
                     <PropertyColumn Property="x => x.CreatedOn" Title="Created" />
             </Columns>
             <NoRecordsContent>

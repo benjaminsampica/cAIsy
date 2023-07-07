@@ -1,4 +1,5 @@
 ﻿using Caisy.Web.Features.CodeConverter;
+using static Caisy.Web.Infrastructure.Models.ChatHistory;
 
 namespace Caisy.Web.Features.CodeReader;
 
@@ -54,6 +55,8 @@ public class CodeReaderState : IArchivingState
 {
     public ConversationBase Conversation { get; set; } = new GetCodeConverterConversationQueryResponse();
     public long? ChatHistoryId { get; set; }
+
+    ChatHistoryType IArchivingState.GetType() => ChatHistoryType.Reader;
 }
 
 public class ReadCodeCommand : IRequest

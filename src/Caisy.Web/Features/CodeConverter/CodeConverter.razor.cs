@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using static Caisy.Web.Infrastructure.Models.ChatHistory;
 
 namespace Caisy.Web.Features.CodeConverter;
 
@@ -59,6 +60,8 @@ public class CodeConverterState : IArchivingState
 {
     public ConversationBase Conversation { get; set; } = new GetCodeConverterConversationQueryResponse();
     public long? ChatHistoryId { get; set; }
+
+    ChatHistoryType IArchivingState.GetType() => ChatHistoryType.Converter;
 }
 
 public class ConvertCodeCommand : IRequest

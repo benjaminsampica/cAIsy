@@ -36,7 +36,7 @@ jobs:
       run: | 
           dotnet restore
           dotnet test -c Release --collect:"XPlat Code Coverage" --results-directory ./coverage
-          dotnet publish **/Caisy.Web.csproj -c Release -o ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+          dotnet publish Caisy.Web.csproj -c Release -o ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
     - name: Deploy to Azure Web App

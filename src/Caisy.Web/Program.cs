@@ -21,7 +21,7 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<ApplicationState>();
 builder.Services.AddScoped<IIdentityProvider, IdentityProvider>();
 builder.Services.AddTransient<IOpenAIApiService, OpenAIApiService>();
-builder.Services.Configure<OpenAIApiSettings>(builder.Configuration.GetSection("OpenAiApi"))
+builder.Services.Configure<OpenAIApiSettings>(builder.Configuration.GetSection("OpenAIApi"))
     .AddSingleton(provider => provider.GetRequiredService<IOptions<OpenAIApiSettings>>().Value);
 builder.Services.AddScoped<CodeConverterState>();
 builder.Services.AddScoped<CodeReaderState>();

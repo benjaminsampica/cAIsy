@@ -15,9 +15,14 @@
         </MudAppBar>
         <MudMainContent>
             <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="pt-2">
-                <ErrorHandler>
-                    @Body
-                </ErrorHandler>
+                <ErrorBoundary @ref="_errorBoundary">
+                    <ChildContent>
+                        @Body
+                    </ChildContent>
+                    <ErrorContent>
+                        <ErrorHandler Exception="context"/>
+                    </ErrorContent>
+                </ErrorBoundary>
             </MudContainer>
         </MudMainContent>
     </MudLayout>
@@ -30,6 +35,7 @@
     [Inject] public IIdentityProvider IdentityProvider { get; set; } = null!;
     [Inject] public ApplicationState ApplicationState { get; set; } = null!;
 
+    private ErrorBoundary? _errorBoundary;
     private static readonly string[] _headerFontFamily = new[] { "Orbitron", "sans-serif" };
     private MudTheme _baseTheme = new MudTheme
     {
@@ -48,6 +54,11 @@
             Primary = Colors.Pink.Default
         },
     };
+
+    protected override void OnParametersSet()
+    {
+        _errorBoundary?.Recover();
+    }
 
     protected override void OnInitialized()
     {

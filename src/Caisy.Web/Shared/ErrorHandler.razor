@@ -7,22 +7,17 @@
         @_message
     </MudAlert>
 }
-<CascadingValue Value="this">
-    @ChildContent
-</CascadingValue>
-
-
 
 @code {
-    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter, EditorRequired] public Exception Exception { get; set; } = null!;
     private string? _message;
 
-    public void ProcessError(Exception ex)
+    protected override void OnInitialized()
     {
         Logger.LogError("Error:ProcessError - Type: {Type} Message: {Message}",
-            ex.GetType(), ex.Message);
+                  Exception.GetType(), Exception.Message);
 
-        _message = ex.Message;
+        _message = Exception.Message;
 
         StateHasChanged();
     }

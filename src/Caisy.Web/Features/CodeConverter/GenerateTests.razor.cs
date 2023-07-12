@@ -14,19 +14,9 @@ public partial class GenerateTests : IDisposable
 
     private async Task OnClickAsync()
     {
-        try
-        {
-            await IsDisabledChanged.InvokeAsync(true);
-            await Mediator.Send(_model);
-        }
-        catch (FailedOpenAIApiRequestException ex)
-        {
-            ErrorHandler.ProcessError(ex);
-        }
-        finally
-        {
-            await IsDisabledChanged.InvokeAsync(false);
-        }
+        await IsDisabledChanged.InvokeAsync(true);
+        await Mediator.Send(_model);
+        await IsDisabledChanged.InvokeAsync(false);
     }
 
     private void SetTestingFramework(TestFramework testFramework)

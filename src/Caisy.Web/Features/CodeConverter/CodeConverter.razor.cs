@@ -7,7 +7,6 @@ public partial class CodeConverter : IDisposable
 {
     [Inject] public IMediator Mediator { get; set; } = null!;
     [Inject] public CodeConverterState CodeConverterState { get; set; } = null!;
-    [CascadingParameter] public ErrorHandler ErrorHandler { get; set; } = null!;
     [Parameter] public long? ChatHistoryId { get; set; }
 
     private readonly CancellationTokenSource _cts = new();
@@ -28,20 +27,11 @@ public partial class CodeConverter : IDisposable
 
     private async Task OnValidSubmitAsync()
     {
-        try
-        {
-            _isGenerating = true;
-            await Mediator.Send(_model);
-            _hasGeneratedCode = true;
-        }
-        catch (FailedOpenAIApiRequestException ex)
-        {
-            ErrorHandler.ProcessError(ex);
-        }
-        finally
-        {
-            _isGenerating = false;
-        }
+        _isGenerating = true;
+        await Mediator.Send(_model);
+        _hasGeneratedCode = true;
+
+        _isGenerating = false;
     }
 
     private void ToggleOptions() => _isOptionsOpen = !_isOptionsOpen;

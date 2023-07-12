@@ -71,9 +71,9 @@
             chatWindowModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", $"./Features/Shared/Components/{nameof(ChatWindow)}.razor.js");
         }
 
-        if(Conversation.MessageCount > 0)
+        if (chatWindowModule is not null && Conversation.MessageCount > 0)
         {
-            await chatWindowModule!.InvokeVoidAsync("focusLastMessage");
+            await chatWindowModule.InvokeVoidAsync("focusLastMessage");
         }
     }
 

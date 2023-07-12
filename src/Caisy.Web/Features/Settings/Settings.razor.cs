@@ -23,7 +23,7 @@ public partial class Settings : IDisposable
         _model.PrefersDarkMode = IdentityProvider?.User?.PrefersDarkMode ?? false;
     }
 
-    private async Task SubmitAsync(bool value)
+    private async Task UpdateSettingsAsync(bool value)
     {
         _model.PrefersDarkMode = value;
 

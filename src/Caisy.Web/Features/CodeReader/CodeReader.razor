@@ -14,7 +14,7 @@
 </MudGrid>
 <EditForm Model="_model" OnValidSubmit="OnValidSubmitAsync">
     <DataAnnotationsValidator />
-    <ChatWindow Conversation="CodeReaderState.Conversation" />
+    <ChatWindow Conversation="CodeReaderState.Conversation" Loading="_isGenerating"/>
     <ChatMessageBox @bind-Loading="@_isGenerating" @bind-Message="@_model.Code" MessageButtonText="Generate">
         <ToolbarContent>
             <MudIconButton Icon="@Icons.Material.Outlined.Menu" Color="Color.Primary" Variant="Variant.Filled" OnClick="ToggleOptions" />

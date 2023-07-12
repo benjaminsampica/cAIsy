@@ -3,29 +3,32 @@
 @inherits LayoutComponentBase
 
 <div>
-    <MudLayout>
-        <MudAppBar Color="Color.Dark">
-            <MudImage Src="favicon.ico" /> 
-            <MudText Typo="Typo.h4">c<span class="ai-header">AI</span>sy</MudText>
-            <MudNavLink Href="" Icon="@Icons.Material.Outlined.ChangeCircle" IconColor="Color.Primary">Converter</MudNavLink>
-            <MudNavLink Href="reader" Icon="@Icons.Material.Outlined.MenuBook" IconColor="Color.Primary">Reader</MudNavLink>
-            <MudNavLink Href="history" Icon="@Icons.Material.Outlined.History" IconColor="Color.Primary">History</MudNavLink>
-            <MudSpacer />
-            <Settings />
-        </MudAppBar>
-        <MudMainContent>
-            <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="pt-2">
-                <ErrorBoundary @ref="_errorBoundary">
-                    <ChildContent>
-                        @Body
-                    </ChildContent>
-                    <ErrorContent>
-                        <ErrorHandler Exception="context"/>
-                    </ErrorContent>
-                </ErrorBoundary>
-            </MudContainer>
-        </MudMainContent>
-    </MudLayout>
+    <CascadingValue Value="IdentityProvider.User">
+        <MudLayout>
+            <MudAppBar Color="Color.Dark">
+                <MudImage Src="favicon.ico" /> 
+                <MudText Typo="Typo.h4">c<span class="ai-header">AI</span>sy</MudText>
+                <MudNavLink Href="" Icon="@Icons.Material.Outlined.ChangeCircle" IconColor="Color.Primary">Converter</MudNavLink>
+                <MudNavLink Href="reader" Icon="@Icons.Material.Outlined.MenuBook" IconColor="Color.Primary">Reader</MudNavLink>
+                <MudNavLink Href="history" Icon="@Icons.Material.Outlined.History" IconColor="Color.Primary">History</MudNavLink>
+                <MudSpacer />
+                <Settings />
+            </MudAppBar>
+            <MudMainContent>
+                <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="pt-2">
+                    <ErrorBoundary @ref="_errorBoundary">
+                        <ChildContent>
+                            @Body
+                        </ChildContent>
+                        <ErrorContent>
+                            <ErrorHandler Exception="context"/>
+                        </ErrorContent>
+                    </ErrorBoundary>
+                </MudContainer>
+            </MudMainContent>
+        </MudLayout>
+    </CascadingValue>
+
 </div>
 
 <MudThemeProvider @ref=ApplicationState.MudThemeProvider Theme=_baseTheme IsDarkMode="IdentityProvider.User?.PrefersDarkMode ?? false" />

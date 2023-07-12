@@ -1,42 +1,47 @@
 ﻿<MudPaper Class="pa-4 mb-1">
     @if (Conversation.Messages.Count > 0)
     {
+        <MudGrid>
+            <MudItem xs="12" Style="height: 55vh; overflow: scroll;">
+                    <MudTimeline TimelinePosition="TimelinePosition.Start">
+                        @{
+                            RenderFragment caseyDot = @<MudImage Src="caisy.png" Height="30" />;
+                        }
+                        @foreach (var message in Conversation.Messages)
+                        {
+                            var color = message.IsUserMessage ? Color.Dark : Color.Primary;
+                            RenderFragment dot = message.IsUserMessage
+                                    ? @<MudIcon Icon=@Icons.Material.Outlined.Person></MudIcon>
+                                    : caseyDot;
 
-            <MudGrid>
-                <MudItem xs="12" Style="height: 55vh; overflow: scroll;">
-                        <MudTimeline TimelinePosition="TimelinePosition.Start">
-                            @foreach (var message in Conversation.Messages)
-                            {
-                                var color = message.IsUserMessage ? Color.Dark : Color.Primary;
-                                RenderFragment dot = message.IsUserMessage
-                                        ? @<MudIcon Icon=@Icons.Material.Outlined.Person></MudIcon>
-                                : @<MudImage Src="caisy.png" Height="30" />;
-
-                                <MudTimelineItem Color="color" Size="Size.Large" Elevation="0">
-                                    <ItemDot>
-                                        @dot
-                                    </ItemDot>
-                                    <ItemContent>
-                                        <MudAlert Severity="Severity.Normal" NoIcon=true Class="alert-code">
-                                            <MudMarkdown Value="@message.Content" CodeBlockTheme="User.CodeBlockTheme" />
-                                        </MudAlert>
-                                    </ItemContent>
-                                </MudTimelineItem>
-                            }
-                            @if (Loading)
-                            {
-                                <MudTimelineItem Color="Color.Primary" Size="Size.Large" Elevation="0">
-                                    <ItemDot>
-                                        <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Large" />
-                                    </ItemDot>
-                                    <ItemContent>
-                                        <MudSkeleton Height="100" Width="100%"></MudSkeleton>
-                                    </ItemContent>
-                                </MudTimelineItem>
-                            }
-                        </MudTimeline>            
-                </MudItem>
-            </MudGrid>
+                            <MudTimelineItem Color="color" Size="Size.Large" Elevation="0">
+                                <ItemDot>
+                                    @dot
+                                </ItemDot>
+                                <ItemContent>
+                                    <MudAlert Severity="Severity.Normal" NoIcon=true Class="alert-code">
+                                    @if(message.Content is not null)
+                                    {
+                                        <MudMarkdown Value="@message.Content" CodeBlockTheme="User.CodeBlockTheme" />
+                                    }
+                                    </MudAlert>
+                                </ItemContent>
+                            </MudTimelineItem>
+                        }
+                        @if (Loading)
+                        {
+                            <MudTimelineItem Color="Color.Primary" Size="Size.Large" Elevation="0">
+                                <ItemDot>
+                                    @caseyDot
+                                </ItemDot>
+                                <ItemContent>
+                                    <MudSkeleton Height="200px" Width="100%"></MudSkeleton>
+                                </ItemContent>
+                            </MudTimelineItem>
+                        }
+                    </MudTimeline>            
+            </MudItem>
+        </MudGrid>
     }
     else
     {
@@ -51,5 +56,5 @@
 @code {
     [CascadingParameter] public IUser User { get; set; } = null!;
     [Parameter, EditorRequired] public ConversationBase Conversation { get; set; } = null!;
-    [Parameter] public bool Loading { get; set; }
+    [Parameter, EditorRequired] public bool Loading { get; set; }
 }

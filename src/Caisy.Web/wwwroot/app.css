@@ -11,7 +11,7 @@
 }
 
 /* MudBlazor Overrides */
-.alert-code > .mud-alert-position {
+.alert-code-block > .mud-alert-position {
     display: block !important;
 }
 

@@ -1,5 +1,8 @@
-﻿<MudPaper Class="pa-4 mb-1">
-    @if (Conversation.Messages.Count > 0)
+﻿@using Microsoft.JSInterop;
+@implements IAsyncDisposable;
+
+<MudPaper Class="pa-4 mb-1">
+    @if (Conversation.MessageCount > 0)
     {
         <MudGrid>
             <MudItem xs="12" Style="height: 55vh; overflow: scroll;">
@@ -19,7 +22,7 @@
                                     @dot
                                 </ItemDot>
                                 <ItemContent>
-                                    <MudAlert Severity="Severity.Normal" NoIcon=true Class="alert-code">
+                                    <MudAlert Severity="Severity.Normal" NoIcon=true Class="alert-code-block message">
                                     @if(message.Content is not null)
                                     {
                                         <MudMarkdown Value="@message.Content" CodeBlockTheme="User.CodeBlockTheme" />
@@ -54,7 +57,31 @@
 </MudPaper>
 
 @code {
+    [Inject] private IJSRuntime JSRuntime { get; set; } = null!;
     [CascadingParameter] public IUser User { get; set; } = null!;
     [Parameter, EditorRequired] public ConversationBase Conversation { get; set; } = null!;
     [Parameter, EditorRequired] public bool Loading { get; set; }
+
+    private IJSObjectReference? chatWindowModule;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+        {
+            chatWindowModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", $"./Features/Shared/Components/{nameof(ChatWindow)}.razor.js");
+        }
+
+        if(Conversation.MessageCount > 0)
+        {
+            await chatWindowModule!.InvokeVoidAsync("focusLastMessage");
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if(chatWindowModule is not null)
+        {
+            await chatWindowModule.DisposeAsync();
+        }
+    }
 }

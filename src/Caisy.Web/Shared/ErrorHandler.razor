@@ -15,9 +15,9 @@
     protected override void OnInitialized()
     {
         Logger.LogError("Error:ProcessError - Type: {Type} Message: {Message}",
-                  Exception.GetType(), Exception.Message);
+                  Exception?.GetType(), Exception?.Message);
 
-        _message = Exception.Message;
+        _message = Exception?.Message;
 
         StateHasChanged();
     }

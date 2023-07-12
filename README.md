@@ -1,6 +1,6 @@
 # Introduction
 
-Built with Blazor WASM and hosted for free on GitHub Pages at <https://caisy.azurewebsites.net>.
+Built with Blazor Server and hosted for a nominal hosting fee and OpenAI fee (which I provide) at <https://caisy.azurewebsites.net>.
 
 # Running Locally
 

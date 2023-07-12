@@ -65,6 +65,13 @@
 
     protected override void OnInitialized()
     {
+        if(IdentityProvider.User == null)
+        {
+            IdentityProvider.User = new UserProfile
+            {
+                 PrefersDarkMode = false
+            };
+        }
         ApplicationState.OnUserSettingsChanged += StateHasChanged;
     }
 
